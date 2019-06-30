@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/medicin_search"
+        android:layout_marginTop="90dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:inputType="text"
+        android:hint="궁금한 의약품을 검색해 보세요" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="그래프"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="100dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="나의 약 정보"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <ScrollView
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n
+                                  나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="나의 복용 알림"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="아침\n7:00\n먹었어요"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#ffffff"
+            android:layout_height="120dp" />
+        <Button
+            android:text="점심\n13:00\n못먹었어요"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="120dp" />
+        <Button
+            android:text="저녁\n20:00\n알림예정"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="120dp" />
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="주의해야할 음식"
+        android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+    <ScrollView
+        android:scrollbars="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <TextView
+            android:text="주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+</LinearLayout>
