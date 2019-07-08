@@ -3,6 +3,9 @@ package com.k1l3.wheredoesithurt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,9 +16,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
@@ -25,11 +33,20 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
     Fragment fragment_main;
+    String image;
+    String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
+
+
+
+        Intent intent =getIntent();
+        image = intent.getStringExtra("profile");
+        name = intent.getStringExtra("name");
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -46,6 +63,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         replaceFragment(fragment_main=new Fragment_main());
+
+        View headerView = navigationView.getHeaderView(0);
+
+        //프로필 사진과 이름을 출력
+        ImageView profileImage = headerView.findViewById(R.id.profileImage);
+        TextView profileName = headerView.findViewById(R.id.profileName);
+
+        Glide.with(this).load(image).into(profileImage);
+        profileName.setText(name);
+
+        //todo 프로필 사진 라운딩 및 크기맞추기
+        profileImage.setBackground(new ShapeDrawable(new OvalShape()));
+        profileImage.setClipToOutline(true);
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
