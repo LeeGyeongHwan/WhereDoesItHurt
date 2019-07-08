@@ -6,10 +6,10 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="a" />
+            android:title="로그아웃" />
         <item
             android:id="@+id/nav_gallery"
-            android:title="b" />
+            android:title="회원탈퇴" />
         <item
             android:id="@+id/nav_slideshow"
             android:title="c" />
