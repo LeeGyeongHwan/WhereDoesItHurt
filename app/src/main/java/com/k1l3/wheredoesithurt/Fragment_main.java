@@ -25,7 +25,16 @@ public class Fragment_main extends Fragment {
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Toast.makeText(getContext(),medicine_search.getText().toString()+"검색",Toast.LENGTH_LONG).show();
+                if(!medicine_search.getText().toString().equals("")) {
+                    Fragment fragment_search = new Fragment_search();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("search_word", medicine_search.getText().toString());
+                    fragment_search.setArguments(bundle);
+                    replaceFragment(fragment_search);
+                }
+                else{
+                    Toast.makeText(getContext(), "검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         });
@@ -35,4 +44,12 @@ public class Fragment_main extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+    private void replaceFragment(@NonNull Fragment fragment) {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .commit();
+    }
+
+
 }

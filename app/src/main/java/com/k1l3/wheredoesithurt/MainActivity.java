@@ -15,13 +15,14 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
-    Fragment fragment_main;
+    Fragment fragment_main,fragment_search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
-
+        fragment_main = new Fragment_main();
+        fragment_search = new Fragment_search();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        replaceFragment(fragment_main=new Fragment_main());
+        replaceFragment(fragment_main);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -80,10 +81,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        Fragment current_fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment==fragment_main){
             super.onBackPressed();
+        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment!=fragment_main){
+            replaceFragment(fragment_main);
         }
     }
 }
