@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="176dp"
-    android:background="#00ff00"
+    android:background="#5F53E0"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingLeft="16dp"
@@ -14,9 +14,9 @@
 
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:layout_width="80dp"
+        android:scaleType="centerCrop"
+        android:layout_height="80dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
