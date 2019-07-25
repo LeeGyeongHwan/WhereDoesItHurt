@@ -3,13 +3,14 @@ package com.k1l3.wheredoesithurt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -29,12 +30,14 @@ import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
-
+import static android.support.constraint.Constraints.TAG;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
     Fragment fragment_main,fragment_search;
     String image;
     String name;
+    FragmentManager manager;
+    FragmentTransaction transaction;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
         fragment_search = new Fragment_search();
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
 
 
 
@@ -93,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
                 .commit();
+        /*transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack("fragment");
+        transaction.commit();*/
+        Log.e(TAG,"값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
     }
 
     @Override
@@ -127,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment==fragment_main){
             super.onBackPressed();
         } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment!=fragment_main){
-            replaceFragment(fragment_main);
+            manager.popBackStack();
         }
     }
     private void logout(){

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +18,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.support.constraint.Constraints.TAG;
+
 public class Fragment_main extends Fragment {
     EditText medicine_search;
     ViewGroup btn1, btn2, btn3;
     public int[] check = new int[3];
+    FragmentManager manager;
+    FragmentTransaction transaction;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -26,6 +33,8 @@ public class Fragment_main extends Fragment {
         final View viewGroup = inflater.inflate(R.layout.fragment_main,container, false);
         medicine_search=(EditText)viewGroup.findViewById(R.id.medicin_search);
         medicine_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        manager = getActivity().getSupportFragmentManager();
+        transaction = manager.beginTransaction();
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -131,10 +140,14 @@ public class Fragment_main extends Fragment {
 
     }
     private void replaceFragment(@NonNull Fragment fragment) {
-        getActivity().getSupportFragmentManager()
+        /*getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
-                .commit();
+                .commit();*/
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack("fragment");
+        transaction.commit();
+        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
     }
 
 

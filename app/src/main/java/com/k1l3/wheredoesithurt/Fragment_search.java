@@ -1,35 +1,56 @@
 package com.k1l3.wheredoesithurt;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
+import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_search extends Fragment {
+    View viewGroup;
     String search_word;
-    String data;
-    TextView text;
+    ArrayList<Search_item> data;
+    ListView listView ;
+    Adapter adapter;
+    ImageView search_medicine_image;
+    Bitmap imgBitmap = null, no_medicine_image = null;
+    FragmentManager manager;
+    FragmentTransaction transaction;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        final View viewGroup = inflater.inflate(R.layout.fragment_search, container, false);
-        text = (TextView)viewGroup.findViewById(R.id.text);
+        viewGroup = inflater.inflate(R.layout.fragment_search, container, false);
+        listView = (ListView)viewGroup.findViewById(R.id.search_list_view);
+        manager = getActivity().getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+
+        no_medicine_image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.search_img);
+        search_medicine_image = (ImageView)viewGroup.findViewById(R.id.search_medicine_image);
+        adapter = new Adapter();
         if(getArguments()!=null){
             search_word = getArguments().getString("search_word");
 
@@ -39,15 +60,42 @@ public class Fragment_search extends Fragment {
                 public void run() {
                     // TODO Auto-generated method stub
                     data= getXmlData();
+                    for(int i=0;i<data.size();i++){
+                        imgBitmap = GetImageFromURL(data.get(i).getItem_name());
+                        if(imgBitmap!=null) {
+                            data.get(i).setItem_image(imgBitmap);
+                        }
+                        else{
+                            data.get(i).setItem_image(no_medicine_image);
+                        }
+                    }
                     if(getActivity()!=null){
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 // TODO Auto-generated method stub
-                                text.setText(data);
+                                for(int i=0;i<data.size();i++){
+                                    adapter.addItem(data);
+                                    listView.setAdapter(adapter);
+                                }
+                            }
+                        });
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                if(data.get(position).getItem_image()==no_medicine_image){
+                                    data.get(position).setItem_image(null);
+                                }
+                                Fragment fragment_detail_search = new Fragment_detail_search();
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("data", data.get(position));
+                                fragment_detail_search.setArguments(bundle);
+                                replaceFragment(fragment_detail_search);
                             }
                         });
                     }
+
                 }
             }).start();
         }
@@ -58,17 +106,15 @@ public class Fragment_search extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
-    private String getXmlData(){
+    private ArrayList<Search_item> getXmlData(){
 
         StringBuffer buffer=new StringBuffer();
         String str= search_word;
-        String item_name = null , entp_name = null, etc_otc_code = null;
-        ArrayList<String> ee_doc_data = new ArrayList<>();
-        ArrayList<String> ud_doc_data = new ArrayList<>();
+        String item_name = null , entp_name = null, etc_otc_code = null, ee_doc_data = "", ud_doc_data = "";
+        ArrayList<Search_item> item = new ArrayList<>();
         int stopping = 0;
         try {
-            Log.e(TAG, "getXmlData: " + getString(R.string.api_data_key));
-            URL url = new URL("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?ServiceKey="+getString(R.string.api_data_key)+"&item_name="+str);
+             URL url = new URL("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?ServiceKey="+getString(R.string.api_data_key)+"&item_name="+str);
             InputStream is= url.openStream();
 
             XmlPullParserFactory factory= XmlPullParserFactory.newInstance();
@@ -103,14 +149,14 @@ public class Fragment_search extends Fragment {
                             stopping = 1;
                         }else if (tag.equals("PARAGRAPH")&&stopping==1) {
                             xpp.next();
-                            ee_doc_data.add(xpp.getText());
+                            ee_doc_data=ee_doc_data+xpp.getText()+"\n";
                         }else if (tag.equals("UD_DOC_DATA")) {
                             stopping = 2;
                         } else if (tag.equals("PARAGRAPH")&&stopping==2) {
                             xpp.next();
                             String data = xpp.getText();
                             if(!data.substring(0,1).equals("<")) {
-                                ud_doc_data.add(xpp.getText());
+                                ud_doc_data=ud_doc_data+xpp.getText()+"\n";
                             }
                         }else if(tag.equals("NB_DOC_DATA")){
                             stopping = 0;
@@ -124,46 +170,73 @@ public class Fragment_search extends Fragment {
                         tag= xpp.getName();
 
                         if(tag.equals("item")) {
-                            if(item_name!=null) {
-                                buffer.append(" 이름 : " + item_name + "\n  회사이름: " + entp_name +"\n  종류: " + etc_otc_code
-                                        +"\n  효능효과 :");
-                            }
-                            for(int i=0;i<ee_doc_data.size();i++){
-                                buffer.append("\n "+ ee_doc_data.get(i));
-                            }
-                            buffer.append("\n  용법용량 : ");
-                            for(int i=0;i<ud_doc_data.size();i++){
-                                buffer.append("\n "+ ud_doc_data.get(i));
-                            }
-                            //GetImageFromURL(item_name);  //이미지다운
-                            buffer.append("\n --------------------\n");
+                            Search_item budget = new Search_item(item_name,entp_name,etc_otc_code,ee_doc_data,ud_doc_data);
+                            item.add(budget);
+
                             item_name = null;
                             entp_name = null;
                             etc_otc_code = null;
-                            ee_doc_data.clear();
-                            ud_doc_data.clear();
+                            ee_doc_data = "";
+                            ud_doc_data = "";
                         }
                         break;
                 }
 
                 eventType= xpp.next();
             }
-
         } catch (Exception e) {
         }
 
-        return buffer.toString();
+        return item;
 
     }
 
-  /*  private Bitmap GetImageFromURL(String item_name) {
+    class Adapter extends BaseAdapter {
+        ArrayList<Search_item> items = new ArrayList<Search_item>();
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        public void addItem(Search_item item){
+            items.add(item);
+        }
+        public void addItem(ArrayList<Search_item> item){items=item;}
+        public void deleteItem(Search_item item){
+            items.remove(item);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Search_itemView view = new Search_itemView(viewGroup.getContext());
+            Search_item item = items.get(position);
+            view.setMedicine_name(item.getMedicine_name());
+            view.setSearch_medicine_image(item.getItem_image());
+            return view;
+        }
+    }
+    private void replaceFragment(@NonNull Fragment fragment) {
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack("fragment");
+        transaction.commit();
+        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
+    }
+
+    private Bitmap GetImageFromURL(String item_name) {
         Bitmap imgBitmap = null;
         String item_image_URL = null;
         try
         {
-            URL url = new URL("http://apis.data.go.kr/1470000/MdcinGrnIdntfcInfoService/getMdcinGrnIdntfcInfoList?ServiceKey="+key+"&item_name="+item_name);
+            URL url = new URL("http://apis.data.go.kr/1470000/MdcinGrnIdntfcInfoService/getMdcinGrnIdntfcInfoList?ServiceKey="+getString(R.string.api_data_key)+"&item_name="+item_name);
             InputStream is= url.openStream();
-
             XmlPullParserFactory factory= XmlPullParserFactory.newInstance();
             XmlPullParser xpp= factory.newPullParser();
             xpp.setInput( new InputStreamReader(is, "UTF-8") );
@@ -181,10 +254,11 @@ public class Fragment_search extends Fragment {
                     case XmlPullParser.START_TAG:
                         tag= xpp.getName();
 
-                        if(tag.equals("item")) ;
+                        if(tag.equals("item"));
                         else if(tag.equals("ITEM_IMAGE")){
                             xpp.next();
                             item_image_URL=xpp.getText();
+                            Log.e(TAG,item_image_URL);
                         }
                         break;
 
@@ -198,18 +272,26 @@ public class Fragment_search extends Fragment {
 
                 eventType= xpp.next();
             }
-
-            URL iamge_url = new URL(item_image_URL);
-            URLConnection conn = iamge_url.openConnection();
-            conn.connect();
-            int nSize = conn.getContentLength();
-            BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), nSize);
-            imgBitmap = BitmapFactory.decodeStream(bis);
-            bis.close();
+            try
+            {
+                URL iamge_url = new URL(item_image_URL);
+                URLConnection conn = iamge_url.openConnection();
+                conn.connect();
+                int nSize = conn.getContentLength();
+                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), nSize);
+                imgBitmap = BitmapFactory.decodeStream(bis);
+                bis.close();
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e(TAG,"오류 1 :" + e.toString());
+            }
         }catch (Exception e) {
             e.printStackTrace();
+
+            Log.e(TAG,"오류 2 : " + e.toString());
         }
         return imgBitmap;
-    }*/
+    }
+
 
 }
