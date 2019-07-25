@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.k1l3.wheredoesithurt" >
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -21,6 +23,19 @@
         </activity>
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ResultOfVision"
+            android:label=".ResultOfVision">
+
+        </activity>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider"/>
+        </provider>
     </application>
 
 </manifest>
