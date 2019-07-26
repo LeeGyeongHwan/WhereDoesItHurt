@@ -2,6 +2,7 @@ package com.k1l3.wheredoesithurt;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -428,6 +429,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
+        }
+
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("분석중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
         }
 
         @Override
