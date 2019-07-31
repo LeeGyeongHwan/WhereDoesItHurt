@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 import java.util.ArrayList;
 
 public class Fragment_history extends Fragment {
@@ -136,7 +138,7 @@ public class Fragment_history extends Fragment {
     }
     void ImageClick(ImageView imageView){
         View rView = getLayoutInflater().inflate(R.layout.full_screen,null);
-        ImageView a = rView.findViewById(R.id.full_image);
+        PhotoView a = rView.findViewById(R.id.full_image);
         a.setImageBitmap(((BitmapDrawable)imageView.getDrawable()).getBitmap());
         dialog = new Dialog(getContext(),android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
         dialog.setContentView(rView);
