@@ -68,8 +68,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        replaceFragment(fragment_main);
-
+        //replaceFragment(fragment_main);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment_main)
+                .commit();
         View headerView = navigationView.getHeaderView(0);
 
         //프로필 사진과 이름을 출력
@@ -94,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
     private void replaceFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager()
+        /*getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
-                .commit();
-        /*transaction.replace(R.id.main_container, fragment);
+                .commit();*/
+        transaction= manager.beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
-        transaction.commit();*/
+        transaction.commit();
         Log.e(TAG,"값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
     }
 
@@ -112,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logout();
         } else if (id == R.id.nav_gallery) {
             withdrawal();
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_history) {
+            replaceFragment(new Fragment_history());
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {

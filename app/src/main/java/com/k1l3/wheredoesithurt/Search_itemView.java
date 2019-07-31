@@ -38,4 +38,5 @@ public class Search_itemView extends LinearLayout {
     public ImageView getSearch_medicine_image(){ return search_medicine_image;}
 
     public void setSearch_medicine_image(Bitmap image){ this.search_medicine_image.setImageBitmap(image);}
+
 }

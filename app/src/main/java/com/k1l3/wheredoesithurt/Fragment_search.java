@@ -244,6 +244,7 @@ public class Fragment_search extends Fragment {
         }
     }
     private void replaceFragment(@NonNull Fragment fragment) {
+        transaction= manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
