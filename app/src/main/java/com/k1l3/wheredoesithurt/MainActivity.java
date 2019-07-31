@@ -86,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
+        ImageView cambtn= findViewById(R.id.cameraBtn);
+        cambtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Addword_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

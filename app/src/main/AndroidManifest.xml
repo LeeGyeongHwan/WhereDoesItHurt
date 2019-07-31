@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".Addword_Activity"></activity>
     </application>
 
 </manifest>
