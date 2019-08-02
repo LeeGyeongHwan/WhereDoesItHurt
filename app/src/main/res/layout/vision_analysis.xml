@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:stretchColumns="*"
-            android:layout_margin="5dp"
             >
             <TableRow
                 android:gravity="center"
@@ -74,7 +73,7 @@
                     android:id="@+id/analysis_edit1_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:width="100dp"
+                    android:width="80dp"
 
                     />
                 <EditText
@@ -175,14 +174,6 @@
                     android:layout_width="wrap_content"
                     />
             </TableRow>
-            <TableRow
-                android:gravity="right"
-                >
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="항목 추가" />
-            </TableRow>
 
 
         </TableLayout>
@@ -201,7 +192,7 @@
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="알람설정페이지"
+            android:text="다음"
             />
 
         <Button
