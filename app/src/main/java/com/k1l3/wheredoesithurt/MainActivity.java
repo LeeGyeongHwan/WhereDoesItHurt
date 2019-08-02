@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +35,7 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import static android.support.constraint.Constraints.TAG;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
-    Fragment fragment_main,fragment_search;
+    Fragment fragment_main, fragment_search;
     String image;
     String name;
     String email;
@@ -46,15 +45,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar=(Toolbar)findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
         fragment_search = new Fragment_search();
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
 
+        Intent intent = getIntent();
 
-
-        Intent intent =getIntent();
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
         email = intent.getStringExtra("email");
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Glide.with(this).load(image).into(profileImage);
         profileName.setText(name);
 
-        //todo 프로필 사진 라운딩 및 크기맞추기
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
@@ -113,15 +110,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{
-                Toast.makeText(this,"검색",Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                Toast.makeText(this, "검색", Toast.LENGTH_LONG).show();
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void replaceFragment(@NonNull Fragment fragment) {
         /*getSupportFragmentManager()
                 .beginTransaction()
@@ -163,13 +162,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment current_fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment==fragment_main){
+        } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment == fragment_main) {
             super.onBackPressed();
         } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment!=fragment_main){
             manager.popBackStack();
         }
     }
-    public void logout(){
+
+    private void logout() {
         Toast.makeText(getApplicationContext(), "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
 
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void withdrawal(){
+    private void withdrawal() {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage("탈퇴하시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onFailure(ErrorResult errorResult) {
                                 int result = errorResult.getErrorCode();
 
-                                if(result == ApiErrorCode.CLIENT_ERROR_CODE) {
+                                if (result == ApiErrorCode.CLIENT_ERROR_CODE) {
                                     Toast.makeText(getApplicationContext(), "네트워크 연결이 불안정합니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "회원탈퇴에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();

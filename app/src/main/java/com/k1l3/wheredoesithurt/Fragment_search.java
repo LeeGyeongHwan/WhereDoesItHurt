@@ -141,48 +141,47 @@ public class Fragment_search extends Fragment {
              URL url = new URL("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?ServiceKey="+getString(R.string.api_data_key)+"&item_name="+str);
             InputStream is= url.openStream();
 
-            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();
-            XmlPullParser xpp= factory.newPullParser();
-            xpp.setInput( new InputStreamReader(is, "UTF-8") );
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(new InputStreamReader(is, "UTF-8"));
 
             String tag;
 
             xpp.next();
-            int eventType= xpp.getEventType();
+            int eventType = xpp.getEventType();
 
-            while( eventType != XmlPullParser.END_DOCUMENT ){
-                switch( eventType ){
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
                         break;
 
                     case XmlPullParser.START_TAG:
-                        tag= xpp.getName();
+                        tag = xpp.getName();
 
-                        if(tag.equals("item")) ;
-                        else if(tag.equals("ITEM_NAME")){
+                        if (tag.equals("item")) ;
+                        else if (tag.equals("ITEM_NAME")) {
                             xpp.next();
-                            item_name=xpp.getText();
-                        }
-                        else if (tag.equals("ENTP_NAME")) {
+                            item_name = xpp.getText();
+                        } else if (tag.equals("ENTP_NAME")) {
                             xpp.next();
                             entp_name = xpp.getText();
                         } else if (tag.equals("ETC_OTC_CODE")) {
                             xpp.next();
                             etc_otc_code = xpp.getText();
-                        }else if (tag.equals("EE_DOC_DATA")) {
+                        } else if (tag.equals("EE_DOC_DATA")) {
                             stopping = 1;
-                        }else if (tag.equals("PARAGRAPH")&&stopping==1) {
+                        } else if (tag.equals("PARAGRAPH") && stopping == 1) {
                             xpp.next();
                             ee_doc_data=ee_doc_data+xpp.getText()+"\n";
                         }else if (tag.equals("UD_DOC_DATA")) {
                             stopping = 2;
-                        } else if (tag.equals("PARAGRAPH")&&stopping==2) {
+                        } else if (tag.equals("PARAGRAPH") && stopping == 2) {
                             xpp.next();
                             String data = xpp.getText();
                             if(!data.substring(0,1).equals("<")) {
                                 ud_doc_data=ud_doc_data+xpp.getText()+"\n";
                             }
-                        }else if(tag.equals("NB_DOC_DATA")){
+                        } else if (tag.equals("NB_DOC_DATA")) {
                             stopping = 0;
                         }
                         break;
@@ -191,7 +190,7 @@ public class Fragment_search extends Fragment {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        tag= xpp.getName();
+                        tag = xpp.getName();
 
                         if(tag.equals("item")) {
                             Search_item budget = new Search_item(item_name,entp_name,etc_otc_code,ee_doc_data,ud_doc_data);
@@ -206,7 +205,7 @@ public class Fragment_search extends Fragment {
                         break;
                 }
 
-                eventType= xpp.next();
+                eventType = xpp.next();
             }
         } catch (Exception e) {
         }
