@@ -2,6 +2,7 @@ package com.k1l3.wheredoesithurt;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -45,6 +47,8 @@ public class Fragment_search extends Fragment {
     FragmentManager manager;
     FragmentTransaction transaction;
     EditText medicine_search;
+    Toolbar toolBar;
+    TextView backgroundchange;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
