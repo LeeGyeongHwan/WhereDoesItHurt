@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,9 +44,13 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.Block;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.Page;
+import com.google.api.services.vision.v1.model.Paragraph;
+import com.google.api.services.vision.v1.model.Word;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
@@ -271,7 +276,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Cloud vision function
     public void startGalleryChooser() {
-        Log.d("Gallery", "startGalleryChooser: " + Manifest.permission.READ_EXTERNAL_STORAGE);
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Log.d("success","Gallery");
             Intent intent = new Intent();
@@ -317,7 +321,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("gallery", "here you are recode" + requestCode);
         switch (requestCode) {
             case CAMERA_PERMISSIONS_REQUEST:
                 if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
@@ -325,9 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case GALLERY_PERMISSIONS_REQUEST:
-                Log.d("gallery", "album ");
                 if (PermissionUtils.permissionGranted(requestCode, GALLERY_PERMISSIONS_REQUEST, grantResults)) {
-                    Log.d("gallery", "startalbmum");
                     startGalleryChooser();
                 }
                 break;
@@ -358,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Vision.Images.Annotate prepareAnnotationRequest(final Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
+        Log.d("gallery", "Json make " + jsonFactory.toString());
         VisionRequestInitializer requestInitializer =
                 new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
                     /**
@@ -381,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
         builder.setVisionRequestInitializer(requestInitializer);
-
+        Log.d("gallery", "Json find " + jsonFactory.toString());
         Vision vision = builder.build();
 
         BatchAnnotateImagesRequest batchAnnotateImagesRequest =
@@ -397,14 +398,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
 
-            // Base64 encode the JPEG
+            // Base64 encode the JPEGr
             base64EncodedImage.encodeContent(imageBytes);
             annotateImageRequest.setImage(base64EncodedImage);
 
             // add the features we want
             annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                 Feature textDetection = new Feature();
-                textDetection.setType("TEXT_DETECTION");
+                textDetection.setType("DOCUMENT_TEXT_DETECTION");
                 textDetection.setMaxResults(MAX_LABEL_RESULTS);
                 add(textDetection);
             }});
@@ -412,11 +413,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Add the list of one thing to the request
             add(annotateImageRequest);
         }});
-
+        Log.d("gallery", "batch find " + batchAnnotateImagesRequest.toString());
         Vision.Images.Annotate annotateRequest =
                 vision.images().annotate(batchAnnotateImagesRequest);
         // Due to a bug: requests to Vision API containing large images fail when GZipped.
         annotateRequest.setDisableGZipContent(true);
+        Log.d("gallery", "annotate request " + annotateRequest.toString());
         Log.d(TAG, "created Cloud Vision request object, sending request");
 
         return annotateRequest;
@@ -462,6 +464,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         protected void onPostExecute(String result) {
             MainActivity activity = mActivityWeakReference.get();
+            asyncDialog.dismiss();
             if (activity != null && !activity.isFinishing()) {
                 Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
                 intent.putExtra("result",result);
@@ -508,18 +511,137 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         StringBuilder message = new StringBuilder("I found these things:\n\n");
+        Log.d("gallery", "getresponse " + response.getResponses().toString());
+
+        List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
+        Log.d("gallery", "convertResponseToString: "+pages.size());
+        /*
+        for(Page page: pages){
+            List<Block> blocks = page.getBlocks();
+            for(Block block : blocks){
+                List<Paragraph> paragraphs = block.getParagraphs();
+                for(Paragraph paragraph: paragraphs){
+                    List<Word> words = paragraph.getWords();
+                    for(Word word: words){
+                        word.getBoundingBox();
+                        word.getSymbols()
+                    }
+                }
+            }
+
+        }*/
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
+        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
+        Log.d("gallery", "label" + labels);
+        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
+        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+
+        int vertixArray[][]=new int[3][2];
+        int Y_eachmedicine[] = new int[5];
+        String medicine[] = new String[5];
+        int info_med[][] = new int[5][3];
+        int arrcount=0;
+
         if (labels != null) {
+            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
+
+
             for (EntityAnnotation label : labels) {
-                message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
-                message.append("\n\n");
+                String labelstr=label.getDescription();
+                if(labelstr.equals("량") || labelstr.equals("투약량")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[0][0]=firstX;
+                    vertixArray[0][1]=secondX;
+                }else if(labelstr.equals("투여횟수")||labelstr.equals("투여")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[1][0]=firstX;
+                    vertixArray[1][1]=secondX;
+                }else if(labelstr.equals("투약일수")||labelstr.equals("일수")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[2][0]=firstX;
+                    vertixArray[2][1]=secondX;
+                }
+            }
+            for( int i=0;i<3;i++){
+                for(int j=0;j<2;j++){
+                    Log.d("gallery", "convertResponseToString: vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
+                }
+            }
+
+            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
+
+            int findcount=3;
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if(findcount==2){
+                    medicine[arrcount]=labelstr;
+                    Y_eachmedicine[arrcount]=label.getBoundingPoly().getVertices().get(0).getY();
+                    arrcount++;
+                }
+                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
+
+                if(labelstr.length()==9){
+                    try{
+                        findcount=0;
+                        Integer.parseInt(labelstr);
+                        Log.d("gallery", "convertResponseToString: "+labelstr);
+                    }catch (NumberFormatException e){
+                        Log.d("exception", "convertResponseToString: "+e);
+                        findcount=3;
+                    }
+                }
+                Log.d("galler", "convertResponseToString: "+label.getDescription());
+                Log.d("galler", "convertResponseToString: "+label.getBoundingPoly().getVertices());
+                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
+                //투약,투여,횟수시기,일수, x,y좌표 가져오기
+                findcount++;
+            }
+            for(int i=0;i<5;i++){
+                Log.d("gallery", "convertResponseToString: "+ Y_eachmedicine[i]);
+                Log.d("gallery", "convertResponseToString: "+ medicine[i]);
+            }
+
+            for (EntityAnnotation label : labels) {
+                int labelX=label.getBoundingPoly().getVertices().get(0).getX();
+                int labelX2=label.getBoundingPoly().getVertices().get(1).getX();
+                int labelY=label.getBoundingPoly().getVertices().get(0).getY();
+                for(int i=0;i<arrcount;i++){
+                    if((Y_eachmedicine[i]-10<labelY) && (Y_eachmedicine[i]+10>labelY)){
+                        Log.d(TAG, "convertResponseToString: labely"+labelY);
+                        for(int j=0;j<arrcount;j++){
+                            if((vertixArray[j][0]-40<labelX) && (vertixArray[j][1]+40>labelX2)) {
+                                Log.d("gallery", "convertResponseToString: labelx"+labelX);
+                                try {
+                                    info_med[i][j] = Integer.parseInt(label.getDescription());
+                                    Log.d("gallery", "convertResponseToString: ["+i+"]["+j+"]: "+info_med[i][j]);
+                                } catch (NumberFormatException e) {
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+
             }
         } else {
             message.append("nothing");
         }
 
-        return message.toString();
+        String returnstr="";
+        for(int i=0;i<arrcount;i++){
+            returnstr=returnstr.concat(medicine[i]+" ");
+            for(int j=0;j<arrcount;j++){
+                returnstr= returnstr.concat(info_med[i][j]+" ");
+            }
+
+        }
+        Log.d("gallery", "convertResponseToString: "+returnstr);
+        return returnstr;
     }
 
 }
