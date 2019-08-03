@@ -67,6 +67,7 @@ public class Fragment_search extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(!medicine_search.getText().toString().equals("")) {
+                    getArguments().putString("search_word",medicine_search.getText().toString());
                     setListView(medicine_search.getText().toString());
                 }
                 else{
@@ -77,7 +78,6 @@ public class Fragment_search extends Fragment {
         });
         if(getArguments()!=null){
             search_word = getArguments().getString("search_word");
-
            /* new Thread(new Runnable() {
 
                 @Override

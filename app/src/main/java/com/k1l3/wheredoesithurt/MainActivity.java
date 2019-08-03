@@ -220,28 +220,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
     public void toolbar_search(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        setup_nav(R.drawable.ic_menu);
     }
     public void toolbar_main(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_history(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void setup_nav(int menuImage){
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -255,6 +254,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setHomeAsUpIndicator(menuImage);
     }
 }

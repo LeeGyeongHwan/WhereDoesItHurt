@@ -34,6 +34,7 @@ public class Fragment_history extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_history,container, false);
+        ((MainActivity)getActivity()).toolbar_history();
         listView = (ListView)viewGroup.findViewById(R.id.history_list_view);
         button = (Button)viewGroup.findViewById(R.id.history_button);
         adapter = new Adapter();
