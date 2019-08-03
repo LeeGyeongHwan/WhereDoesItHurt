@@ -145,6 +145,7 @@ public class Fragment_main extends Fragment {
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
                 .commit();*/
+        transaction= manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
