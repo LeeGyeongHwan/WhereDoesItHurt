@@ -2,6 +2,8 @@ package com.k1l3.wheredoesithurt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -25,6 +27,9 @@ public class Search_itemView extends LinearLayout {
         inflater.inflate(R.layout.search_item,this,true);
         medicine_name = (TextView)findViewById(R.id.medicin_name);
         search_medicine_image = (ImageView)findViewById(R.id.search_medicine_image);
+        search_medicine_image.setBackground(new ShapeDrawable(new OvalShape()));
+        search_medicine_image.setClipToOutline(true);
+
     }
 
     public TextView getMedicine_name() {
@@ -38,4 +43,5 @@ public class Search_itemView extends LinearLayout {
     public ImageView getSearch_medicine_image(){ return search_medicine_image;}
 
     public void setSearch_medicine_image(Bitmap image){ this.search_medicine_image.setImageBitmap(image);}
+
 }

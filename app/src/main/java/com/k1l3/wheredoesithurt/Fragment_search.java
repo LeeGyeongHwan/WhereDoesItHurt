@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -45,11 +46,14 @@ public class Fragment_search extends Fragment {
     FragmentManager manager;
     FragmentTransaction transaction;
     EditText medicine_search;
+    Toolbar toolBar;
+    TextView backgroundchange;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_search, container, false);
+        ((MainActivity)getActivity()).toolbar_search();
         listView = (ListView)viewGroup.findViewById(R.id.search_list_view);
         medicine_search = (EditText)viewGroup.findViewById(R.id.medicin_search_2);
         manager = getActivity().getSupportFragmentManager();
@@ -63,6 +67,7 @@ public class Fragment_search extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(!medicine_search.getText().toString().equals("")) {
+                    getArguments().putString("search_word",medicine_search.getText().toString());
                     setListView(medicine_search.getText().toString());
                 }
                 else{
@@ -73,7 +78,6 @@ public class Fragment_search extends Fragment {
         });
         if(getArguments()!=null){
             search_word = getArguments().getString("search_word");
-
            /* new Thread(new Runnable() {
 
                 @Override
@@ -244,6 +248,7 @@ public class Fragment_search extends Fragment {
         }
     }
     private void replaceFragment(@NonNull Fragment fragment) {
+        transaction= manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();

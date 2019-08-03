@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+
 import static android.support.constraint.Constraints.TAG;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent =getIntent();
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
-
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -68,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        replaceFragment(fragment_main);
-
+        //replaceFragment(fragment_main);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment_main)
+                .commit();
         View headerView = navigationView.getHeaderView(0);
 
         //프로필 사진과 이름을 출력
@@ -83,6 +87,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
+        ImageView cambtn= findViewById(R.id.cameraBtn);
+        cambtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Addword_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -94,13 +106,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
     private void replaceFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager()
+        /*getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
-                .commit();
-        /*transaction.replace(R.id.main_container, fragment);
+                .commit();*/
+        transaction= manager.beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
-        transaction.commit();*/
+        transaction.commit();
         Log.e(TAG,"값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
     }
 
@@ -112,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logout();
         } else if (id == R.id.nav_gallery) {
             withdrawal();
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_history) {
+            replaceFragment(new Fragment_history());
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {
@@ -205,5 +218,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }).show();
 
+    }
+    public void toolbar_search(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
+        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_main(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_history(){
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void setup_nav(int menuImage){
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+        actionBar.setHomeAsUpIndicator(menuImage);
     }
 }

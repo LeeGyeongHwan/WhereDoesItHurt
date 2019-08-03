@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Fragment_detail_search extends Fragment  {
@@ -34,7 +35,7 @@ public class Fragment_detail_search extends Fragment  {
             item = (Search_item) getArguments().getSerializable("data");
             if(item.getItem_image()!=null){
                 medicine_image.setImageBitmap(item.getItem_image());
-                linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linearLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
             else{
                 medicine_image.setVisibility(View.GONE);
