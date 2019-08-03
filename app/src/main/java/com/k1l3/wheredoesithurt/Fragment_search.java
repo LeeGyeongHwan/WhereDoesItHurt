@@ -2,7 +2,6 @@ package com.k1l3.wheredoesithurt;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,6 +53,7 @@ public class Fragment_search extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_search, container, false);
+        ((MainActivity)getActivity()).toolbar_search();
         listView = (ListView)viewGroup.findViewById(R.id.search_list_view);
         medicine_search = (EditText)viewGroup.findViewById(R.id.medicin_search_2);
         manager = getActivity().getSupportFragmentManager();

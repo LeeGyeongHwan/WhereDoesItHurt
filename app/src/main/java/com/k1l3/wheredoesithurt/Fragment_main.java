@@ -31,6 +31,7 @@ public class Fragment_main extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
         final View viewGroup = inflater.inflate(R.layout.fragment_main,container, false);
+        ((MainActivity)getActivity()).toolbar_main();
         medicine_search=(EditText)viewGroup.findViewById(R.id.medicin_search);
         medicine_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         manager = getActivity().getSupportFragmentManager();
