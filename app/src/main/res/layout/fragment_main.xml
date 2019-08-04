@@ -57,13 +57,13 @@
                 android:textColor="#776DE0"
                 android:gravity="left"
                 android:text="나의 약 정보" />
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.5dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
-                android:background="#706CD4"
-                />
+                android:background="#706CD4" />
 
             <ScrollView
                 android:scrollbars="vertical"
@@ -118,8 +118,8 @@
             android:layout_margin="3dp"
             android:padding="5dp"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple"
-            >
+            android:background="@drawable/flip_purple">
+
             <TextView
                 android:text="아침"
                 android:id="@+id/when1"
@@ -127,7 +127,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
+
             <TextView
                 android:text="07:00"
                 android:id="@+id/time1"
@@ -135,7 +136,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp" />
+
             <TextView
                 android:text="못먹었어요"
                 android:id="@+id/iseat1"
@@ -143,7 +145,7 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -154,8 +156,8 @@
             android:layout_margin="3dp"
             android:padding="5dp"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple"
-            >
+            android:background="@drawable/flip_purple">
+
             <TextView
                 android:text="점심"
                 android:id="@+id/when2"
@@ -163,7 +165,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
+
             <TextView
                 android:text="13:00"
                 android:id="@+id/time2"
@@ -171,7 +174,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp" />
+
             <TextView
                 android:text="못먹었어요"
                 android:id="@+id/iseat2"
@@ -179,8 +183,9 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/flipbtn3"
             android:layout_width="0dp"
@@ -189,8 +194,8 @@
             android:layout_margin="3dp"
             android:padding="5dp"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple"
-            >
+            android:background="@drawable/flip_purple">
+
             <TextView
                 android:text="저녁"
                 android:id="@+id/when3"
@@ -198,7 +203,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
+
             <TextView
                 android:text="20:00"
                 android:id="@+id/time3"
@@ -206,7 +212,8 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp" />
+
             <TextView
                 android:text="못먹었어요"
                 android:textSize="17dp"
@@ -214,7 +221,7 @@
                 android:textColor="#ffffff"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -242,7 +249,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <ScrollView
         android:id="@+id/scrollView2"
