@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="HISTORY"
-                android:textColor="#ffffff"
+                android:textColor="#776DE0"
                 android:visibility="gone" />
 
             <TextView
