@@ -107,11 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 Fragment fragment_mypage = new Fragment_mypage();
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putString("profile", image);
                 bundle.putString("name",name);
                 bundle.putString("email",email);
-                fragment_mypage.setArguments(bundle);
+                fragment_mypage.setArguments(bundle);*/
                 replaceFragment(fragment_mypage);
             }
         });
@@ -130,7 +130,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void replaceFragment(@NonNull Fragment fragment) {
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
-
+        bundle.putString("profile", image);
+        bundle.putString("name",name);
+        bundle.putString("email",email);
         fragment.setArguments(bundle);
         transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
