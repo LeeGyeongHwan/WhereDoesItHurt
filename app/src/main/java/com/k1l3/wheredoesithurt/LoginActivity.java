@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -117,15 +118,23 @@ public class LoginActivity extends AppCompatActivity {
         userInfo.setDisease("");
         userInfo.setLifeStyles("");
 
-        medicine.setName(" ");
+        medicine.setName("파티엔 정");
         ArrayList<Medicine> d = new ArrayList<>();
         d.add(medicine);
 
-        prescription.setBegin(0);
+        ArrayList<String> hashTag = new ArrayList<>();
+        hashTag.add("가려움");
+        hashTag.add("알레르기");
+        hashTag.add("기침");
+        hashTag.add("내과");
+        hashTag.add("외과");
+
+        prescription.setBegin("2019.07.29");
         prescription.setEnd(0);
         prescription.setCaution(0);
         prescription.setMedicines(d);
         prescription.setSideEffect(0);
+        prescription.setHashTag(hashTag);
 
         ArrayList<Prescription> p = new ArrayList<>();
         p.add(prescription);

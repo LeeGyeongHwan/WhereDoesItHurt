@@ -78,7 +78,7 @@ public class Fragment_search extends Fragment {
         });
         if(getArguments()!=null){
             search_word = getArguments().getString("search_word");
-           /* new Thread(new Runnable() {
+           new Thread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -121,7 +121,7 @@ public class Fragment_search extends Fragment {
                     }
 
                 }
-            }).start();*/
+            }).start();
            setListView(search_word);
         }
         return viewGroup;
@@ -274,7 +274,6 @@ public class Fragment_search extends Fragment {
                 switch( eventType ){
                     case XmlPullParser.START_DOCUMENT:
                         break;
-
                     case XmlPullParser.START_TAG:
                         tag= xpp.getName();
 

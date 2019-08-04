@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,14 +34,17 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
 import static android.support.constraint.Constraints.TAG;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
     String image;
     String name;
+    Long id;
     String email;
     FragmentManager manager;
     FragmentTransaction transaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
         email = intent.getStringExtra("email");
+        id = intent.getLongExtra("id",0);
+
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        ImageView cambtn= findViewById(R.id.cameraBtn);
+        ImageView cambtn = findViewById(R.id.cameraBtn);
         cambtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,15 +128,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void replaceFragment(@NonNull Fragment fragment) {
-        /*getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .commit();*/
-        transaction= manager.beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", id);
+
+        fragment.setArguments(bundle);
+        transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
-        Log.e(TAG,"값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+        Log.e(TAG, "값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
     }
 
     @Override
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment == fragment_main) {
             super.onBackPressed();
-        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment!=fragment_main){
+        } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment != fragment_main) {
             manager.popBackStack();
         }
     }
@@ -236,7 +242,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }).show();
 
     }
-    public void toolbar_search(){
+
+    public void toolbar_search() {
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
@@ -244,7 +251,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
-    public void toolbar_main(){
+
+    public void toolbar_main() {
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
@@ -252,7 +260,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
-    public void toolbar_history(){
+
+    public void toolbar_history() {
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);

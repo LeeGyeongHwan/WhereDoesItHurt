@@ -1,55 +1,78 @@
 package com.k1l3.wheredoesithurt.models;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 
 public class Prescription {
-    private int Begin;
-    private int End;
-    private int Caution;
-    private int SideEffect;
-    private ArrayList<Medicine> Medicines;
+    private String begin;
+    private int end;
+    private int caution;
+    private int sideEffect;
+    private ArrayList<Medicine> medicines;
+    private ArrayList<String> hashTag;
+    private boolean isVisible = false;
 
     public Prescription() {
-
     }
 
-    public int getBegin() {
-        return Begin;
+    public String getBegin() {
+        return begin;
     }
 
     public int getCaution() {
-        return Caution;
+        return caution;
     }
 
     public int getEnd() {
-        return End;
+        return end;
     }
 
     public int getSideEffect() {
-        return SideEffect;
+        return sideEffect;
     }
 
     public ArrayList<Medicine> getMedicines() {
-        return Medicines;
+        return medicines;
     }
 
-    public void setBegin(int begin) {
-        Begin = begin;
+    public ArrayList<String> getHashTag() {
+        return hashTag;
+    }
+
+    public boolean isVisible(){
+        return isVisible;
+    }
+
+    public void show(){
+        isVisible = true;
+    }
+
+    public void hide(){
+        isVisible = false;
+    }
+
+    public void setBegin(String begin) {
+        this.begin = begin;
     }
 
     public void setCaution(int caution) {
-        Caution = caution;
+        this.caution = caution;
     }
 
     public void setEnd(int end) {
-        End = end;
+        this.end = end;
     }
 
     public void setMedicines(ArrayList<Medicine> medicines) {
-        Medicines = medicines;
+        this.medicines = medicines;
     }
 
     public void setSideEffect(int sideEffect) {
-        SideEffect = sideEffect;
+        this.sideEffect = sideEffect;
+    }
+
+    public void setHashTag(@Nullable ArrayList<String> hashTag) {
+        this.hashTag = hashTag;
     }
 }

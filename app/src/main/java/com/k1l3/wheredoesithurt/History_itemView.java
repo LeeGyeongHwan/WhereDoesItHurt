@@ -17,12 +17,13 @@ import android.widget.TextView;
 import com.google.android.flexbox.FlexboxLayout;
 
 public class History_itemView extends LinearLayout {
-    TextView presc_date,presc_medicine;
+    TextView presc_date, presc_medicine;
     Button button;
-    ImageView history_medicine_image,history_medicine_image2;
+    ImageView history_medicine_image, history_medicine_image2;
     FlexboxLayout flexboxlayout;
-    LinearLayout linearLayout,first_layout;
+    LinearLayout linearLayout, first_layout;
     EditText history_memo;
+
     public History_itemView(Context context) {
         super(context);
         init(context);
@@ -32,44 +33,46 @@ public class History_itemView extends LinearLayout {
         super(context, attrs);
         init(context);
     }
-    public void init(Context context){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.history_item,this,true);
-        presc_date = (TextView)findViewById(R.id.presc_date);
-        presc_medicine = (TextView)findViewById(R.id.presc_medicine);
-        button = (Button)findViewById(R.id.history_button);
-        history_medicine_image = (ImageView)findViewById(R.id.history_medicine_image);
-        history_medicine_image2 = (ImageView)findViewById(R.id.history_medicine_image2);
-        flexboxlayout = (FlexboxLayout)findViewById(R.id.flexboxlayout);
-        linearLayout = (LinearLayout)findViewById(R.id.history_layout);
-        first_layout = (LinearLayout)findViewById(R.id.history_first_layout);
-        history_memo = (EditText)findViewById(R.id.history_memo);
+
+    public void init(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.history_item, this, true);
+        presc_date = findViewById(R.id.presc_date);
+        presc_medicine = findViewById(R.id.presc_medicine);
+        button = findViewById(R.id.history_button);
+        history_medicine_image = findViewById(R.id.history_medicine_image);
+        history_medicine_image2 = findViewById(R.id.history_medicine_image2);
+        flexboxlayout = findViewById(R.id.flexboxlayout);
+        linearLayout = findViewById(R.id.history_layout);
+        first_layout = findViewById(R.id.history_first_layout);
+        history_memo = findViewById(R.id.history_memo);
         setupUI(first_layout);
     }
+
     //다른화면 클릭시 키보드 제거
     public void setupUI(View view) {
         if (!(view instanceof EditText)) {
             view.setOnTouchListener(new OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    im.hideSoftInputFromWindow(history_memo.getWindowToken(),0);
+                    InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    im.hideSoftInputFromWindow(history_memo.getWindowToken(), 0);
                     return false;
                 }
             });
         }
         if (view instanceof ViewGroup) {
-            if (view instanceof ViewGroup) {
-                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                    View innerView = ((ViewGroup) view).getChildAt(i);
-                    setupUI(innerView);
-                }
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
             }
         }
     }
+
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
+
     public TextView getPresc_date() {
         return presc_date;
     }
