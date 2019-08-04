@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void logout() {
+    public void logout() {
         Toast.makeText(getApplicationContext(), "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
 
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
