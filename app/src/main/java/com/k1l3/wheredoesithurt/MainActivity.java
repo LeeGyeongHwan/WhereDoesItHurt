@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Fragment fragment_main,fragment_search;
     String image;
     String name;
+    String email;
     FragmentManager manager;
     FragmentTransaction transaction;
     @Override
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent =getIntent();
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
+        email = intent.getStringExtra("email");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -93,6 +96,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Addword_Activity.class);
                 startActivity(intent);
+            }
+        });
+
+        Button mypagebtn = (Button)findViewById(R.id.mypagebtn);
+        mypagebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment_mypage = new Fragment_mypage();
+                Bundle bundle = new Bundle();
+                bundle.putString("profile", image);
+                bundle.putString("name",name);
+                bundle.putString("email",email);
+                fragment_mypage.setArguments(bundle);
+                replaceFragment(fragment_mypage);
             }
         });
     }
@@ -152,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             manager.popBackStack();
         }
     }
-    private void logout(){
+    public void logout(){
         Toast.makeText(getApplicationContext(), "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
 
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
@@ -223,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -230,11 +248,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
     public void toolbar_history(){
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_mypage(){
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
