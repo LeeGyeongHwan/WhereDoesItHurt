@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("name", result.getNickname());
                     intent.putExtra("profile", result.getProfileImagePath());
+                    intent.putExtra("email",result.getKakaoAccount().getEmail());
                     startActivity(intent);
                     finish();
                 }

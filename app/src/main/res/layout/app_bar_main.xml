@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,9 +8,15 @@
 
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <android.support.v7.widget.Toolbar
@@ -30,21 +36,31 @@
             app:layout_constraintVertical_bias="0.0"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <TextView
-                android:id="@+id/toolbar_history"
-                android:text="HISTORY"
-                android:visibility="gone"
-                android:textColor="#ADA5FD"
-                android:layout_gravity="center"
+                android:id="@+id/toolbar_mypage"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="MYPAGE"
+                android:textColor="#776DE0"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/toolbar_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="HISTORY"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/toolbar_search"
-                android:text="의약품 검색"
-                android:visibility="gone"
-                android:textColor="#ffffff"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="의약품 검색"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="110dp"
@@ -57,7 +73,17 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbarlayout"
+        app:layout_constraintVertical_bias="0.504" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

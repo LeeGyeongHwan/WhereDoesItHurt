@@ -14,17 +14,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
     <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="0dp"
-        android:layout_height="520dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.586" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:id="@+id/linearlayout"
@@ -60,6 +60,7 @@
             />
 
         <Button
+            android:id="@+id/mypagebtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
