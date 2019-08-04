@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -32,13 +31,10 @@ import java.util.ArrayList;
 import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_history extends Fragment {
-    ArrayList<String> a = new ArrayList<>();
-    ArrayList<String> b = new ArrayList<>();
-    View viewGroup;
-    ListView listView;
-    Adapter adapter;
-    Button button;
-    Dialog dialog;
+    private View viewGroup;
+    private ListView listView;
+    private Adapter adapter;
+    private Dialog dialog;
     private Long id;
     private ArrayList<Prescription> prescription;
 
@@ -67,7 +63,6 @@ public class Fragment_history extends Fragment {
         viewGroup = inflater.inflate(R.layout.fragment_history, container, false);
         ((MainActivity) getActivity()).toolbar_history();
         listView = viewGroup.findViewById(R.id.history_list_view);
-        button = viewGroup.findViewById(R.id.history_button);
         adapter = new Adapter();
 
         databaseReference.child("prescriptions").addListenerForSingleValueEvent(prescriptionListener);
@@ -89,7 +84,7 @@ public class Fragment_history extends Fragment {
 
 
     class Adapter extends BaseAdapter {
-        ArrayList<Prescription> items = new ArrayList<Prescription>();
+        ArrayList<Prescription> items = new ArrayList<>();
 
         @Override
         public int getCount() {
@@ -106,23 +101,15 @@ public class Fragment_history extends Fragment {
             return position;
         }
 
-        public void addItem(Prescription item) {
+        private void addItem(Prescription item) {
             items.add(item);
-        }
-
-        public void addItem(ArrayList<Prescription> item) {
-            items = item;
-        }
-
-        public void deleteItem(Prescription item) {
-            items.remove(item);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final History_itemView view = new History_itemView(viewGroup.getContext());
             final Prescription item = items.get(position);
-            StringBuffer medicine = new StringBuffer(item.getMedicines().get(0).getName());
+            StringBuilder medicine = new StringBuilder(item.getMedicines().get(0).getName());
 
             //Hash태그에 들어가는것 추가 + Custom
             view.setPresc_date(item.getBegin());
@@ -144,7 +131,7 @@ public class Fragment_history extends Fragment {
             view.setPresc_medicine(medicine.toString());
 
             //History에서 버튼누르면 밑에께나오기
-            view.getButton().setOnClickListener(new View.OnClickListener() {
+            view.getFirst_layout().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (item.isVisible()) {

@@ -18,7 +18,6 @@ import com.google.android.flexbox.FlexboxLayout;
 
 public class History_itemView extends LinearLayout {
     TextView presc_date, presc_medicine;
-    Button button;
     ImageView history_medicine_image, history_medicine_image2;
     FlexboxLayout flexboxlayout;
     LinearLayout linearLayout, first_layout;
@@ -39,7 +38,6 @@ public class History_itemView extends LinearLayout {
         inflater.inflate(R.layout.history_item, this, true);
         presc_date = findViewById(R.id.presc_date);
         presc_medicine = findViewById(R.id.presc_medicine);
-        button = findViewById(R.id.history_button);
         history_medicine_image = findViewById(R.id.history_medicine_image);
         history_medicine_image2 = findViewById(R.id.history_medicine_image2);
         flexboxlayout = findViewById(R.id.flexboxlayout);
@@ -79,14 +77,6 @@ public class History_itemView extends LinearLayout {
 
     public void setPresc_date(String presc_date) {
         this.presc_date.setText(presc_date);
-    }
-
-    public Button getButton() {
-        return button;
-    }
-
-    public void setButton(Button button) {
-        this.button = button;
     }
 
     public ImageView getHistory_medicine_image() {
@@ -131,6 +121,10 @@ public class History_itemView extends LinearLayout {
 
     public void setPresc_medicine(String presc_medicine) {
         this.presc_medicine.setText(presc_medicine);
+    }
+
+    public LinearLayout getFirst_layout() {
+        return first_layout;
     }
 
     public EditText getHistory_memo() {
