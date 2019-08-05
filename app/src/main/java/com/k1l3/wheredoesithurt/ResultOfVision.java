@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ResultOfVision extends AppCompatActivity {
-    public Button cancelBtn;
+    public Button cancelBtn,nextPage;
+    public EditText title_pre;
     public EditText edit1_1,edit1_2,edit1_3,edit1_4;
     public EditText edit2_1,edit2_2,edit2_3,edit2_4;
     public EditText edit3_1,edit3_2,edit3_3,edit3_4;
@@ -21,6 +23,8 @@ public class ResultOfVision extends AppCompatActivity {
         setContentView(R.layout.vision_analysis);
 
         cancelBtn=(Button)findViewById(R.id.cancelvision);
+        nextPage=findViewById(R.id.nextpage);
+        title_pre=findViewById(R.id.title_prescription);
         edit1_1=(EditText)findViewById(R.id.analysis_edit1_1);
         edit1_2=(EditText)findViewById(R.id.analysis_edit1_2);
         edit1_3=(EditText)findViewById(R.id.analysis_edit1_3);
@@ -63,5 +67,11 @@ public class ResultOfVision extends AppCompatActivity {
                 finish();
             }
         });
+        nextPage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(ResultOfVision.this,"하하",Toast.LENGTH_LONG).show();
+            }
+        } );
     }
 }
