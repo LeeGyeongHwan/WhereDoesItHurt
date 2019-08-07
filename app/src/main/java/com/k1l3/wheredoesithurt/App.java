@@ -18,6 +18,7 @@ public class App extends Application {
         /**
          * Session Config에 대해서는 default값들이 존재한다.
          * 필요한 상황에서만 override해서 사용하면 됨.
+         *
          * @return Session의 설정값.
          */
         // 카카오 로그인 세션을 불러올 때의 설정값을 설정하는 부분.
@@ -26,7 +27,7 @@ public class App extends Application {
             return new ISessionConfig() {
                 @Override
                 public AuthType[] getAuthTypes() {
-                    return new AuthType[] {AuthType.KAKAO_LOGIN_ALL};
+                    return new AuthType[]{AuthType.KAKAO_LOGIN_ALL};
                     /*로그인을 하는 방식을 지정하는 부분. AuthType로는 다음 네 가지 방식이 있다.
                     KAKAO_TALK: 카카오톡으로 로그인, KAKAO_STORY: 카카오스토리로 로그인, KAKAO_ACCOUNT: 웹뷰를 통한 로그인,
                     KAKAO_TALK_EXCLUDE_NATIVE_LOGIN: 카카오톡으로만 로그인+계정 없으면 계정생성 버튼 제공
@@ -76,7 +77,7 @@ public class App extends Application {
     }
 
     public static App getGlobalApplicationContext() {
-        if(instance == null) {
+        if (instance == null) {
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
         }
         return instance;

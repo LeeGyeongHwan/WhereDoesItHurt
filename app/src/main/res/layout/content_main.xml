@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <TextView
+        android:id="@+id/changeColor"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="0dp"
-        android:layout_height="520dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.586" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +43,7 @@
             android:layout_gravity="left"
             android:layout_weight="2"
             android:gravity="center"
-            android:background="#00ff0000"
+            android:background="#ffffff"
             android:text="CALENDAR"
             android:textColor="#776DE0"
             android:textSize="20dp" />
@@ -47,19 +55,18 @@
             android:textColor="#000000"
             android:layout_weight="1"
             android:src="@drawable/camera"
-            android:layout_gravity="center"
-            />
+            android:layout_gravity="center" />
 
         <Button
+            android:id="@+id/mypagebtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_weight="2"
-            android:background="#00ff0000"
+            android:background="#ffffff"
             android:gravity="center"
             android:text="MYPAGE"
             android:textColor="#776DE0"
-            android:textSize="20dp"
-            />
+            android:textSize="20dp" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

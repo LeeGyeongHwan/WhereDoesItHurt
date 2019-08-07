@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00ff0000">
+
+    <RelativeLayout
+        android:layout_width="390dp"
+        android:layout_height="65dp"
+        android:orientation="horizontal"
+        android:elevation="5dp"
+        android:background="@drawable/search_list"
+        android:layout_marginBottom="15dp"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/search_medicine_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/search_img" />
+
+        <TextView
+            android:id="@+id/medicin_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="10dp"
+            android:textColor="#494949"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/search_medicine_image"
+            android:gravity="center_vertical"
+            android:text="약 이름"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

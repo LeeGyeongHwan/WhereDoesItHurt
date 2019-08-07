@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -18,6 +19,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +61,8 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
+import static android.support.constraint.Constraints.TAG;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -67,9 +73,14 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
-    Fragment fragment_main,fragment_search;
+    Fragment fragment_main, fragment_search;
     String image;
     String name;
+    Long id;
+    String email;
+    FragmentManager manager;
+    FragmentTransaction transaction;
+
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
     public static final String FILE_NAME = "temp.jpg";
@@ -89,15 +100,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar=(Toolbar)findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
         fragment_search = new Fragment_search();
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
 
+        Intent intent = getIntent();
 
-
-        Intent intent =getIntent();
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
+        email = intent.getStringExtra("email");
+        id = intent.getLongExtra("id",0);
 
 
 
@@ -115,8 +129,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        replaceFragment(fragment_main);
-
+        //replaceFragment(fragment_main);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment_main)
+                .commit();
         View headerView = navigationView.getHeaderView(0);
 
         //프로필 사진과 이름을 출력
@@ -126,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Glide.with(this).load(image).into(profileImage);
         profileName.setText(name);
 
-        //todo 프로필 사진 라운딩 및 크기맞추기
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
@@ -154,21 +170,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{
-                Toast.makeText(this,"검색",Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                Toast.makeText(this, "검색", Toast.LENGTH_LONG).show();
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void replaceFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .commit();
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", id);
+        bundle.putString("profile", image);
+        bundle.putString("name",name);
+        bundle.putString("email",email);
+        fragment.setArguments(bundle);
+        transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack("fragment");
+        transaction.commit();
+        Log.e(TAG, "값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
     }
 
     @Override
@@ -179,8 +202,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logout();
         } else if (id == R.id.nav_gallery) {
             withdrawal();
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_history) {
+            replaceFragment(new Fragment_history());
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {
@@ -200,13 +223,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment current_fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment==fragment_main){
+        } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment == fragment_main) {
             super.onBackPressed();
-        } else if(!drawer.isDrawerOpen(GravityCompat.START)&&current_fragment!=fragment_main){
-            replaceFragment(fragment_main);
+        } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment != fragment_main) {
+            manager.popBackStack();
         }
     }
-    private void logout(){
+
+    public void logout() {
         Toast.makeText(getApplicationContext(), "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
 
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
@@ -219,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void withdrawal(){
+    private void withdrawal() {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage("탈퇴하시겠습니까?")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -230,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onFailure(ErrorResult errorResult) {
                                 int result = errorResult.getErrorCode();
 
-                                if(result == ApiErrorCode.CLIENT_ERROR_CODE) {
+                                if (result == ApiErrorCode.CLIENT_ERROR_CODE) {
                                     Toast.makeText(getApplicationContext(), "네트워크 연결이 불안정합니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "회원탈퇴에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
@@ -644,4 +668,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return returnstr;
     }
 
+
+    public void toolbar_search() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void toolbar_main() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void toolbar_history() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_mypage(){
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void setup_nav(int menuImage){
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+        actionBar.setHomeAsUpIndicator(menuImage);
+    }
 }
