@@ -111,9 +111,9 @@ public class LoginActivity extends AppCompatActivity {
         times.setLunch(" ");
         times.setDinner(" ");
 
-        userInfo.setAge(kakaoAcount.getAgeRange().getValue());
+        userInfo.setAge(" ");
         userInfo.setName(result.getNickname());
-        userInfo.setGender(kakaoAcount.getGender().getValue());
+        userInfo.setGender(" ");
         userInfo.setTimes(times);
         userInfo.setDisease("");
         userInfo.setLifeStyles("");
