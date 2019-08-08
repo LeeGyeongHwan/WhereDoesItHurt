@@ -3,6 +3,8 @@
     package="com.k1l3.wheredoesithurt">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -23,7 +25,20 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ResultOfVision"
+            android:label=".ResultOfVision">
+
+        </activity>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider"/>
+        </provider>
         <activity android:name=".Addword_Activity"></activity>
     </application>
 
