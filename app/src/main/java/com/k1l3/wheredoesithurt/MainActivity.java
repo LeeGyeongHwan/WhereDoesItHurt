@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,10 +30,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -146,28 +150,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        ImageView cambtn= findViewById(R.id.cameraBtn);
-        cambtn.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        ImageView plusbtn= findViewById(R.id.plusBtn);
+        plusbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder
-                        .setMessage("처방전을 추가하세요")
-                        .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainActivity.this.startGalleryChooser();
-                            }
-                        })
-                        .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainActivity.this.startCamera();
-                            }
-                        });
-                builder.create().show();
+            public void onClick(View v) {
+
+                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.cam_direct_layout, null);
+
+                LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
+                addContentView(ll, paramll);
+
+                Button cambtn = findViewById(R.id.camBtn);
+                Button directbtn = findViewById(R.id.directbtn);
+                ImageView cancel = findViewById(R.id.returnBtn);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinearLayout ll = (LinearLayout)findViewById(R.id.cam_dir_lin);
+                        ((ViewManager) ll.getParent()).removeView(ll);
+                    }
+                });
+
+                directbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //
+                    }
+                });
+
+                cambtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                        builder
+                                .setMessage("처방전을 추가하세요")
+                                .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.this.startGalleryChooser();
+                                    }
+                                })
+                                .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.this.startCamera();
+                                    }
+                                });
+                        builder.create().show();
+                    }
+                });
             }
         });
+
+
     }
 
     @Override
