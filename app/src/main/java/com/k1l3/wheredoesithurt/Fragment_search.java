@@ -78,50 +78,6 @@ public class Fragment_search extends Fragment {
         });
         if(getArguments()!=null){
             search_word = getArguments().getString("search_word");
-           new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    // TODO Auto-generated method stub
-                    data= getXmlData(search_word);
-                    for(int i=0;i<data.size();i++){
-                        imgBitmap = GetImageFromURL(data.get(i).getItem_name());
-                        if(imgBitmap!=null) {
-                            data.get(i).setItem_image(imgBitmap);
-                        }
-                        else{
-                            data.get(i).setItem_image(no_medicine_image);
-                        }
-                    }
-                    if(getActivity()!=null){
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                for(int i=0;i<data.size();i++){
-                                    adapter.addItem(data);
-                                    listView.setAdapter(adapter);
-                                }
-                            }
-                        });
-
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if(data.get(position).getItem_image()==no_medicine_image){
-                                    data.get(position).setItem_image(null);
-                                }
-                                Fragment fragment_detail_search = new Fragment_detail_search();
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("data", data.get(position));
-                                fragment_detail_search.setArguments(bundle);
-                                replaceFragment(fragment_detail_search);
-                            }
-                        });
-                    }
-
-                }
-            }).start();
            setListView(search_word);
         }
         return viewGroup;

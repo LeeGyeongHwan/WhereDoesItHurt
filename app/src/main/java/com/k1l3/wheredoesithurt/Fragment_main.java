@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class Fragment_main extends Fragment {
         ((MainActivity)getActivity()).toolbar_main();
         medicine_search=(EditText)viewGroup.findViewById(R.id.medicin_search);
         medicine_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        medicine_search.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
