@@ -40,310 +40,55 @@
         android:layout_margin="10dp"
         >
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:stretchColumns="*"
+
             >
-
-            <TableRow>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="처방 의약품 명칭"
-                        />
-                    <EditText
-                        android:layout_margin="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/analysis_edit1_1"
-                        android:hint="약"
-
-                        />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1회 투약량"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit1_2"
-                                android:hint="투약량"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1일 투여횟수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit1_3"
-                                android:hint="투여횟수"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="투약 일수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit1_4"
-                                android:hint="투약일수"
-                                />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </TableRow>
-            <TableRow>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="처방 의약품 명칭"
-                        />
-                    <EditText
-                        android:layout_margin="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/analysis_edit2_1"
-                        android:hint="약"
-
-                        />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1회 투약량"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit2_2"
-                                android:hint="투약량"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1일 투여횟수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit2_3"
-                                android:hint="투여횟수"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="투약 일수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit2_4"
-                                android:hint="투약일수"
-                                />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </TableRow>
-            <TableRow>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="처방 의약품 명칭"
-                        />
-                    <EditText
-                        android:layout_margin="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/analysis_edit3_1"
-                        android:hint="약"
-
-                        />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1회 투약량"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit3_2"
-                                android:hint="투약량"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="1일 투여횟수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit3_3"
-                                android:hint="투여횟수"
-                                />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            >
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="투약 일수"
-                                />
-                            <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:id="@+id/analysis_edit3_4"
-                                android:hint="투약일수"
-                                />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/startinflatelinear"
+                android:orientation="vertical"
+                android:stretchColumns="*"
                 >
-                <TextView
-                    android:text="*수정이 필요할 수 있습니다."
-                    android:textColor="#FF0000"
-                    android:textSize="10dp"
-                    android:layout_width="wrap_content"
-                    />
-            </TableRow>
+
+            </LinearLayout>
 
 
-        </TableLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                    <TextView
+                        android:text="*수정이 필요할 수 있습니다."
+                        android:id="@+id/visiontext"
+                        android:visibility="invisible"
+                        android:textColor="#FF0000"
+                        android:textSize="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addMedBtn"
+                        android:text="약 추가" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </ScrollView>
 

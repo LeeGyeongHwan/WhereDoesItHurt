@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager manager;
     FragmentTransaction transaction;
 
+    static int medicine_count;
+
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
     public static final String FILE_NAME = "temp.jpg";
@@ -180,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 directbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //
+                        Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
+                        startActivity(intent);
                     }
                 });
 
@@ -533,10 +536,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (activity != null && !activity.isFinishing()) {
                 Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
                 intent.putExtra("result",result);
+                intent.putExtra("numbermedicine",medicine_count);
                 startActivity(intent);
 
-                //TextView imageDetail = activity.findViewById(R.id.image_details);
-                //imageDetail.setText(result);
             }
         }
     }
@@ -580,21 +582,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
         Log.d("gallery", "convertResponseToString: "+pages.size());
-        /*
-        for(Page page: pages){
-            List<Block> blocks = page.getBlocks();
-            for(Block block : blocks){
-                List<Paragraph> paragraphs = block.getParagraphs();
-                for(Paragraph paragraph: paragraphs){
-                    List<Word> words = paragraph.getWords();
-                    for(Word word: words){
-                        word.getBoundingBox();
-                        word.getSymbols()
-                    }
-                }
-            }
-
-        }*/
 
         List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
         Log.d("gallery", "get0" + response.getResponses().get(0).toString());
@@ -703,8 +690,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for(int j=0;j<arrcount;j++){
                 returnstr= returnstr.concat(info_med[i][j]+" ");
             }
-
         }
+        medicine_count=arrcount;
         Log.d("gallery", "convertResponseToString: "+returnstr);
         return returnstr;
     }
