@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ResultOfVision extends AppCompatActivity {
     public Button cancelBtn,nextPage,addMedBtn;
     public EditText title_pre;
-
+    int index=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -39,7 +39,7 @@ public class ResultOfVision extends AppCompatActivity {
         String getStr= intent.getStringExtra("result");
         int getCount=intent.getIntExtra("numbermedicine",1);
         Log.d("check", "onCreate: "+getStr);
-        int index=0;
+
 
         for(int i=0; i<getCount; i++){
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.startinflatelinear);
@@ -92,13 +92,24 @@ public class ResultOfVision extends AppCompatActivity {
                 finish();
             }
         });
+
         nextPage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(ResultOfVision.this,"하하",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent (ResultOfVision.this,SetAlarmPage.class);
+                intent.putExtra("index",index);
+                intent.putExtra("title",title_pre.getText().toString());
+                Log.d("check", "onClick: index"+index);
+                for(int i=0;i<index;i++){
+                    intent.putExtra("edit1".concat(Integer.toString(i)),EditList1.get(i).getText().toString());
+                    intent.putExtra("edit2".concat(Integer.toString(i)),EditList2.get(i).getText().toString());
+                    intent.putExtra("edit3".concat(Integer.toString(i)),EditList3.get(i).getText().toString());
+                    intent.putExtra("edit4".concat(Integer.toString(i)),EditList4.get(i).getText().toString());
+                }
+                startActivity(intent);
             }
         } );
-        final int finalIndex = index;
+
         addMedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,11 +123,11 @@ public class ResultOfVision extends AppCompatActivity {
                 EditText edit2=findViewById(R.id.analysis_edit1_2);
                 EditText edit3=findViewById(R.id.analysis_edit1_3);
                 EditText edit4=findViewById(R.id.analysis_edit1_4);
-                edit1.setId(100+ finalIndex);
-                edit2.setId(200+ finalIndex);
-                edit3.setId(300+ finalIndex);
-                edit4.setId(400+ finalIndex);
-
+                edit1.setId(100+ index);
+                edit2.setId(200+ index);
+                edit3.setId(300+ index);
+                edit4.setId(400+ index);
+                index++;
                 EditList1.add(edit1);
                 EditList2.add(edit2);
                 EditList3.add(edit3);
