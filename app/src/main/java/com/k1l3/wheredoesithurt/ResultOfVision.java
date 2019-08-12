@@ -99,6 +99,8 @@ public class ResultOfVision extends AppCompatActivity {
                 Intent intent = new Intent (ResultOfVision.this,SetAlarmPage.class);
                 intent.putExtra("index",index);
                 intent.putExtra("title",title_pre.getText().toString());
+                intent.putExtra("alarmcount",EditList3.get(0).getText().toString());
+                intent.putExtra("alarmday",EditList4.get(0).getText().toString());
                 Log.d("check", "onClick: index"+index);
                 for(int i=0;i<index;i++){
                     intent.putExtra("edit1".concat(Integer.toString(i)),EditList1.get(i).getText().toString());
