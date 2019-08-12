@@ -28,12 +28,16 @@ import java.util.ArrayList;
 public class LoginActivity extends AppCompatActivity {
 
     private SessionCallback sessionCallback;
+    private boolean isLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (Session.getCurrentSession().isOpened()) {
+            isLogin = true;
+        }
 
         sessionCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
@@ -76,13 +80,15 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(MeV2Response result) {
-                    registerUserInfoToFireBase(result);
+                    if (!isLogin) {
+                        registerUserInfoToFireBase(result);
+                    }
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("name", result.getNickname());
                     intent.putExtra("profile", result.getProfileImagePath());
                     intent.putExtra("id", result.getId());
-                    intent.putExtra("email",result.getKakaoAccount().getEmail());
+                    intent.putExtra("email", result.getKakaoAccount().getEmail());
                     startActivity(intent);
                     finish();
                 }
@@ -111,9 +117,16 @@ public class LoginActivity extends AppCompatActivity {
         times.setLunch(" ");
         times.setDinner(" ");
 
-        userInfo.setAge(" ");
+        if (kakaoAcount.getAgeRange() == null)
+            userInfo.setAge(" ");
+        else
+            userInfo.setAge(kakaoAcount.getAgeRange().toString());
         userInfo.setName(result.getNickname());
-        userInfo.setGender(" ");
+
+        if (kakaoAcount.getGender() == null)
+            userInfo.setGender(" ");
+        else
+            userInfo.setGender(kakaoAcount.getGender().toString());
         userInfo.setTimes(times);
         userInfo.setDisease("");
         userInfo.setLifeStyles("");
