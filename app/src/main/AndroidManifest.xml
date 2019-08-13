@@ -27,6 +27,7 @@
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".ResultOfVision"
+            android:noHistory="true"
             android:label=".ResultOfVision">
 
         </activity>
