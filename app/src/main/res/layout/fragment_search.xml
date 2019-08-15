@@ -36,10 +36,16 @@
             android:textSize="15dp"
             android:hint="궁금한 의약품을 검색해 보세요"
             app:layout_constraintVertical_bias="0.057" />
-
+        <ImageView
+            android:background="#ffffff"
+            android:id="@+id/loading"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
         <ScrollView
             android:id="@+id/scrollView3"
             android:layout_centerHorizontal="true"
+            android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
@@ -47,7 +53,6 @@
             android:scrollbars="vertical"
             android:fillViewport="true"
             app:layout_constraintVertical_bias="1.0">
-
             <ListView
                 android:id="@+id/search_list_view"
                 android:layout_width="match_parent"
