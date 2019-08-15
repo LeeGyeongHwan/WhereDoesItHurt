@@ -18,17 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
 
 import java.util.ArrayList;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_history extends Fragment {
     private View viewGroup;
@@ -46,39 +39,23 @@ public class Fragment_history extends Fragment {
             id = getArguments().getLong("id");
         }
 
-        prescription = new ArrayList<>();
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/" + id);
-        ValueEventListener prescriptionListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                getPrescriptions(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled: ", databaseError.toException());
-            }
-        };
-
         viewGroup = inflater.inflate(R.layout.fragment_history, container, false);
         ((MainActivity) getActivity()).toolbar_history();
         listView = viewGroup.findViewById(R.id.history_list_view);
         adapter = new Adapter();
 
-        databaseReference.child("prescriptions").addListenerForSingleValueEvent(prescriptionListener);
+        getPrescriptions();
 
         return viewGroup;
     }
 
-    private void getPrescriptions(DataSnapshot dataSnapshot) {
-        if (dataSnapshot.hasChildren()) {
-            for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
-                prescription.add(dataSnapshotChild.getValue(Prescription.class));
-            }
-            for (Prescription pres : prescription) {
-                adapter.addItem(pres);
-            }
+    private void getPrescriptions() {
+        User user = User.getInstance();
+
+        for(Prescription prescription : user.getPrescriptions()){
+            adapter.addItem(prescription);
         }
+
         listView.setAdapter(adapter);
     }
 

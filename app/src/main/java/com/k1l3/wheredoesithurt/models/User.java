@@ -1,13 +1,20 @@
 package com.k1l3.wheredoesithurt.models;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private static final User instance = new User();
     private ArrayList<Prescription> Prescriptions;
     private UserInfo userInfo;
 
-    public User() {
+    private User() {
+    }
+
+    public static User getInstance() {
+        return instance;
     }
 
     public List<Prescription> getPrescriptions() {
@@ -25,4 +32,5 @@ public class User {
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
+
 }

@@ -80,9 +80,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(MeV2Response result) {
-                    if (!isLogin) {
-                        registerUserInfoToFireBase(result);
-                    }
+//                    if (!isLogin) {
+//                        registerUserInfoToFireBase(result);
+//                    }
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("name", result.getNickname());
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "로그인 도중 오류가 발생했습니다. 인터넷 연결을 확인해주세요: " + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
-
+/*
     private void registerUserInfoToFireBase(MeV2Response result) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference("users");
@@ -111,22 +111,22 @@ public class LoginActivity extends AppCompatActivity {
         final Medicine medicine = new Medicine();
         final UserInfo userInfo = new UserInfo();
 
-        final UserAccount kakaoAcount = result.getKakaoAccount();
+        final UserAccount kakaoAccount = result.getKakaoAccount();
 
         times.setBreakFast(" ");
         times.setLunch(" ");
         times.setDinner(" ");
 
-        if (kakaoAcount.getAgeRange() == null)
+        if (kakaoAccount.getAgeRange() == null)
             userInfo.setAge(" ");
         else
-            userInfo.setAge(kakaoAcount.getAgeRange().toString());
+            userInfo.setAge(kakaoAccount.getAgeRange().toString());
         userInfo.setName(result.getNickname());
 
-        if (kakaoAcount.getGender() == null)
+        if (kakaoAccount.getGender() == null)
             userInfo.setGender(" ");
         else
-            userInfo.setGender(kakaoAcount.getGender().toString());
+            userInfo.setGender(kakaoAccount.getGender().toString());
         userInfo.setTimes(times);
         userInfo.setDisease("");
         userInfo.setLifeStyles("");
@@ -156,5 +156,5 @@ public class LoginActivity extends AppCompatActivity {
         user.setUserInfo(userInfo);
 
         myRef.child(Long.toString(result.getId())).setValue(user);
-    }
+    }*/
 }

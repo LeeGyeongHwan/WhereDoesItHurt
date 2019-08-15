@@ -7,7 +7,9 @@ import java.util.ArrayList;
 public class Prescription {
     private String begin;
     private int end;
+    @Nullable
     private int caution;
+    @Nullable
     private int sideEffect;
     private ArrayList<Medicine> medicines;
     private ArrayList<String> hashTag;

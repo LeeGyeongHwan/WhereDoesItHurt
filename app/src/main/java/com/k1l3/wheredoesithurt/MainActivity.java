@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +29,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,20 +45,23 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.Block;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
-import com.google.api.services.vision.v1.model.Paragraph;
-import com.google.api.services.vision.v1.model.Word;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
+import com.k1l3.wheredoesithurt.models.UserInfo;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
-
-import static android.support.constraint.Constraints.TAG;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,9 +69,23 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String FILE_NAME = "temp.jpg";
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
+    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
+    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
+    private static final int MAX_LABEL_RESULTS = 10;
+    private static final int MAX_DIMENSION = 1200;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    private static final int GALLERY_IMAGE_REQUEST = 1;
+
+    private static final User user = User.getInstance();
+    private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
     String image;
@@ -81,26 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager manager;
     FragmentTransaction transaction;
 
-
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
-    public static final String FILE_NAME = "temp.jpg";
-    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
-    private static final int MAX_DIMENSION = 1200;
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
-    private static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
         fragment_search = new Fragment_search();
         manager = getSupportFragmentManager();
@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
         email = intent.getStringExtra("email");
-        id = intent.getLongExtra("id",0);
+        id = intent.getLongExtra("id", 0);
 
-
+        existDatabase();
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        ImageView cambtn= findViewById(R.id.cameraBtn);
+        ImageView cambtn = findViewById(R.id.cameraBtn);
         cambtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.create().show();
             }
         });
+
+
     }
 
     @Override
@@ -184,14 +186,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle bundle = new Bundle();
         bundle.putLong("id", id);
         bundle.putString("profile", image);
-        bundle.putString("name",name);
-        bundle.putString("email",email);
+        bundle.putString("name", name);
+        bundle.putString("email", email);
         fragment.setArguments(bundle);
+
         transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
-        Log.e(TAG, "값 : " + String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+
+        Log.e(TAG, "값 : " + getSupportFragmentManager().getBackStackEntryCount());
     }
 
     @Override
@@ -228,6 +232,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment != fragment_main) {
             manager.popBackStack();
         }
+    }
+
+    private void loadDatabase(DataSnapshot dataSnapshot) {
+        final ArrayList<Prescription> prescriptions = new ArrayList<>();
+
+        user.setUserInfo(dataSnapshot.getValue(UserInfo.class));
+
+        for (DataSnapshot dataSnapshotChild : dataSnapshot.child("prescriptions").getChildren()) {
+            prescriptions.add(dataSnapshotChild.getValue(Prescription.class));
+            Log.i(TAG, "loadPrescription");
+        }
+
+        user.setPrescriptions(prescriptions);
+
+        Log.i(TAG, "loadDatabase: " + id);
+    }
+
+    private void existDatabase() {
+        final DatabaseReference userDatabaseReference = firebaseDatabase.getReference("users");
+
+        ValueEventListener databaseListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChild(id.toString())) {
+                    createDatabase();
+                } else {
+                    loadDatabase(dataSnapshot.child(id.toString()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled: ", databaseError.toException());
+            }
+        };
+
+        userDatabaseReference.addListenerForSingleValueEvent(databaseListener);
+    }
+
+    private void createDatabase() {
+        final DatabaseReference databaseReference = firebaseDatabase.getReference("users");
+        final UserInfo userInfo = new UserInfo();
+
+        userInfo.setName(name);
+
+        user.setUserInfo(userInfo);
+        user.setPrescriptions(new ArrayList<Prescription>());
+
+        databaseReference.child(id.toString()).setValue(user);
+
+        Log.i(TAG, "createDatabase: " + id);
     }
 
     public void logout() {
@@ -301,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Cloud vision function
     public void startGalleryChooser() {
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Log.d("success","Gallery");
+            Log.d("success", "Gallery");
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -448,17 +503,222 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return annotateRequest;
     }
 
+    private void callCloudVision(final Bitmap bitmap) {
+        // Switch text to loading
+
+        // Do the real work in an async task, because we need to use the network anyway
+        try {
+            AsyncTask<Object, Void, String> labelDetectionTask = new LabelDetectionTask(this, prepareAnnotationRequest(bitmap));
+            labelDetectionTask.execute();
+        } catch (IOException e) {
+            Log.d(TAG, "failed to make API request because of other IOException " +
+                    e.getMessage());
+        }
+    }
+
+    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+        StringBuilder message = new StringBuilder("I found these things:\n\n");
+        Log.d("gallery", "getresponse " + response.getResponses().toString());
+
+        List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
+        Log.d("gallery", "convertResponseToString: " + pages.size());
+
+        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
+        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
+        Log.d("gallery", "label" + labels);
+        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
+        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+
+        int[][] vertixArray = new int[3][2];
+        int[] Y_eachmedicine = new int[5];
+        String[] medicine = new String[5];
+        int[][] info_med = new int[5][3];
+        int arrcount = 0;
+
+        if (labels != null) {
+            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
+
+
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if (labelstr.equals("량") || labelstr.equals("투약량")) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[0][0] = firstX;
+                    vertixArray[0][1] = secondX;
+                } else if (labelstr.equals("투여횟수") || labelstr.equals("투여")) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[1][0] = firstX;
+                    vertixArray[1][1] = secondX;
+                } else if (labelstr.equals("투약일수") || labelstr.equals("일수")) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[2][0] = firstX;
+                    vertixArray[2][1] = secondX;
+                }
+            }
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 2; j++) {
+                    Log.d("gallery", "convertResponseToString: vertix[" + i + "][" + j + "] : " + vertixArray[i][j]);
+                }
+            }
+
+            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
+
+            int findcount = 3;
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if (findcount == 2) {
+                    medicine[arrcount] = labelstr;
+                    Y_eachmedicine[arrcount] = label.getBoundingPoly().getVertices().get(0).getY();
+                    arrcount++;
+                }
+                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
+
+                if (labelstr.length() == 9) {
+                    try {
+                        findcount = 0;
+                        Integer.parseInt(labelstr);
+                        Log.d("gallery", "convertResponseToString: " + labelstr);
+                    } catch (NumberFormatException e) {
+                        Log.d("exception", "convertResponseToString: " + e);
+                        findcount = 3;
+                    }
+                }
+                Log.d("galler", "convertResponseToString: " + label.getDescription());
+                Log.d("galler", "convertResponseToString: " + label.getBoundingPoly().getVertices());
+                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
+                //투약,투여,횟수시기,일수, x,y좌표 가져오기
+                findcount++;
+            }
+            for (int i = 0; i < 5; i++) {
+                Log.d("gallery", "convertResponseToString: " + Y_eachmedicine[i]);
+                Log.d("gallery", "convertResponseToString: " + medicine[i]);
+            }
+
+            for (EntityAnnotation label : labels) {
+                int labelX = label.getBoundingPoly().getVertices().get(0).getX();
+                int labelX2 = label.getBoundingPoly().getVertices().get(1).getX();
+                int labelY = label.getBoundingPoly().getVertices().get(0).getY();
+                for (int i = 0; i < arrcount; i++) {
+                    if ((Y_eachmedicine[i] - 10 < labelY) && (Y_eachmedicine[i] + 10 > labelY)) {
+                        Log.d(TAG, "convertResponseToString: labely" + labelY);
+                        for (int j = 0; j < arrcount; j++) {
+                            if ((vertixArray[j][0] - 40 < labelX) && (vertixArray[j][1] + 40 > labelX2)) {
+                                Log.d("gallery", "convertResponseToString: labelx" + labelX);
+                                try {
+                                    info_med[i][j] = Integer.parseInt(label.getDescription());
+                                    Log.d("gallery", "convertResponseToString: [" + i + "][" + j + "]: " + info_med[i][j]);
+                                } catch (NumberFormatException e) {
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        } else {
+            message.append("nothing");
+        }
+
+        String returnstr = "";
+        for (int i = 0; i < arrcount; i++) {
+            returnstr = returnstr.concat(medicine[i] + " ");
+            for (int j = 0; j < arrcount; j++) {
+                returnstr = returnstr.concat(info_med[i][j] + " ");
+            }
+
+        }
+        Log.d("gallery", "convertResponseToString: " + returnstr);
+        return returnstr;
+    }
+
+    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
+
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
+        }
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    public void toolbar_search() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(173, 165, 253));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void toolbar_main() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void toolbar_history() {
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void toolbar_mypage() {
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
+        setup_nav(R.drawable.ic_menu);
+    }
+
+    public void setup_nav(int menuImage) {
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+        actionBar.setHomeAsUpIndicator(menuImage);
+    }
+
     private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
         private final WeakReference<MainActivity> mActivityWeakReference;
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
         private Vision.Images.Annotate mRequest;
 
         LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
         }
-
-        ProgressDialog asyncDialog = new ProgressDialog(
-                MainActivity.this);
 
         @Override
         protected void onPreExecute() {
@@ -490,233 +750,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             MainActivity activity = mActivityWeakReference.get();
             asyncDialog.dismiss();
             if (activity != null && !activity.isFinishing()) {
-                Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
-                intent.putExtra("result",result);
+                Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
+                intent.putExtra("result", result);
                 startActivity(intent);
 
                 //TextView imageDetail = activity.findViewById(R.id.image_details);
                 //imageDetail.setText(result);
             }
         }
-    }
-
-    private void callCloudVision(final Bitmap bitmap) {
-        // Switch text to loading
-
-        // Do the real work in an async task, because we need to use the network anyway
-        try {
-            AsyncTask<Object, Void, String> labelDetectionTask = new LabelDetectionTask(this, prepareAnnotationRequest(bitmap));
-            labelDetectionTask.execute();
-        } catch (IOException e) {
-            Log.d(TAG, "failed to make API request because of other IOException " +
-                    e.getMessage());
-        }
-    }
-
-    private Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int resizedWidth = maxDimension;
-        int resizedHeight = maxDimension;
-
-        if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
-        } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
-            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
-        }
-        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
-    }
-
-    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("I found these things:\n\n");
-        Log.d("gallery", "getresponse " + response.getResponses().toString());
-
-        List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
-        Log.d("gallery", "convertResponseToString: "+pages.size());
-        /*
-        for(Page page: pages){
-            List<Block> blocks = page.getBlocks();
-            for(Block block : blocks){
-                List<Paragraph> paragraphs = block.getParagraphs();
-                for(Paragraph paragraph: paragraphs){
-                    List<Word> words = paragraph.getWords();
-                    for(Word word: words){
-                        word.getBoundingBox();
-                        word.getSymbols()
-                    }
-                }
-            }
-
-        }*/
-
-        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
-        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
-        Log.d("gallery", "label" + labels);
-        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
-        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
-
-        int vertixArray[][]=new int[3][2];
-        int Y_eachmedicine[] = new int[5];
-        String medicine[] = new String[5];
-        int info_med[][] = new int[5][3];
-        int arrcount=0;
-
-        if (labels != null) {
-            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
-
-
-            for (EntityAnnotation label : labels) {
-                String labelstr=label.getDescription();
-                if(labelstr.equals("량") || labelstr.equals("투약량")){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[0][0]=firstX;
-                    vertixArray[0][1]=secondX;
-                }else if(labelstr.equals("투여횟수")||labelstr.equals("투여")){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[1][0]=firstX;
-                    vertixArray[1][1]=secondX;
-                }else if(labelstr.equals("투약일수")||labelstr.equals("일수")){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[2][0]=firstX;
-                    vertixArray[2][1]=secondX;
-                }
-            }
-            for( int i=0;i<3;i++){
-                for(int j=0;j<2;j++){
-                    Log.d("gallery", "convertResponseToString: vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
-                }
-            }
-
-            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
-
-            int findcount=3;
-            for (EntityAnnotation label : labels) {
-                String labelstr = label.getDescription();
-                if(findcount==2){
-                    medicine[arrcount]=labelstr;
-                    Y_eachmedicine[arrcount]=label.getBoundingPoly().getVertices().get(0).getY();
-                    arrcount++;
-                }
-                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
-
-                if(labelstr.length()==9){
-                    try{
-                        findcount=0;
-                        Integer.parseInt(labelstr);
-                        Log.d("gallery", "convertResponseToString: "+labelstr);
-                    }catch (NumberFormatException e){
-                        Log.d("exception", "convertResponseToString: "+e);
-                        findcount=3;
-                    }
-                }
-                Log.d("galler", "convertResponseToString: "+label.getDescription());
-                Log.d("galler", "convertResponseToString: "+label.getBoundingPoly().getVertices());
-                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
-                //투약,투여,횟수시기,일수, x,y좌표 가져오기
-                findcount++;
-            }
-            for(int i=0;i<5;i++){
-                Log.d("gallery", "convertResponseToString: "+ Y_eachmedicine[i]);
-                Log.d("gallery", "convertResponseToString: "+ medicine[i]);
-            }
-
-            for (EntityAnnotation label : labels) {
-                int labelX=label.getBoundingPoly().getVertices().get(0).getX();
-                int labelX2=label.getBoundingPoly().getVertices().get(1).getX();
-                int labelY=label.getBoundingPoly().getVertices().get(0).getY();
-                for(int i=0;i<arrcount;i++){
-                    if((Y_eachmedicine[i]-10<labelY) && (Y_eachmedicine[i]+10>labelY)){
-                        Log.d(TAG, "convertResponseToString: labely"+labelY);
-                        for(int j=0;j<arrcount;j++){
-                            if((vertixArray[j][0]-40<labelX) && (vertixArray[j][1]+40>labelX2)) {
-                                Log.d("gallery", "convertResponseToString: labelx"+labelX);
-                                try {
-                                    info_med[i][j] = Integer.parseInt(label.getDescription());
-                                    Log.d("gallery", "convertResponseToString: ["+i+"]["+j+"]: "+info_med[i][j]);
-                                } catch (NumberFormatException e) {
-
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        } else {
-            message.append("nothing");
-        }
-
-        String returnstr="";
-        for(int i=0;i<arrcount;i++){
-            returnstr=returnstr.concat(medicine[i]+" ");
-            for(int j=0;j<arrcount;j++){
-                returnstr= returnstr.concat(info_med[i][j]+" ");
-            }
-
-        }
-        Log.d("gallery", "convertResponseToString: "+returnstr);
-        return returnstr;
-    }
-
-
-    public void toolbar_search() {
-        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
-        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(173,165,253));
-        setup_nav(R.drawable.ic_menu);
-    }
-
-    public void toolbar_main() {
-        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
-        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
-        setup_nav(R.drawable.ic_menu);
-    }
-
-    public void toolbar_history() {
-        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
-        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
-        setup_nav(R.drawable.ic_menu);
-    }
-    public void toolbar_mypage(){
-        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.VISIBLE);
-        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
-        setup_nav(R.drawable.ic_menu);
-    }
-    public void setup_nav(int menuImage){
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
-        actionBar.setHomeAsUpIndicator(menuImage);
     }
 }
