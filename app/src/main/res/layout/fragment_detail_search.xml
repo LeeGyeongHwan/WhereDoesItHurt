@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
-        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
+        android:background="#ffffff"
         android:scrollbarThumbVertical="@drawable/scroll_color"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/detail_search_linear"
-                android:background="#ADA5FD"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:background="#ADA5FD"
                 android:orientation="vertical"
                 android:paddingBottom="15dp">
+
                 <ImageView
                     android:id="@+id/medicine_image"
                     android:layout_width="200dp"
                     android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:id="@+id/name"
@@ -40,9 +41,9 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="asdg"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
+                    android:text="asdg"
                     android:textColor="#ffffff"
                     android:textSize="19sp"
                     android:textStyle="bold" />
@@ -51,15 +52,15 @@
             <!--세부 정보-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:paddingLeft="5dp"
-                android:elevation="3dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/detail_search_linear"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/detail_box"
-                android:orientation="vertical">
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,21 +72,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="#3D3588"
                         android:layout_marginTop="30dp"
-                        android:text="회사" />
+                        android:text="회사"
+                        android:textColor="#3D3588"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/coper_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textSize="15sp"
-                        android:textColor="#333333"
                         android:layout_marginTop="30dp"
-                        android:text="회사 이름" />
+                        android:text="회사 이름"
+                        android:textColor="#333333"
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,66 +97,66 @@
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="#3D3588"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="10dp"
-                        android:text="종류" />
+                        android:text="종류"
+                        android:textColor="#3D3588"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/medicin_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textSize="15sp"
-                        android:textColor="#333333"
                         android:layout_marginTop="10dp"
-                        android:text="종류이름" />
+                        android:text="종류이름"
+                        android:textColor="#333333"
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/textView5"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="#3D3588"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="효능 효과" />
+                    android:text="효능 효과"
+                    android:textColor="#3D3588"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/medicin_effect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="#333333"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="효능효과 내용" />
+                    android:text="효능효과 내용"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/textView6"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="#3D3588"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="용법 용량" />
+                    android:text="용법 용량"
+                    android:textColor="#3D3588"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/medicin_ud_doc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="#333333"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="용법용량 내용" />
+                    android:text="용법용량 내용"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

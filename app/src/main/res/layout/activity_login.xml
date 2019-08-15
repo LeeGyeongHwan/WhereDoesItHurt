@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="90dp"
     android:background="#ffffff"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingTop="90dp">
 
     <ImageView
         android:id="@+id/login_logo"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/login_logo"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/view"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="370dp"
-            android:layout_height="1dp"
-            android:background="#8B6EEE"
-            android:layout_marginTop="35dp"
-            app:layout_constraintTop_toBottomOf="@+id/login_logo"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/kakao"
-            />
+    <View
+        android:id="@+id/view"
+        android:layout_width="370dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="35dp"
+        android:background="#8B6EEE"
+        app:layout_constraintBottom_toTopOf="@+id/kakao"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_logo" />
 
-        <TextView
-            android:id="@+id/starttext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#8B6EEE"
-            android:layout_marginTop="45dp"
-            android:text="시작하기"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp"
-            android:background="#ffffff"
-            android:textSize="17sp"
-            app:layout_constraintTop_toBottomOf="@+id/login_logo"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/kakao"/>
+    <TextView
+        android:id="@+id/starttext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:background="#ffffff"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:text="시작하기"
+        android:textColor="#8B6EEE"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/kakao"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_logo" />
 
 
     <com.kakao.usermgmt.LoginButton
@@ -52,25 +50,23 @@
         android:layout_width="360dp"
         android:layout_height="45dp"
         android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@+id/starttext"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-    </com.kakao.usermgmt.LoginButton>
-
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/starttext"></com.kakao.usermgmt.LoginButton>
 
 
     <LinearLayout
         android:id="@+id/general"
         android:layout_width="360dp"
         android:layout_height="50dp"
-        android:paddingTop="13dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        android:background="@drawable/login_border"
-        app:layout_constraintTop_toBottomOf="@+id/starttext"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_gravity="center"
-        app:layout_constraintRight_toRightOf="parent">
+        android:layout_marginTop="15dp"
+        android:background="@drawable/login_border"
+        android:orientation="horizontal"
+        android:paddingTop="13dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/starttext">
 
         <ImageView
             android:layout_width="23dp"
@@ -79,13 +75,14 @@
             android:background="@drawable/login_img"
 
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#8B6EEE"
             android:layout_marginLeft="10dp"
-            android:textSize="18sp"
-            android:text="카카오 계정으로 로그인"/>
+            android:text="카카오 계정으로 로그인"
+            android:textColor="#8B6EEE"
+            android:textSize="18sp" />
 
 
     </LinearLayout>

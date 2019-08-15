@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +34,6 @@ public class Fragment_history extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            id = getArguments().getLong("id");
-        }
-
         viewGroup = inflater.inflate(R.layout.fragment_history, container, false);
         ((MainActivity) getActivity()).toolbar_history();
         listView = viewGroup.findViewById(R.id.history_list_view);
@@ -52,13 +47,28 @@ public class Fragment_history extends Fragment {
     private void getPrescriptions() {
         User user = User.getInstance();
 
-        for(Prescription prescription : user.getPrescriptions()){
+        for (Prescription prescription : user.getPrescriptions()) {
             adapter.addItem(prescription);
         }
 
         listView.setAdapter(adapter);
     }
 
+    void ImageClick(ImageView imageView) {
+        View rView = getLayoutInflater().inflate(R.layout.full_screen, null);
+        PhotoView a = rView.findViewById(R.id.full_image);
+        a.setImageBitmap(((BitmapDrawable) imageView.getDrawable()).getBitmap());
+        dialog = new Dialog(getContext(), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        dialog.setContentView(rView);
+        RelativeLayout relativeLayout = rView.findViewById(R.id.image_layout);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     class Adapter extends BaseAdapter {
         ArrayList<Prescription> items = new ArrayList<>();
@@ -140,21 +150,5 @@ public class Fragment_history extends Fragment {
             return view;
         }
 
-    }
-
-    void ImageClick(ImageView imageView) {
-        View rView = getLayoutInflater().inflate(R.layout.full_screen, null);
-        PhotoView a = rView.findViewById(R.id.full_image);
-        a.setImageBitmap(((BitmapDrawable) imageView.getDrawable()).getBitmap());
-        dialog = new Dialog(getContext(), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
-        dialog.setContentView(rView);
-        RelativeLayout relativeLayout = rView.findViewById(R.id.image_layout);
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 }

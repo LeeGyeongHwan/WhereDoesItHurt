@@ -13,31 +13,31 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Fragment_detail_search extends Fragment  {
+public class Fragment_detail_search extends Fragment {
     View viewGroup;
     Search_item item;
-    TextView name,coper_name,medicin_type,medicin_effect,medicin_ud_doc;
+    TextView name, coper_name, medicin_type, medicin_effect, medicin_ud_doc;
     ImageView medicine_image;
     LinearLayout linearLayout;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
-        viewGroup = inflater.inflate(R.layout.fragment_detail_search,container, false);
-        medicine_image = (ImageView)viewGroup.findViewById(R.id.medicine_image);
-        name=(TextView)viewGroup.findViewById(R.id.name);
-        coper_name=(TextView)viewGroup.findViewById(R.id.coper_name);
-        medicin_type=(TextView)viewGroup.findViewById(R.id.medicin_type);
-        medicin_effect=(TextView)viewGroup.findViewById(R.id.medicin_effect);
-        medicin_ud_doc=(TextView)viewGroup.findViewById(R.id.medicin_ud_doc);
-        linearLayout = (LinearLayout)viewGroup.findViewById(R.id.detail_search_linear);
-        if(getArguments()!=null) {
+                             @Nullable Bundle savedInstanceState) {
+        viewGroup = inflater.inflate(R.layout.fragment_detail_search, container, false);
+        medicine_image = (ImageView) viewGroup.findViewById(R.id.medicine_image);
+        name = (TextView) viewGroup.findViewById(R.id.name);
+        coper_name = (TextView) viewGroup.findViewById(R.id.coper_name);
+        medicin_type = (TextView) viewGroup.findViewById(R.id.medicin_type);
+        medicin_effect = (TextView) viewGroup.findViewById(R.id.medicin_effect);
+        medicin_ud_doc = (TextView) viewGroup.findViewById(R.id.medicin_ud_doc);
+        linearLayout = (LinearLayout) viewGroup.findViewById(R.id.detail_search_linear);
+        if (getArguments() != null) {
             item = (Search_item) getArguments().getSerializable("data");
-            if(item.getItem_image()!=null){
+            if (item.getItem_image() != null) {
                 medicine_image.setImageBitmap(item.getItem_image());
                 linearLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            }
-            else{
+            } else {
                 medicine_image.setVisibility(View.GONE);
                 linearLayout.setGravity(Gravity.CENTER);
             }
@@ -49,7 +49,6 @@ public class Fragment_detail_search extends Fragment  {
         }
         return viewGroup;
     }
-
 
 
 }

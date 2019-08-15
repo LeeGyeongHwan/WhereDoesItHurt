@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +30,11 @@ public class History_itemView extends LinearLayout {
     public History_itemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     public void init(Context context) {
@@ -66,17 +70,16 @@ public class History_itemView extends LinearLayout {
         }
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
     public TextView getPresc_date() {
         return presc_date;
     }
 
     public void setPresc_date(String presc_date) {
         this.presc_date.setText(presc_date);
+    }
+
+    public void setPresc_date(TextView presc_date) {
+        this.presc_date = presc_date;
     }
 
     public ImageView getHistory_medicine_image() {
@@ -109,10 +112,6 @@ public class History_itemView extends LinearLayout {
 
     public void setFlexboxlayout(FlexboxLayout flexboxlayout) {
         this.flexboxlayout = flexboxlayout;
-    }
-
-    public void setPresc_date(TextView presc_date) {
-        this.presc_date = presc_date;
     }
 
     public TextView getPresc_medicine() {

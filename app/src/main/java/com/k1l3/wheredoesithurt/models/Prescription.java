@@ -22,59 +22,59 @@ public class Prescription {
         return begin;
     }
 
-    public int getCaution() {
-        return caution;
-    }
-
-    public int getEnd() {
-        return end;
-    }
-
-    public int getSideEffect() {
-        return sideEffect;
-    }
-
-    public ArrayList<Medicine> getMedicines() {
-        return medicines;
-    }
-
-    public ArrayList<String> getHashTag() {
-        return hashTag;
-    }
-
-    public boolean isVisible(){
-        return isVisible;
-    }
-
-    public void show(){
-        isVisible = true;
-    }
-
-    public void hide(){
-        isVisible = false;
-    }
-
     public void setBegin(String begin) {
         this.begin = begin;
+    }
+
+    public int getCaution() {
+        return caution;
     }
 
     public void setCaution(int caution) {
         this.caution = caution;
     }
 
+    public int getEnd() {
+        return end;
+    }
+
     public void setEnd(int end) {
         this.end = end;
     }
 
-    public void setMedicines(ArrayList<Medicine> medicines) {
-        this.medicines = medicines;
+    public int getSideEffect() {
+        return sideEffect;
     }
 
     public void setSideEffect(int sideEffect) {
         this.sideEffect = sideEffect;
     }
 
+    public ArrayList<Medicine> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(ArrayList<Medicine> medicines) {
+        this.medicines = medicines;
+    }
+
+    public ArrayList<String> getHashTag() {
+        return hashTag;
+    }
+
     public void setHashTag(@Nullable ArrayList<String> hashTag) {
         this.hashTag = hashTag;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void show() {
+        isVisible = true;
+    }
+
+    public void hide() {
+        isVisible = false;
     }
 }

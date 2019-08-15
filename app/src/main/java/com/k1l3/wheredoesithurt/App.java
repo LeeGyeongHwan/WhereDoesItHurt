@@ -14,6 +14,27 @@ public class App extends Application {
 
     private static volatile App instance = null;
 
+    public static App getGlobalApplicationContext() {
+        if (instance == null) {
+            throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
+        }
+        return instance;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+
+        KakaoSDK.init(new KakaoSDKAdapter());
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        instance = null;
+    }
+
     private static class KakaoSDKAdapter extends KakaoAdapter {
         /**
          * Session Config에 대해서는 default값들이 존재한다.
@@ -74,26 +95,5 @@ public class App extends Application {
                 }
             };
         }
-    }
-
-    public static App getGlobalApplicationContext() {
-        if (instance == null) {
-            throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
-        }
-        return instance;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-
-        KakaoSDK.init(new KakaoSDKAdapter());
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        instance = null;
     }
 }
