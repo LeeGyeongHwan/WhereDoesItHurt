@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class Fragment_history extends Fragment {
     private Dialog dialog;
     private Long id;
     private ArrayList<Prescription> prescription;
+
 
     @Nullable
     @Override
@@ -99,15 +101,19 @@ public class Fragment_history extends Fragment {
             StringBuilder medicine = new StringBuilder(item.getMedicines().get(0).getName());
 
             //Hash태그에 들어가는것 추가 + Custom
+
             view.setPresc_date(item.getBegin());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT ) ;
             for (int i = 0; i < item.getHashTag().size(); i++) {
                 TextView textView = new TextView(getContext());
                 textView.setText(item.getHashTag().get(i));
                 textView.setTextColor(Color.BLACK);
-                textView.setBackground(getResources().getDrawable(R.drawable.searchbox));
-                textView.setTextSize(15);
+                textView.setBackground(getResources().getDrawable(R.drawable.history_tag));
+                textView.setTextSize(13);
                 textView.setIncludeFontPadding(false);
-                textView.setPadding(20, 20, 20, 20);
+                textView.setPadding(30, 20, 30, 20);
+                params.setMargins( 0, 10, 10, 0 );
+                textView.setLayoutParams( params );
                 view.getFlexboxlayout().addView(textView);
             }
             if (item.getMedicines().size() >= 1) {
@@ -123,9 +129,11 @@ public class Fragment_history extends Fragment {
                 public void onClick(View v) {
                     if (item.isVisible()) {
                         view.getLinearLayout().setVisibility(View.GONE);
+                        view.getSeperator().setVisibility(View.GONE);
                         item.hide();
                     } else {
                         view.getLinearLayout().setVisibility(View.VISIBLE);
+                        view.getSeperator().setVisibility(View.VISIBLE);
                         item.show();
                     }
                 }

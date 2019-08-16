@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.android.flexbox.FlexboxLayout;
 
 public class History_itemView extends LinearLayout {
-    TextView presc_date, presc_medicine;
+    TextView presc_date, presc_medicine, seperator;
     ImageView history_medicine_image, history_medicine_image2;
     FlexboxLayout flexboxlayout;
     LinearLayout linearLayout, first_layout;
@@ -48,6 +48,7 @@ public class History_itemView extends LinearLayout {
         linearLayout = findViewById(R.id.history_layout);
         first_layout = findViewById(R.id.history_first_layout);
         history_memo = findViewById(R.id.history_memo);
+        seperator = findViewById(R.id.history_sep);
         setupUI(first_layout);
     }
 
@@ -133,4 +134,6 @@ public class History_itemView extends LinearLayout {
     public void setHistory_memo(String history_memo) {
         this.history_memo.setText(history_memo);
     }
+
+    public TextView getSeperator() { return seperator; }
 }

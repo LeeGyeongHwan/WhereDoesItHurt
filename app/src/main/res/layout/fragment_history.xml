@@ -16,14 +16,15 @@
         <EditText
             android:id="@+id/history_search"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
             android:background="@drawable/searchbox"
             android:drawableRight="@drawable/search_icon"
             android:inputType="text"
             android:textSize="15dp"
+            android:hint="보고싶은 처방전의 태그와 제목을 입력하세요 "
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
             app:layout_constraintVertical_bias="0.057" />
 
         <ScrollView
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="10dp"
             android:fillViewport="true"
             android:scrollbars="vertical"
             app:layout_constraintVertical_bias="1.0">
@@ -41,6 +43,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentLeft="false"
+                android:divider="@null"
+                android:dividerHeight="0px"
                 android:layout_marginTop="8dp"
                 android:fastScrollEnabled="true"
                 android:orientation="horizontal"
