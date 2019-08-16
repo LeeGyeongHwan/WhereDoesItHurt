@@ -28,6 +28,7 @@
             android:id="@+id/title_alarm"
             android:textSize="20dp"
             android:textColor="#9152EC"
+            android:padding="10dp"
             android:text="나의 복용약"
             />
         <LinearLayout
@@ -40,20 +41,111 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 >
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="부터"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_weight="1"
-                    />
-                <TextView
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/from_dateText"
+                        android:text="0000.00.00"
+                        android:gravity="center"
+
+                        />
+                    <ImageView
+                        android:id="@+id/from_imgBtn"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/down"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_height="wrap_content"
+                        android:text="부터"
+                        android:gravity="center"
+
+                        />
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="까지"
+                    android:orientation="horizontal"
                     android:gravity="center"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/to_dateText"
+                        android:text="0000.00.00"
+                        android:gravity="center"
+
+                        />
+
+                    <ImageView
+                        android:id="@+id/to_imBtn"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/down"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="까지"
+                        android:gravity="center"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/from_datelinear"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <DatePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:datePickerMode="spinner"
+                    android:id="@+id/from_datepicker"
                     android:layout_weight="1"
-                    />
+                    android:calendarViewShown="false">
+                </DatePicker>
+                <Button
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/from_dateBtn"
+                    android:text="확인"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/to_datelinear"
+                android:orientation="horizontal">
+                <DatePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:datePickerMode="spinner"
+                    android:id="@+id/to_datepicker"
+                    android:layout_weight="1"
+                    android:calendarViewShown="false">
+                </DatePicker>
+                <Button
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/to_dateBtn"
+                    android:text="확인"
+                    android:layout_gravity="center"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,6 +163,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/alarm_num"
                     android:text="3회씩"
                     android:gravity="center"
                     android:layout_weight="1"

@@ -23,7 +23,9 @@
                 android:id="@+id/extext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="디포트시간"
+                android:textSize="30dp"
+                android:padding="10dp"
+                android:text="AM 08 : 30"
                 />
             <ImageView
                 android:id="@+id/pickerBtn"
@@ -43,15 +45,32 @@
             android:layout_weight="1"
             />
     </LinearLayout>
-    <TimePicker
-        android:id="@+id/timepicker"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/pickerlinear"
         android:visibility="gone"
-        android:timePickerMode="spinner"
-        >
+        android:layout_margin="10dp">
+        <TimePicker
+            android:id="@+id/timepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:layout_weight="1"
+            >
+        </TimePicker>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="설정"
+            android:layout_weight="1"
+            android:id="@+id/confirm_timeBtn"
+            android:layout_gravity="center"
+            />
 
-    </TimePicker>
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
