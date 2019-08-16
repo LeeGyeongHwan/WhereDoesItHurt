@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
 
 import java.util.ArrayList;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_history extends Fragment {
     private View viewGroup;
@@ -42,46 +34,41 @@ public class Fragment_history extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            id = getArguments().getLong("id");
-        }
-
-        prescription = new ArrayList<>();
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/" + id);
-        ValueEventListener prescriptionListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                getPrescriptions(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled: ", databaseError.toException());
-            }
-        };
-
         viewGroup = inflater.inflate(R.layout.fragment_history, container, false);
         ((MainActivity) getActivity()).toolbar_history();
         listView = viewGroup.findViewById(R.id.history_list_view);
         adapter = new Adapter();
 
-        databaseReference.child("prescriptions").addListenerForSingleValueEvent(prescriptionListener);
+        getPrescriptions();
 
         return viewGroup;
     }
 
-    private void getPrescriptions(DataSnapshot dataSnapshot) {
-        if (dataSnapshot.hasChildren()) {
-            for (DataSnapshot dataSnapshotChild : dataSnapshot.getChildren()) {
-                prescription.add(dataSnapshotChild.getValue(Prescription.class));
-            }
-            for (Prescription pres : prescription) {
-                adapter.addItem(pres);
-            }
+    private void getPrescriptions() {
+        User user = User.getInstance();
+
+        for (Prescription prescription : user.getPrescriptions()) {
+            adapter.addItem(prescription);
         }
+
         listView.setAdapter(adapter);
     }
 
+    void ImageClick(ImageView imageView) {
+        View rView = getLayoutInflater().inflate(R.layout.full_screen, null);
+        PhotoView a = rView.findViewById(R.id.full_image);
+        a.setImageBitmap(((BitmapDrawable) imageView.getDrawable()).getBitmap());
+        dialog = new Dialog(getContext(), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        dialog.setContentView(rView);
+        RelativeLayout relativeLayout = rView.findViewById(R.id.image_layout);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     class Adapter extends BaseAdapter {
         ArrayList<Prescription> items = new ArrayList<>();
@@ -163,21 +150,5 @@ public class Fragment_history extends Fragment {
             return view;
         }
 
-    }
-
-    void ImageClick(ImageView imageView) {
-        View rView = getLayoutInflater().inflate(R.layout.full_screen, null);
-        PhotoView a = rView.findViewById(R.id.full_image);
-        a.setImageBitmap(((BitmapDrawable) imageView.getDrawable()).getBitmap());
-        dialog = new Dialog(getContext(), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
-        dialog.setContentView(rView);
-        RelativeLayout relativeLayout = rView.findViewById(R.id.image_layout);
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 }

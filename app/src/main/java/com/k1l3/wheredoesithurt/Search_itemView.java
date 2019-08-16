@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class Search_itemView extends LinearLayout {
     TextView medicine_name;
     ImageView search_medicine_image;
+
     public Search_itemView(Context context) {
         super(context);
         init(context);
@@ -22,11 +23,12 @@ public class Search_itemView extends LinearLayout {
         super(context, attrs);
         init(context);
     }
-    public void init(Context context){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.search_item,this,true);
-        medicine_name = (TextView)findViewById(R.id.medicin_name);
-        search_medicine_image = (ImageView)findViewById(R.id.search_medicine_image);
+
+    public void init(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.search_item, this, true);
+        medicine_name = (TextView) findViewById(R.id.medicin_name);
+        search_medicine_image = (ImageView) findViewById(R.id.search_medicine_image);
         search_medicine_image.setBackground(new ShapeDrawable(new OvalShape()));
         search_medicine_image.setClipToOutline(true);
 
@@ -40,8 +42,12 @@ public class Search_itemView extends LinearLayout {
         this.medicine_name.setText(name);
     }
 
-    public ImageView getSearch_medicine_image(){ return search_medicine_image;}
+    public ImageView getSearch_medicine_image() {
+        return search_medicine_image;
+    }
 
-    public void setSearch_medicine_image(Bitmap image){ this.search_medicine_image.setImageBitmap(image);}
+    public void setSearch_medicine_image(Bitmap image) {
+        this.search_medicine_image.setImageBitmap(image);
+    }
 
 }

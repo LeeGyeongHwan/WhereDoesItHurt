@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/medicin_search"
-        android:layout_margin="5dp"
-        android:drawableRight="@drawable/search_icon"
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/searchbox"
+        android:drawableRight="@drawable/search_icon"
+        android:hint="궁금한 의약품을 검색해 보세요"
+        android:inputType="text"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:background="@drawable/searchbox"
-        android:inputType="text"
         android:textSize="15dp"
-        android:hint="궁금한 의약품을 검색해 보세요"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -45,18 +45,18 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:padding="5dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="19dp"
-                android:textColor="#776DE0"
                 android:gravity="left"
-                android:text="나의 약 정보" />
+                android:text="나의 약 정보"
+                android:textColor="#776DE0"
+                android:textSize="19dp" />
 
             <View
                 android:layout_width="wrap_content"
@@ -66,11 +66,11 @@
                 android:background="#706CD4" />
 
             <ScrollView
-                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="3dp"
                 android:scrollbarThumbVertical="@drawable/scroll_color"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:scrollbars="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -114,126 +114,126 @@
             android:id="@+id/flipbtn1"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight="1"
             android:layout_margin="3dp"
-            android:padding="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/flip_purple"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple">
+            android:padding="5dp">
 
             <TextView
-                android:text="아침"
                 android:id="@+id/when1"
-                android:textSize="15dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
                 android:gravity="center"
-                android:layout_height="25dp" />
+                android:text="아침"
+                android:textColor="#ffffff"
+                android:textSize="15dp" />
 
             <TextView
-                android:text="07:00"
                 android:id="@+id/time1"
-                android:textSize="25dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:gravity="center"
-                android:layout_height="60dp" />
+                android:text="07:00"
+                android:textColor="#ffffff"
+                android:textSize="25dp" />
 
             <TextView
-                android:text="못먹었어요"
                 android:id="@+id/iseat1"
-                android:textSize="17dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="못먹었어요"
                 android:textAlignment="center"
-                android:layout_height="25dp" />
+                android:textColor="#ffffff"
+                android:textSize="17dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/flipbtn2"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight="1"
             android:layout_margin="3dp"
-            android:padding="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/flip_purple"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple">
+            android:padding="5dp">
 
             <TextView
-                android:text="점심"
                 android:id="@+id/when2"
-                android:textSize="15dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
                 android:gravity="center"
-                android:layout_height="25dp" />
+                android:text="점심"
+                android:textColor="#ffffff"
+                android:textSize="15dp" />
 
             <TextView
-                android:text="13:00"
                 android:id="@+id/time2"
-                android:textSize="25dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:gravity="center"
-                android:layout_height="60dp" />
+                android:text="13:00"
+                android:textColor="#ffffff"
+                android:textSize="25dp" />
 
             <TextView
-                android:text="못먹었어요"
                 android:id="@+id/iseat2"
-                android:textSize="17dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="못먹었어요"
                 android:textAlignment="center"
-                android:layout_height="25dp" />
+                android:textColor="#ffffff"
+                android:textSize="17dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/flipbtn3"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight="1"
             android:layout_margin="3dp"
-            android:padding="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/flip_purple"
             android:orientation="vertical"
-            android:background="@drawable/flip_purple">
+            android:padding="5dp">
 
             <TextView
-                android:text="저녁"
                 android:id="@+id/when3"
-                android:textSize="15dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
                 android:gravity="center"
-                android:layout_height="25dp" />
+                android:text="저녁"
+                android:textColor="#ffffff"
+                android:textSize="15dp" />
 
             <TextView
-                android:text="20:00"
                 android:id="@+id/time3"
-                android:textSize="25dp"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:gravity="center"
-                android:layout_height="60dp" />
+                android:text="20:00"
+                android:textColor="#ffffff"
+                android:textSize="25dp" />
 
             <TextView
-                android:text="못먹었어요"
-                android:textSize="17dp"
                 android:id="@+id/iseat3"
-                android:textColor="#ffffff"
                 android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="못먹었어요"
                 android:textAlignment="center"
-                android:layout_height="25dp" />
+                android:textColor="#ffffff"
+                android:textSize="17dp" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_marginLeft="6dp"
-        android:textSize="19dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
         android:layout_marginTop="15dp"
         android:text="주의해야할 음식"
         android:textColor="#776DE0"
+        android:textSize="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -266,9 +266,9 @@
 
 
         <TextView
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:elevation="0dp"
             android:text="주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n" />
     </ScrollView>

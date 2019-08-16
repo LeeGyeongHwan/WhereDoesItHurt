@@ -17,13 +17,14 @@ import com.bumptech.glide.Glide;
 
 public class Fragment_mypage extends Fragment {
     View viewGroup;
-    String image,name,email;
+    String image, name, email;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewGroup = inflater.inflate(R.layout.fragment_mypage,container, false);
-        ((MainActivity)getActivity()).toolbar_mypage();
+        viewGroup = inflater.inflate(R.layout.fragment_mypage, container, false);
+        ((MainActivity) getActivity()).toolbar_mypage();
         image = getArguments().getString("profile");
         name = getArguments().getString("name");
         email = getArguments().getString("email");
@@ -37,11 +38,11 @@ public class Fragment_mypage extends Fragment {
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        Button logout_button = (Button)viewGroup.findViewById(R.id.logout_button);
+        Button logout_button = (Button) viewGroup.findViewById(R.id.logout_button);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).logout();
+                ((MainActivity) getActivity()).logout();
             }
         });
         return viewGroup;

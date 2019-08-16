@@ -3,8 +3,9 @@
     package="com.k1l3.wheredoesithurt">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -12,8 +13,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
@@ -24,12 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".ResultOfVision"
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ResultOfVision"
             android:label=".ResultOfVision">
 
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -37,7 +41,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider"/>
+                android:resource="@xml/provider" />
         </provider>
         <activity android:name=".Addword_Activity"></activity>
     </application>

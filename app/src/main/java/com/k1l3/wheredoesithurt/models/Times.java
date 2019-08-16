@@ -8,27 +8,27 @@ public class Times {
     public Times() {
     }
 
-    public void setBreakFast(String breakFast) {
-        BreakFast = breakFast;
-    }
-
-    public void setDinner(String dinner) {
-        Dinner = dinner;
-    }
-
-    public void setLunch(String lunch) {
-        Lunch = lunch;
-    }
-
     public String getBreakFast() {
         return BreakFast;
+    }
+
+    public void setBreakFast(String breakFast) {
+        BreakFast = breakFast;
     }
 
     public String getDinner() {
         return Dinner;
     }
 
+    public void setDinner(String dinner) {
+        Dinner = dinner;
+    }
+
     public String getLunch() {
         return Lunch;
+    }
+
+    public void setLunch(String lunch) {
+        Lunch = lunch;
     }
 }

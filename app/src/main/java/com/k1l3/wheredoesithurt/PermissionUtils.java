@@ -15,16 +15,16 @@ public class PermissionUtils {
         ArrayList<String> permissionsNeeded = new ArrayList<>();
 
         for (String s : permissions) {
-            Log.d("gallery", "requestPermission: s "+s);
+            Log.d("gallery", "requestPermission: s " + s);
             int permissionCheck = ContextCompat.checkSelfPermission(activity, s);
-            Log.d("gallery", "requestPermission: percheck"+permissionCheck);
-            Log.d("gallery", "requestPermission: pergranted"+PackageManager.PERMISSION_GRANTED);
+            Log.d("gallery", "requestPermission: percheck" + permissionCheck);
+            Log.d("gallery", "requestPermission: pergranted" + PackageManager.PERMISSION_GRANTED);
             boolean hasPermission = (permissionCheck == PackageManager.PERMISSION_GRANTED);
-            Log.d("gallery", "requestPermission: permission "+hasPermission);
+            Log.d("gallery", "requestPermission: permission " + hasPermission);
             granted &= hasPermission;
             if (!hasPermission) {
                 permissionsNeeded.add(s);
-                Log.d("gallery", "had list: "+permissionsNeeded);
+                Log.d("gallery", "had list: " + permissionsNeeded);
             }
         }
 
@@ -35,7 +35,7 @@ public class PermissionUtils {
             ActivityCompat.requestPermissions(activity,
                     permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
                     requestCode);
-            Log.d("gallery","this is after");
+            Log.d("gallery", "this is after");
             return false;
         }
     }

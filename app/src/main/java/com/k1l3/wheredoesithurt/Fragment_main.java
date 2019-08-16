@@ -22,19 +22,19 @@ import android.widget.Toast;
 import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_main extends Fragment {
+    public int[] check = new int[3];
     EditText medicine_search;
     ViewGroup btn1, btn2, btn3;
-    public int[] check = new int[3];
     FragmentManager manager;
     FragmentTransaction transaction;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
-        final View viewGroup = inflater.inflate(R.layout.fragment_main,container, false);
-        ((MainActivity)getActivity()).toolbar_main();
-        medicine_search=(EditText)viewGroup.findViewById(R.id.medicin_search);
+                             @Nullable Bundle savedInstanceState) {
+        final View viewGroup = inflater.inflate(R.layout.fragment_main, container, false);
+        ((MainActivity) getActivity()).toolbar_main();
+        medicine_search = (EditText) viewGroup.findViewById(R.id.medicin_search);
         medicine_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         medicine_search.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         manager = getActivity().getSupportFragmentManager();
@@ -143,11 +143,11 @@ public class Fragment_main extends Fragment {
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
                 .commit();*/
-        transaction= manager.beginTransaction();
+        transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
-        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
+        Log.e(TAG, "값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
     }
 
 

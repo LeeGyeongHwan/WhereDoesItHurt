@@ -15,44 +15,44 @@ public class UserInfo {
         return Age;
     }
 
-    public String getDisease() {
-        return Disease;
-    }
-
-    public String getGender() {
-        return Gender;
-    }
-
-    public String getLifeStyles() {
-        return LifeStyles;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public Times getTimes() {
-        return times;
-    }
-
     public void setAge(String Age) {
         this.Age = Age;
+    }
+
+    public String getDisease() {
+        return Disease;
     }
 
     public void setDisease(String disease) {
         Disease = disease;
     }
 
+    public String getGender() {
+        return Gender;
+    }
+
     public void setGender(String gender) {
         Gender = gender;
+    }
+
+    public String getLifeStyles() {
+        return LifeStyles;
     }
 
     public void setLifeStyles(String lifeStyles) {
         LifeStyles = lifeStyles;
     }
 
+    public String getName() {
+        return Name;
+    }
+
     public void setName(String name) {
         Name = name;
+    }
+
+    public Times getTimes() {
+        return times;
     }
 
     public void setTimes(Times times) {

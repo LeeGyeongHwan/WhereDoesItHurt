@@ -7,6 +7,7 @@ public class History_item {
     ArrayList<String> hash_tag = new ArrayList<>();
     ArrayList<String> medicine = new ArrayList<>();
     int count = 0;
+
     public History_item(String history_day, ArrayList<String> hash_tag, ArrayList<String> medicine) {
         this.history_day = history_day;
         this.hash_tag = hash_tag;
