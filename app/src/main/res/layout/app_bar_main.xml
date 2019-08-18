@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="MYPAGE"
-                android:textColor="#776DE0"
+                android:textColor="#ffffff"
                 android:visibility="gone" />
             <TextView
                 android:id="@+id/toolbar_history"

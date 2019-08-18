@@ -44,6 +44,7 @@ public class Fragment_mypage extends Fragment {
                 ((MainActivity)getActivity()).logout();
             }
         });
+
         return viewGroup;
     }
 }

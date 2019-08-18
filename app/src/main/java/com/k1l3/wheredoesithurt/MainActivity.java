@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,20 +46,15 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.Block;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
-import com.google.api.services.vision.v1.model.Paragraph;
-import com.google.api.services.vision.v1.model.Word;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
-
-import static android.support.constraint.Constraints.TAG;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,7 +62,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
@@ -80,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String email;
     FragmentManager manager;
     FragmentTransaction transaction;
-
+    Button mypagebtn;
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
     public static final String FILE_NAME = "temp.jpg";
@@ -105,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragment_search = new Fragment_search();
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
+        mypagebtn = (Button)findViewById(R.id.mypagebtn);
 
         Intent intent = getIntent();
 
@@ -166,6 +159,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                 builder.create().show();
+            }
+        });
+        mypagebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment_mypage = new Fragment_mypage();
+                Bundle bundle = new Bundle();
+                bundle.putString("profile", image);
+                bundle.putString("name",name);
+                bundle.putString("email",email);
+                fragment_mypage.setArguments(bundle);
+                replaceFragment(fragment_mypage);
+
             }
         });
     }
@@ -700,7 +706,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
     public void setup_nav(int menuImage){
