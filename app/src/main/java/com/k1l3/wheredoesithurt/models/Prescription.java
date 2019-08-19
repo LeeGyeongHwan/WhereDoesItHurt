@@ -2,9 +2,10 @@ package com.k1l3.wheredoesithurt.models;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Prescription {
+public class Prescription implements Serializable {
     private String begin;
     private String end;
 

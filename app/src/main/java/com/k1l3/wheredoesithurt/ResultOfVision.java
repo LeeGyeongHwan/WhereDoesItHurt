@@ -13,11 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.k1l3.wheredoesithurt.models.Medicine;
 import java.util.ArrayList;
 
 import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ResultOfVision extends AppCompatActivity {
@@ -28,6 +31,7 @@ public class ResultOfVision extends AppCompatActivity {
     public EditText edit2_1, edit2_2, edit2_3, edit2_4;
     public EditText edit3_1, edit3_2, edit3_3, edit3_4;
     public Prescription prescription;
+    private ArrayList<Medicine> medicines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,8 @@ public class ResultOfVision extends AppCompatActivity {
         String getStr= intent.getStringExtra("result");
         int getCount=intent.getIntExtra("numbermedicine",1);
         Log.d("check", "onCreate: "+getStr);
+
+        medicines = new ArrayList<>();
 
         cancelBtn = (Button) findViewById(R.id.cancelvision);
         nextPage = findViewById(R.id.nextpage);
@@ -124,6 +130,9 @@ public class ResultOfVision extends AppCompatActivity {
                     intent.putExtra("edit3".concat(Integer.toString(i)),EditList3.get(i).getText().toString());
                     intent.putExtra("edit4".concat(Integer.toString(i)),EditList4.get(i).getText().toString());
                 }
+                addMedicines();
+                prescription.setMedicines(medicines);
+                intent.putExtra("prescription",prescription);
                 startActivity(intent);
             }
         } );
@@ -152,5 +161,19 @@ public class ResultOfVision extends AppCompatActivity {
                 EditList4.add(edit4);
             }
         });
+    }
+
+    private void addMedicines(){
+        medicines.add(new Medicine(edit1_1.getText().toString(), Integer.parseInt(edit1_2.getText().toString()),
+                Integer.parseInt(edit1_3.getText().toString()), Integer.parseInt(edit1_4.getText().toString())));
+
+        medicines.add(new Medicine(edit2_1.getText().toString(), Integer.parseInt(edit2_2.getText().toString()),
+                Integer.parseInt(edit2_3.getText().toString()), Integer.parseInt(edit2_4.getText().toString())));
+
+        medicines.add(new Medicine(edit3_1.getText().toString(), Integer.parseInt(edit3_2.getText().toString()),
+                Integer.parseInt(edit3_3.getText().toString()), Integer.parseInt(edit3_4.getText().toString())));
+
+        prescription.setMedicines(medicines);
+        prescription.setEnd(edit3_4.getText().toString());
     }
 }
