@@ -38,6 +38,14 @@ public class Prescription implements Serializable {
         this.caution = caution;
     }
 
+    public Times getTimes() {
+        return times;
+    }
+
+    public void setTimes(Times times) {
+        this.times = times;
+    }
+
     public String getEnd() {
         return end;
     }

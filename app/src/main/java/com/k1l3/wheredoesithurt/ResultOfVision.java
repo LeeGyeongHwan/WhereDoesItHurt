@@ -24,14 +24,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ResultOfVision extends AppCompatActivity {
-    public Button cancelBtn,nextPage,addMedBtn;
-    public EditText title_pre;
-    int index=0;
-    public EditText edit1_1, edit1_2, edit1_3, edit1_4;
-    public EditText edit2_1, edit2_2, edit2_3, edit2_4;
-    public EditText edit3_1, edit3_2, edit3_3, edit3_4;
-    public Prescription prescription;
+    private Button cancelBtn,nextPage,addMedBtn;
+    private EditText title_pre;
+    private Prescription prescription;
     private ArrayList<Medicine> medicines;
+    private int index=0;
+
+    private final ArrayList<EditText> EditList1 = new ArrayList<>();
+    private final ArrayList<EditText> EditList2 = new ArrayList<>();
+    private final ArrayList<EditText> EditList3 = new ArrayList<>();
+    private final ArrayList<EditText> EditList4 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +44,7 @@ public class ResultOfVision extends AppCompatActivity {
         nextPage=findViewById(R.id.nextpage);
         addMedBtn=findViewById(R.id.addMedBtn);
         title_pre=findViewById(R.id.title_prescription);
-        EditText[] arrayEdit = new EditText[10];
-        final ArrayList<EditText> EditList1 = new ArrayList<>();
-        final ArrayList<EditText> EditList2 = new ArrayList<>();
-        final ArrayList<EditText> EditList3 = new ArrayList<>();
-        final ArrayList<EditText> EditList4 = new ArrayList<>();
+
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -54,6 +52,7 @@ public class ResultOfVision extends AppCompatActivity {
 
         prescription = new Prescription();
         prescription.setBegin(formatDate);
+
         Intent intent = getIntent();
         String getStr= intent.getStringExtra("result");
         int getCount=intent.getIntExtra("numbermedicine",1);
@@ -123,16 +122,11 @@ public class ResultOfVision extends AppCompatActivity {
                 intent.putExtra("title",title_pre.getText().toString());
                 intent.putExtra("alarmcount",EditList3.get(0).getText().toString());
                 intent.putExtra("alarmday",EditList4.get(0).getText().toString());
-                Log.d("check", "onClick: index"+index);
-                for(int i=0;i<index;i++){
-                    intent.putExtra("edit1".concat(Integer.toString(i)),EditList1.get(i).getText().toString());
-                    intent.putExtra("edit2".concat(Integer.toString(i)),EditList2.get(i).getText().toString());
-                    intent.putExtra("edit3".concat(Integer.toString(i)),EditList3.get(i).getText().toString());
-                    intent.putExtra("edit4".concat(Integer.toString(i)),EditList4.get(i).getText().toString());
-                }
+
                 addMedicines();
                 prescription.setMedicines(medicines);
                 intent.putExtra("prescription",prescription);
+                
                 startActivity(intent);
             }
         } );
@@ -164,16 +158,11 @@ public class ResultOfVision extends AppCompatActivity {
     }
 
     private void addMedicines(){
-        medicines.add(new Medicine(edit1_1.getText().toString(), Integer.parseInt(edit1_2.getText().toString()),
-                Integer.parseInt(edit1_3.getText().toString()), Integer.parseInt(edit1_4.getText().toString())));
-
-        medicines.add(new Medicine(edit2_1.getText().toString(), Integer.parseInt(edit2_2.getText().toString()),
-                Integer.parseInt(edit2_3.getText().toString()), Integer.parseInt(edit2_4.getText().toString())));
-
-        medicines.add(new Medicine(edit3_1.getText().toString(), Integer.parseInt(edit3_2.getText().toString()),
-                Integer.parseInt(edit3_3.getText().toString()), Integer.parseInt(edit3_4.getText().toString())));
-
-        prescription.setMedicines(medicines);
-        prescription.setEnd(edit3_4.getText().toString());
+        for(int i=0;i<EditList1.size();++i){
+            medicines.add(new Medicine(EditList1.get(i).getText().toString(),
+                                        Integer.parseInt(EditList2.get(i).getText().toString()),
+                                        Integer.parseInt(EditList3.get(i).getText().toString()),
+                                        Integer.parseInt(EditList4.get(i).getText().toString())));
+        }
     }
 }

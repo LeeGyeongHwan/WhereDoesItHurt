@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,13 +25,13 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Addword_Activity extends AppCompatActivity {
+    private static final String TAG = "AddwordActivity";
     private ArrayList<String> word_in;
-    private TextView textView, hash_tag_text;
+    private TextView textView;
     private EditText add_text_hash;
     private Button saveButton;
     private SpannableString spannableString;
     private FlexboxLayout flexboxLayout,word_flexboxlayout;
-    private StringBuffer hash_tag;
     private int[] check = new int[15];
     private Prescription prescription;
     private ArrayList<String> hashtags;
@@ -45,7 +46,6 @@ public class Addword_Activity extends AppCompatActivity {
         flexboxLayout = (FlexboxLayout)findViewById(R.id.add_flexboxlayout);
         word_flexboxlayout = (FlexboxLayout)findViewById(R.id.word_flexboxlayout);
         saveButton = (Button)findViewById(R.id.save_button);
-        hash_tag = new StringBuffer();
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
         spannableString = new SpannableString(textView.getText().toString());
         hashtags = new ArrayList<>();
@@ -97,14 +97,14 @@ public class Addword_Activity extends AppCompatActivity {
                         button.setBackgroundColor(Color.BLACK);
                         check[checking]++;
                         word_flexboxlayout.addView(word_button);
-                        hashtags.add("#"+button.getText().toString());
+                        hashtags.add(button.getText().toString());
                     }
                     else{
                         button.setTextColor(Color.BLACK);
                         button.setBackgroundColor(Color.WHITE);
                         check[checking]++;
                         word_flexboxlayout.removeView(word_button);
-                        hashtags.remove("#"+button.getText().toString());
+                        hashtags.remove(button.getText().toString());
                     }
                 }
             });
@@ -132,6 +132,8 @@ public class Addword_Activity extends AppCompatActivity {
                 });
                 word_flexboxlayout.addView(word_button);
                 add_text_hash.setText("");
+
+                hashtags.add(add_text_hash.getText().toString());
                 return false;
             }
         });
@@ -140,14 +142,19 @@ public class Addword_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 savePrescription();
+
                 finish();
             }
         });
     }
 
     private void savePrescription(){
+        Log.i(TAG, "savePrescription");
+
         prescription.setHashTag(hashtags);
+
         User.getInstance().getPrescriptions().add(prescription);
+
         User.getInstance().syncWithDatabase();
     }
 
