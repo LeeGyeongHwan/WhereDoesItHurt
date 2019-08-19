@@ -6,7 +6,7 @@ public class UserInfo {
     private String Gender;
     private String LifeStyles;
     private String Name;
-    private Times times;
+    private Times defaultTimes;
 
     public UserInfo() {
     }
@@ -51,11 +51,11 @@ public class UserInfo {
         Name = name;
     }
 
-    public Times getTimes() {
-        return times;
+    public Times getDefaultTimes() {
+        return defaultTimes;
     }
 
-    public void setTimes(Times times) {
-        this.times = times;
+    public void setDefaultTimes(Times defaultTimes) {
+        this.defaultTimes = defaultTimes;
     }
 }

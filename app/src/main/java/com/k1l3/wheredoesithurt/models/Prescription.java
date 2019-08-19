@@ -6,13 +6,16 @@ import java.util.ArrayList;
 
 public class Prescription {
     private String begin;
-    private int end;
+    private String end;
+
     @Nullable
     private int caution;
     @Nullable
     private int sideEffect;
     private ArrayList<Medicine> medicines;
     private ArrayList<String> hashTag;
+    private Times times;
+
     private boolean isVisible = false;
 
     public Prescription() {
@@ -34,11 +37,11 @@ public class Prescription {
         this.caution = caution;
     }
 
-    public int getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(int end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 
