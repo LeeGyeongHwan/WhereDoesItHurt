@@ -26,7 +26,7 @@ public class Addword_Activity extends AppCompatActivity {
     EditText add_text_hash;
     Button saveButton;
     SpannableString spannableString;
-    FlexboxLayout flexboxLayout;
+    FlexboxLayout flexboxLayout,word_flexboxlayout;
     StringBuffer hash_tag;
     int[] check = new int[15];
 
@@ -34,10 +34,11 @@ public class Addword_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_word);
-        textView = (TextView) findViewById(R.id.textView);
-        hash_tag_text = (TextView) findViewById(R.id.hash_tag_text);
-        flexboxLayout = (FlexboxLayout) findViewById(R.id.add_flexboxlayout);
-        saveButton = (Button) findViewById(R.id.save_button);
+        textView = (TextView)findViewById(R.id.textView);
+        //hash_tag_text = (TextView)findViewById(R.id.hash_tag_text);
+        flexboxLayout = (FlexboxLayout)findViewById(R.id.add_flexboxlayout);
+        word_flexboxlayout = (FlexboxLayout)findViewById(R.id.word_flexboxlayout);
+        saveButton = (Button)findViewById(R.id.save_button);
         hash_tag = new StringBuffer();
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
         spannableString = new SpannableString(textView.getText().toString());
@@ -57,6 +58,23 @@ public class Addword_Activity extends AppCompatActivity {
             button.setIncludeFontPadding(false);
             button.setPadding(20, 20, 20, 20);
             final int checking = i;
+
+            final Button word_button = new Button(getApplicationContext());
+            word_button.setTextColor(Color.BLACK);
+            word_button.setBackgroundColor(Color.WHITE);
+            word_button.setText("#"+button.getText().toString());
+            word_button.setTextSize(15);
+            word_button.setIncludeFontPadding(false);
+            word_button.setPadding(20, 20, 20, 20);
+            word_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    word_flexboxlayout.removeView(v);
+                    button.setTextColor(Color.BLACK);
+                    button.setBackgroundColor(Color.WHITE);
+                    check[checking]++;
+                }
+            });
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -64,15 +82,18 @@ public class Addword_Activity extends AppCompatActivity {
                         button.setTextColor(Color.WHITE);
                         button.setBackgroundColor(Color.BLACK);
                         check[checking]++;
-                        hash_tag.append(" #" + button.getText().toString());
-                        hash_tag_text.setText(hash_tag.toString());
-                    } else {
+                        //hash_tag.append(" #"+button.getText().toString());
+                        //hash_tag_text.setText(hash_tag.toString());
+                        word_flexboxlayout.addView(word_button);
+                    }
+                    else{
                         button.setTextColor(Color.BLACK);
                         button.setBackgroundColor(Color.WHITE);
                         check[checking]++;
-                        hash_tag.delete(hash_tag.indexOf(button.getText().toString()) - 2,
-                                hash_tag.indexOf(button.getText().toString()) + button.getText().toString().length());
-                        hash_tag_text.setText(hash_tag.toString());
+                        word_flexboxlayout.removeView(word_button);
+                        /*hash_tag.delete(hash_tag.indexOf(button.getText().toString())-2,
+                                hash_tag.indexOf(button.getText().toString())+button.getText().toString().length());
+                        hash_tag_text.setText(hash_tag.toString());*/
                     }
                 }
             });
@@ -84,8 +105,20 @@ public class Addword_Activity extends AppCompatActivity {
         add_text_hash.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                hash_tag.append(" #" + add_text_hash.getText().toString());
-                hash_tag_text.setText(hash_tag.toString());
+                final Button word_button = new Button(getApplicationContext());
+                word_button.setTextColor(Color.BLACK);
+                word_button.setBackgroundColor(Color.WHITE);
+                word_button.setText("#"+add_text_hash.getText().toString());
+                word_button.setTextSize(15);
+                word_button.setIncludeFontPadding(false);
+                word_button.setPadding(20, 20, 20, 20);
+                word_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        word_flexboxlayout.removeView(v);
+                        }
+                });
+                word_flexboxlayout.addView(word_button);
                 add_text_hash.setText("");
                 return false;
             }

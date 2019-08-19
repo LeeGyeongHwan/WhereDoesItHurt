@@ -6,25 +6,35 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import static android.support.constraint.Constraints.TAG;
+
 public class Fragment_mypage extends Fragment {
     View viewGroup;
-    String image, name, email;
-
+    String image,name,email;
+    LinearLayout my_default_time;
+    FragmentManager manager;
+    FragmentTransaction transaction;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewGroup = inflater.inflate(R.layout.fragment_mypage, container, false);
-        ((MainActivity) getActivity()).toolbar_mypage();
+        viewGroup = inflater.inflate(R.layout.fragment_mypage,container, false);
+        manager = getActivity().getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        ((MainActivity)getActivity()).toolbar_mypage();
         image = getArguments().getString("profile");
         name = getArguments().getString("name");
         email = getArguments().getString("email");
@@ -45,6 +55,22 @@ public class Fragment_mypage extends Fragment {
                 ((MainActivity) getActivity()).logout();
             }
         });
+        //기본 알람시간 페이지로 가기
+        my_default_time = (LinearLayout)viewGroup.findViewById(R.id.my_default_time);
+        my_default_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Fragment_my_default_time());
+            }
+        });
         return viewGroup;
+    }
+
+    private void replaceFragment(@NonNull Fragment fragment) {
+        transaction= manager.beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack("fragment");
+        transaction.commit();
+        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
     }
 }

@@ -8,5 +8,10 @@
         <item name="android:elevation">0dp</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.Dialog" >
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="colorControlNormal">#ADA5FD</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 
 </resources>

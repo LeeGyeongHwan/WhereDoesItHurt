@@ -69,11 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/hash_tag_text"
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/word_flexboxlayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:alignContent="flex_start"
+                app:alignItems="flex_start"
+                app:flexWrap="wrap"/>
         </ScrollView>
 
         <Button

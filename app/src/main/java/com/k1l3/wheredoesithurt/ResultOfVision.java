@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.k1l3.wheredoesithurt.models.Prescription;
 
@@ -82,8 +81,9 @@ public class ResultOfVision extends AppCompatActivity {
         });
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(ResultOfVision.this, "하하", Toast.LENGTH_LONG).show();
+            public void onClick(View v){
+                Intent intent = new Intent(ResultOfVision.this, Addword_Activity.class);
+                startActivity(intent);
             }
         });
     }

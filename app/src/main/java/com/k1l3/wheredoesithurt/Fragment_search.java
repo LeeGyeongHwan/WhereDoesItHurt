@@ -19,9 +19,12 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -48,6 +51,8 @@ public class Fragment_search extends Fragment {
     EditText medicine_search;
     Toolbar toolBar;
     TextView backgroundchange;
+    ImageView loading;
+    ScrollView scrollView;
 
     @Nullable
     @Override
@@ -59,7 +64,9 @@ public class Fragment_search extends Fragment {
         medicine_search = (EditText) viewGroup.findViewById(R.id.medicin_search_2);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
-
+        loading = (ImageView)viewGroup.findViewById(R.id.loading);
+        scrollView = (ScrollView)viewGroup.findViewById(R.id.scrollView3);
+        Glide.with(this).load(R.raw.loading).into(loading);
         no_medicine_image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.search_img);
         search_medicine_image = (ImageView) viewGroup.findViewById(R.id.search_medicine_image);
         adapter = new Adapter();
@@ -246,8 +253,16 @@ public class Fragment_search extends Fragment {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                data = getXmlData(search_word);
-                for (int i = 0; i < data.size(); i++) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        loading.setVisibility(View.VISIBLE);
+                        scrollView.setVisibility(View.GONE);
+                    }
+                });
+                data= getXmlData(search_word);
+                for(int i=0;i<data.size();i++){
                     imgBitmap = GetImageFromURL(data.get(i).getItem_name());
                     if (imgBitmap != null) {
                         data.get(i).setItem_image(imgBitmap);
@@ -264,6 +279,8 @@ public class Fragment_search extends Fragment {
                                 adapter.addItem(data);
                                 listView.setAdapter(adapter);
                             }
+                            scrollView.setVisibility(View.VISIBLE);
+                            loading.setVisibility(View.GONE);
                         }
                     });
 

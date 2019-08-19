@@ -25,11 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".ResultOfVision"
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ResultOfVision"
+            android:noHistory="true"
             android:label=".ResultOfVision">
 
         </activity>
