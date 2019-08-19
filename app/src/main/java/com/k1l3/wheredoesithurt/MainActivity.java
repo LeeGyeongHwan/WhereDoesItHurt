@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,10 +28,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentTransaction transaction;
     Button mypagebtn;
 
+    static int medicine_count;
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         StringBuilder message = new StringBuilder("I found these things:\n\n");
         Log.d("gallery", "getresponse " + response.getResponses().toString());
@@ -269,26 +274,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        ImageView cambtn = findViewById(R.id.cameraBtn);
-        cambtn.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        ImageView plusbtn= findViewById(R.id.plusBtn);
+        plusbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder
-                        .setMessage("처방전을 추가하세요")
-                        .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainActivity.this.startGalleryChooser();
-                            }
-                        })
-                        .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainActivity.this.startCamera();
-                            }
-                        });
-                builder.create().show();
+            public void onClick(View v) {
+
+                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.cam_direct_layout, null);
+
+                LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
+                addContentView(ll, paramll);
+
+                Button cambtn = findViewById(R.id.camBtn);
+                Button directbtn = findViewById(R.id.directbtn);
+                ImageView cancel = findViewById(R.id.returnBtn);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinearLayout ll = (LinearLayout)findViewById(R.id.cam_dir_lin);
+                        ((ViewManager) ll.getParent()).removeView(ll);
+                    }
+                });
+
+                directbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
+                        startActivity(intent);
+                    }
+                });
+
+                cambtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                        builder
+                                .setMessage("처방전을 추가하세요")
+                                .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.this.startGalleryChooser();
+                                    }
+                                })
+                                .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.this.startCamera();
+                                    }
+                                });
+                        builder.create().show();
+                    }
+                });
             }
         });
         mypagebtn.setOnClickListener(new View.OnClickListener() {
@@ -637,6 +678,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return annotateRequest;
     }
 
+    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
+        private final WeakReference<MainActivity> mActivityWeakReference;
+        private Vision.Images.Annotate mRequest;
+
+        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
+            mActivityWeakReference = new WeakReference<>(activity);
+            mRequest = annotate;
+        }
+
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("분석중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Object... params) {
+            try {
+                Log.d(TAG, "created Cloud Vision request object, sending request");
+                BatchAnnotateImagesResponse response = mRequest.execute();
+                return convertResponseToString(response);
+
+            } catch (GoogleJsonResponseException e) {
+                Log.d(TAG, "failed to make API request because " + e.getContent());
+            } catch (IOException e) {
+                Log.d(TAG, "failed to make API request because of other IOException " +
+                        e.getMessage());
+            }
+            return "Cloud Vision API request failed. Check logs for details.";
+        }
+
+        protected void onPostExecute(String result) {
+            MainActivity activity = mActivityWeakReference.get();
+            asyncDialog.dismiss();
+            if (activity != null && !activity.isFinishing()) {
+                Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
+                intent.putExtra("result",result);
+                intent.putExtra("numbermedicine",medicine_count);
+                startActivity(intent);
+
+            }
+        }
+    }
+
     private void callCloudVision(final Bitmap bitmap) {
         // Switch text to loading
 
@@ -669,6 +761,127 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
+
+    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+        StringBuilder message = new StringBuilder("I found these things:\n\n");
+        Log.d("gallery", "getresponse " + response.getResponses().toString());
+
+        List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
+        Log.d("gallery", "convertResponseToString: "+pages.size());
+
+        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
+        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
+        Log.d("gallery", "label" + labels);
+        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
+        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+
+        int vertixArray[][]=new int[3][2];
+        int Y_eachmedicine[] = new int[5];
+        String medicine[] = new String[5];
+        int info_med[][] = new int[5][3];
+        int arrcount=0;
+
+        if (labels != null) {
+            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
+
+
+            for (EntityAnnotation label : labels) {
+                String labelstr=label.getDescription();
+                if(labelstr.equals("량") || labelstr.equals("투약량")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[0][0]=firstX;
+                    vertixArray[0][1]=secondX;
+                }else if(labelstr.equals("투여횟수")||labelstr.equals("투여")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[1][0]=firstX;
+                    vertixArray[1][1]=secondX;
+                }else if(labelstr.equals("투약일수")||labelstr.equals("일수")){
+                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[2][0]=firstX;
+                    vertixArray[2][1]=secondX;
+                }
+            }
+            for( int i=0;i<3;i++){
+                for(int j=0;j<2;j++){
+                    Log.d("gallery", "convertResponseToString: vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
+                }
+            }
+
+            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
+
+            int findcount=3;
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if(findcount==2){
+                    medicine[arrcount]=labelstr;
+                    Y_eachmedicine[arrcount]=label.getBoundingPoly().getVertices().get(0).getY();
+                    arrcount++;
+                }
+                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
+
+                if(labelstr.length()==9){
+                    try{
+                        findcount=0;
+                        Integer.parseInt(labelstr);
+                        Log.d("gallery", "convertResponseToString: "+labelstr);
+                    }catch (NumberFormatException e){
+                        Log.d("exception", "convertResponseToString: "+e);
+                        findcount=3;
+                    }
+                }
+                Log.d("galler", "convertResponseToString: "+label.getDescription());
+                Log.d("galler", "convertResponseToString: "+label.getBoundingPoly().getVertices());
+                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
+                //투약,투여,횟수시기,일수, x,y좌표 가져오기
+                findcount++;
+            }
+            for(int i=0;i<5;i++){
+                Log.d("gallery", "convertResponseToString: "+ Y_eachmedicine[i]);
+                Log.d("gallery", "convertResponseToString: "+ medicine[i]);
+            }
+
+            for (EntityAnnotation label : labels) {
+                int labelX=label.getBoundingPoly().getVertices().get(0).getX();
+                int labelX2=label.getBoundingPoly().getVertices().get(1).getX();
+                int labelY=label.getBoundingPoly().getVertices().get(0).getY();
+                for(int i=0;i<arrcount;i++){
+                    if((Y_eachmedicine[i]-10<labelY) && (Y_eachmedicine[i]+10>labelY)){
+                        Log.d(TAG, "convertResponseToString: labely"+labelY);
+                        for(int j=0;j<arrcount;j++){
+                            if((vertixArray[j][0]-40<labelX) && (vertixArray[j][1]+40>labelX2)) {
+                                Log.d("gallery", "convertResponseToString: labelx"+labelX);
+                                try {
+                                    info_med[i][j] = Integer.parseInt(label.getDescription());
+                                    Log.d("gallery", "convertResponseToString: ["+i+"]["+j+"]: "+info_med[i][j]);
+                                } catch (NumberFormatException e) {
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        } else {
+            message.append("nothing");
+        }
+
+        String returnstr="";
+        for(int i=0;i<arrcount;i++){
+            returnstr=returnstr.concat(medicine[i]+" ");
+            for(int j=0;j<arrcount;j++){
+                returnstr= returnstr.concat(info_med[i][j]+" ");
+            }
+        }
+        medicine_count=arrcount;
+        Log.d("gallery", "convertResponseToString: "+returnstr);
+        return returnstr;
+    }
+
 
     public void toolbar_search() {
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
