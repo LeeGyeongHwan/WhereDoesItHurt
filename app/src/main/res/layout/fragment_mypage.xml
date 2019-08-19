@@ -89,6 +89,10 @@
 
         <LinearLayout
             android:id="@+id/my_info"
+            android:elevation="5dp"
+            android:background="@drawable/search_list"
+            android:layout_marginBottom="15dp"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -98,9 +102,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_popular_black_24" />
+                android:src="@drawable/mypage_icon1" />
 
             <LinearLayout
+                android:layout_marginLeft="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -120,6 +125,10 @@
 
         <LinearLayout
             android:id="@+id/my_default_time"
+            android:elevation="5dp"
+            android:background="@drawable/search_list"
+            android:layout_marginBottom="15dp"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -129,9 +138,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_popular_black_24" />
+                android:src="@drawable/mypage_icon2" />
 
             <LinearLayout
+                android:layout_marginLeft="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -151,6 +161,10 @@
 
         <LinearLayout
             android:id="@+id/my_medicine"
+            android:elevation="5dp"
+            android:background="@drawable/search_list"
+            android:layout_marginBottom="15dp"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -160,9 +174,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_popular_black_24" />
+                android:src="@drawable/mypage_icon3" />
 
             <LinearLayout
+                android:layout_marginLeft="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

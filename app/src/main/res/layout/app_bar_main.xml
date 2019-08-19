@@ -51,6 +51,14 @@
                 android:text="HISTORY"
                 android:textColor="#776DE0"
                 android:visibility="gone" />
+            <TextView
+                android:id="@+id/toolbar_my_default_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="기본 알람 시간"
+                android:textColor="#776DE0"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/toolbar_search"
@@ -68,6 +76,14 @@
                 android:layout_gravity="center"
                 android:src="@drawable/logo"
                 android:textColor="#000000" />
+            <TextView
+                android:id="@+id/toolbar_edit_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="알람 시간 편집"
+                android:textColor="#776DE0"
+                android:visibility="gone" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
