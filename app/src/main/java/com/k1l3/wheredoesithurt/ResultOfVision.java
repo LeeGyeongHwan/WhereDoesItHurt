@@ -101,9 +101,7 @@ public class ResultOfVision extends AppCompatActivity {
                 }
             }
         }
-
-
-
+        
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

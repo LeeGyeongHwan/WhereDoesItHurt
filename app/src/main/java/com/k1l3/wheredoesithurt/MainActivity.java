@@ -102,125 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button mypagebtn;
 
     static int medicine_count;
-    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("I found these things:\n\n");
-        Log.d("gallery", "getresponse " + response.getResponses().toString());
-
-        List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
-        Log.d("gallery", "convertResponseToString: " + pages.size());
-
-        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
-        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
-        Log.d("gallery", "label" + labels);
-        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
-        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
-
-        int[][] vertixArray = new int[3][2];
-        int[] Y_eachmedicine = new int[5];
-        String[] medicine = new String[5];
-        int[][] info_med = new int[5][3];
-        int arrcount = 0;
-
-        if (labels != null) {
-            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
-
-
-            for (EntityAnnotation label : labels) {
-                String labelstr = label.getDescription();
-                if (labelstr.equals("량") || labelstr.equals("투약량")) {
-                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[0][0] = firstX;
-                    vertixArray[0][1] = secondX;
-                } else if (labelstr.equals("투여횟수") || labelstr.equals("투여")) {
-                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[1][0] = firstX;
-                    vertixArray[1][1] = secondX;
-                } else if (labelstr.equals("투약일수") || labelstr.equals("일수")) {
-                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[2][0] = firstX;
-                    vertixArray[2][1] = secondX;
-                }
-            }
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 2; j++) {
-                    Log.d("gallery", "convertResponseToString: vertix[" + i + "][" + j + "] : " + vertixArray[i][j]);
-                }
-            }
-
-            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
-
-            int findcount = 3;
-            for (EntityAnnotation label : labels) {
-                String labelstr = label.getDescription();
-                if (findcount == 2) {
-                    medicine[arrcount] = labelstr;
-                    Y_eachmedicine[arrcount] = label.getBoundingPoly().getVertices().get(0).getY();
-                    arrcount++;
-                }
-                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
-
-                if (labelstr.length() == 9) {
-                    try {
-                        findcount = 0;
-                        Integer.parseInt(labelstr);
-                        Log.d("gallery", "convertResponseToString: " + labelstr);
-                    } catch (NumberFormatException e) {
-                        Log.d("exception", "convertResponseToString: " + e);
-                        findcount = 3;
-                    }
-                }
-                Log.d("galler", "convertResponseToString: " + label.getDescription());
-                Log.d("galler", "convertResponseToString: " + label.getBoundingPoly().getVertices());
-                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
-                //투약,투여,횟수시기,일수, x,y좌표 가져오기
-                findcount++;
-            }
-            for (int i = 0; i < 5; i++) {
-                Log.d("gallery", "convertResponseToString: " + Y_eachmedicine[i]);
-                Log.d("gallery", "convertResponseToString: " + medicine[i]);
-            }
-
-            for (EntityAnnotation label : labels) {
-                int labelX = label.getBoundingPoly().getVertices().get(0).getX();
-                int labelX2 = label.getBoundingPoly().getVertices().get(1).getX();
-                int labelY = label.getBoundingPoly().getVertices().get(0).getY();
-                for (int i = 0; i < arrcount; i++) {
-                    if ((Y_eachmedicine[i] - 10 < labelY) && (Y_eachmedicine[i] + 10 > labelY)) {
-                        Log.d(TAG, "convertResponseToString: labely" + labelY);
-                        for (int j = 0; j < arrcount; j++) {
-                            if ((vertixArray[j][0] - 40 < labelX) && (vertixArray[j][1] + 40 > labelX2)) {
-                                Log.d("gallery", "convertResponseToString: labelx" + labelX);
-                                try {
-                                    info_med[i][j] = Integer.parseInt(label.getDescription());
-                                    Log.d("gallery", "convertResponseToString: [" + i + "][" + j + "]: " + info_med[i][j]);
-                                } catch (NumberFormatException e) {
-
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        } else {
-            message.append("nothing");
-        }
-
-        String returnstr = "";
-        for (int i = 0; i < arrcount; i++) {
-            returnstr = returnstr.concat(medicine[i] + " ");
-            for (int j = 0; j < arrcount; j++) {
-                returnstr = returnstr.concat(info_med[i][j] + " ");
-            }
-
-        }
-        Log.d("gallery", "convertResponseToString: " + returnstr);
-        return returnstr;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,10 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
-
-
-
-
 
         ImageView plusbtn= findViewById(R.id.plusBtn);
         plusbtn.setOnClickListener(new View.OnClickListener() {
@@ -965,56 +842,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(menuImage);
-    }
-
-    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<MainActivity> mActivityWeakReference;
-        ProgressDialog asyncDialog = new ProgressDialog(
-                MainActivity.this);
-        private Vision.Images.Annotate mRequest;
-
-        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
-            mActivityWeakReference = new WeakReference<>(activity);
-            mRequest = annotate;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("분석중입니다..");
-
-            // show dialog
-            asyncDialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-            try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
-                BatchAnnotateImagesResponse response = mRequest.execute();
-                return convertResponseToString(response);
-
-            } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
-            } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
-            }
-            return "Cloud Vision API request failed. Check logs for details.";
-        }
-
-        protected void onPostExecute(String result) {
-            MainActivity activity = mActivityWeakReference.get();
-            asyncDialog.dismiss();
-            if (activity != null && !activity.isFinishing()) {
-                Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
-                intent.putExtra("result", result);
-                startActivity(intent);
-
-                //TextView imageDetail = activity.findViewById(R.id.image_details);
-                //imageDetail.setText(result);
-            }
-        }
     }
 }
