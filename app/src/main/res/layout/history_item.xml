@@ -4,22 +4,29 @@
     android:id="@+id/history_first_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="7dp"
+    android:elevation="7dp"
     android:clickable="true"
+    android:background="@drawable/historybox"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="165dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/history_medicine_image"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="10dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/add_presc" />
+            android:foreground="@drawable/history_image"
+            android:src="@drawable/add_presc"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,72 +34,102 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="처방 날짜"
-                android:textSize="15dp" />
+                android:layout_marginTop="30dp"
+                android:text="나의 복용 약"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
+            <!--닐찌-->
             <TextView
                 android:id="@+id/presc_date"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="관련 단어" />
+                android:layout_marginTop="2dp"
+                android:textColor="#000"
+                android:textSize="13dp" />
+
 
             <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/flexboxlayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 app:alignContent="flex_start"
                 app:alignItems="flex_start"
-                app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
+                app:flexWrap="wrap">
+
+            </com.google.android.flexbox.FlexboxLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="4dp"
+        android:id="@+id/history_sep"
+        android:layout_gravity="center"
+        android:background="@drawable/history_sep"
+        android:visibility="gone"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/history_layout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/history_medicine_image2"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:elevation="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/add_presc" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
+
             <TextView
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="복용 약"
-                android:textSize="15dp" />
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/presc_medicine"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textSize="14dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="메모 " />
+                android:text="메모"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:textSize="14dp"/>
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true"
+                android:textColor="#000"
                 android:scrollbars="vertical">
 
                 <EditText
@@ -104,7 +141,7 @@
                     android:inputType="text|textMultiLine"
                     android:scrollHorizontally="false"
                     android:singleLine="false"
-                    android:textSize="10dp" />
+                    android:textSize="14dp" />
             </ScrollView>
         </LinearLayout>
     </LinearLayout>
