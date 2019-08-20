@@ -804,4 +804,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+    public String getId(){
+        return id.toString();
+    }
 }
