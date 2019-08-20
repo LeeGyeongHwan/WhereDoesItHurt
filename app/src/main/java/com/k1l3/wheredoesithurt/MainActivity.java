@@ -677,6 +677,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -688,6 +689,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -699,6 +701,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -710,6 +713,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -720,6 +724,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -730,12 +735,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(false); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+    }
+    public void toolbar_myinfo(){
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.VISIBLE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
     }
     public void setup_nav(int menuImage){
         setSupportActionBar(toolbar);
