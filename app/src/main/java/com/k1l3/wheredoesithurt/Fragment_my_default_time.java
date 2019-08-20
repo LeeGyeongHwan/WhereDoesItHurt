@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +28,7 @@ import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_my_default_time extends Fragment {
     private View viewGroup;
-    private Button add_time;
+    private ImageButton add_time;
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private ListView defaultList;
@@ -50,7 +50,7 @@ public class Fragment_my_default_time extends Fragment {
         databaseReference = database.getReference();
         ((MainActivity)getActivity()).toolbar_my_default_time();
 
-        add_time = (Button)viewGroup.findViewById(R.id.add_time);
+        add_time = (ImageButton)viewGroup.findViewById(R.id.add_time);
         add_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

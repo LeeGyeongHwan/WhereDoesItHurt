@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TimePicker;
 
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +41,7 @@ public class Fragment_time_spinner extends Fragment {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
         manager = getFragmentManager();
-        Button cancelbtn=(Button)viewGroup.findViewById(R.id.cancel);
+        ImageButton cancelbtn=(ImageButton)viewGroup.findViewById(R.id.cancel);
         if (getArguments() != null) {
             receiveTime = getArguments().getString("time");
             position=getArguments().getInt("position");
@@ -73,7 +74,7 @@ public class Fragment_time_spinner extends Fragment {
             receiveTime="add";
             cancelbtn.setVisibility(View.GONE);
         }
-        Button Finish = (Button)viewGroup.findViewById(R.id.finish);
+        ImageButton Finish = (ImageButton)viewGroup.findViewById(R.id.finish);
         Finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
