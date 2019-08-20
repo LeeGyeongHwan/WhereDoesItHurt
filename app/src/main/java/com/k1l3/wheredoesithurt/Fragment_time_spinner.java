@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +23,8 @@ import com.k1l3.wheredoesithurt.models.User;
 public class Fragment_time_spinner extends Fragment {
     private View viewGroup;
     private TimePicker timePicker;
-    private String hour,min,id;
+    private String hour,min,id,receiveTime;
+    private int position;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FragmentManager manager;
@@ -40,40 +40,76 @@ public class Fragment_time_spinner extends Fragment {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
         manager = getFragmentManager();
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker timePicker, int hour, int min) {
-                Toast.makeText(getContext(), "hour : " + hour + ", min : " + min, Toast.LENGTH_LONG).show();
-            }
-        });
+        Button cancelbtn=(Button)viewGroup.findViewById(R.id.cancel);
+        if (getArguments() != null) {
+            receiveTime = getArguments().getString("time");
+            position=getArguments().getInt("position");
+            timePicker.setHour(Integer.valueOf(receiveTime.substring(0,2)));
+            timePicker.setMinute(Integer.valueOf(receiveTime.substring(2,4)));
+            cancelbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    databaseReference = database.getReference("users").child(id);
+                    ValueEventListener databaseListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Times time = new Times();
+                            User info = dataSnapshot.getValue(User.class);
+                            time=info.getUserInfo().getDefaultTimes();
+                            time.getTimes().remove(position);
+                            info.getUserInfo().setDefaultTimes(time);
+                            databaseReference.setValue(info);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    };
+                    databaseReference.addListenerForSingleValueEvent(databaseListener);
+                    manager.popBackStack();
+                }
+            });
+        }
+        else{
+            receiveTime="add";
+            cancelbtn.setVisibility(View.GONE);
+        }
         Button Finish = (Button)viewGroup.findViewById(R.id.finish);
         Finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hour = String.valueOf(timePicker.getCurrentHour());
-                min = String.valueOf(timePicker.getCurrentMinute());
-                Times time = new Times();
-                Toast.makeText(getContext(), "hour : " + hour + ", min : " + min, Toast.LENGTH_LONG).show();
-
+                if(timePicker.getCurrentHour()<10){
+                    hour = "0"+ String.valueOf(timePicker.getCurrentHour());
+                } else {
+                    hour = String.valueOf(timePicker.getCurrentHour());
+                }
+                if(timePicker.getCurrentMinute()<10){
+                    min = "0" + String.valueOf(timePicker.getCurrentMinute());
+                }else {
+                    min = String.valueOf(timePicker.getCurrentMinute());
+                }
                 databaseReference = database.getReference("users").child(id);
                 ValueEventListener databaseListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Times time = new Times();
                         User info = dataSnapshot.getValue(User.class);
-                        if(info.getUserInfo().getDefaultTimes()==null){
-                            time.addTime(hour+min);
+                        if(receiveTime=="add") {
+                            if (info.getUserInfo().getDefaultTimes() == null) {
+                                time.addTime(hour + min);
+                            } else {
+                                time = info.getUserInfo().getDefaultTimes();
+                                time.addTime(hour + min);
+                            }
                         }
                         else{
-                            time = info.getUserInfo().getDefaultTimes();
-                            time.addTime(hour+min);
+                            time=info.getUserInfo().getDefaultTimes();
+                            time.getTimes().set(position,hour+min);
                         }
                         info.getUserInfo().setDefaultTimes(time);
                         databaseReference.setValue(info);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 };
                 databaseReference.addListenerForSingleValueEvent(databaseListener);
