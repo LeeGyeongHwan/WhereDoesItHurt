@@ -298,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         user.setPrescriptions(prescriptions);
 
+        user.setId(id.toString());
+
         Log.i(TAG, "loadDatabase: " + id);
     }
 
@@ -331,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         user.setUserInfo(userInfo);
         user.setPrescriptions(new ArrayList<Prescription>());
+        user.setId(id.toString());
 
         databaseReference.child(id.toString()).setValue(user);
 

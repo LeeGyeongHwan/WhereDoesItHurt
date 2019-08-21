@@ -1,18 +1,22 @@
 package com.k1l3.wheredoesithurt.models;
 
-import org.jetbrains.annotations.Nullable;
+import java.io.Serializable;
 
-public class Medicine {
+public class Medicine implements Serializable {
     private String name;
 
-    @Nullable
     private int dailyDosage;
-    @Nullable
     private int numberOfDoses;
-    @Nullable
     private int numberOfDay;
 
     public Medicine() {
+    }
+
+    public Medicine(String name, int dailyDosage, int numberOfDoses, int numberOfDay) {
+        this.name = name;
+        this.dailyDosage = dailyDosage;
+        this.numberOfDoses = numberOfDoses;
+        this.numberOfDay = numberOfDay;
     }
 
     public String getName() {

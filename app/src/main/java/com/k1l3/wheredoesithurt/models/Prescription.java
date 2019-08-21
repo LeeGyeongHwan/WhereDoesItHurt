@@ -2,9 +2,10 @@ package com.k1l3.wheredoesithurt.models;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Prescription {
+public class Prescription implements Serializable {
     private String begin;
     private String end;
 
@@ -35,6 +36,14 @@ public class Prescription {
 
     public void setCaution(int caution) {
         this.caution = caution;
+    }
+
+    public Times getTimes() {
+        return times;
+    }
+
+    public void setTimes(Times times) {
+        this.times = times;
     }
 
     public String getEnd() {

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TimePicker;
 
+import com.k1l3.wheredoesithurt.models.User;
+
 public class Fragment_time_spinner extends Fragment {
     View viewGroup;
     TimePicker timePicker;
