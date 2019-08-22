@@ -2,7 +2,9 @@ package com.k1l3.wheredoesithurt;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +26,8 @@ public class ResultOfVision extends AppCompatActivity {
     public Button cancelBtn,nextPage,addMedBtn;
     public EditText title_pre;
     int index=0;
-    public EditText edit1_1, edit1_2, edit1_3, edit1_4;
-    public EditText edit2_1, edit2_2, edit2_3, edit2_4;
-    public EditText edit3_1, edit3_2, edit3_3, edit3_4;
     public Prescription prescription;
+    private final static int ACT_ALARM = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,10 @@ public class ResultOfVision extends AppCompatActivity {
                     intent.putExtra("edit3".concat(Integer.toString(i)),EditList3.get(i).getText().toString());
                     intent.putExtra("edit4".concat(Integer.toString(i)),EditList4.get(i).getText().toString());
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+
                 startActivity(intent);
+                finish();
             }
         } );
 

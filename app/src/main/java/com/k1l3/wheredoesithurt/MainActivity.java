@@ -2,16 +2,22 @@ package com.k1l3.wheredoesithurt;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,6 +26,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -87,9 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
-
+    private final static int ACT_ALARM = 99;
     private static final User user = User.getInstance();
     private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private static final String CHANNEL_ID = "noti";
 
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
@@ -99,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String email;
     FragmentManager manager;
     FragmentTransaction transaction;
-    Button mypagebtn;
-
+    Button mypagebtn,myCalendar;
     static int medicine_count;
 
     @Override
@@ -113,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragment_search = new Fragment_search();
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        mypagebtn = (Button)findViewById(R.id.mypagebtn);
+        mypagebtn = findViewById(R.id.mypagebtn);
+        myCalendar = findViewById(R.id.myCalendar);
 
         Intent intent = getIntent();
 
@@ -182,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
-                        startActivity(intent);
+                        startActivityForResult(intent,ACT_ALARM);
                     }
                 });
 
@@ -207,6 +215,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         builder.create().show();
                     }
                 });
+            }
+        });
+        myCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment_calendar = new Fragment_calendar();
+                Bundle bundle = new Bundle();
+                fragment_calendar.setArguments(bundle);
+                replaceFragment(fragment_calendar);
+
             }
         });
         mypagebtn.setOnClickListener(new View.OnClickListener() {
@@ -439,12 +457,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d("please", "onActivityResult: code"+requestCode+" result : "+resultCode);
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             uploadImage(data.getData());
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             uploadImage(photoUri);
+        } else if (requestCode == ACT_ALARM && resultCode ==RESULT_OK){
+            MakeNotification();
+            Log.d("please", "onActivityResult: "+requestCode +" result ok"+ resultCode);
         }
     }
 
@@ -600,11 +621,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
                 intent.putExtra("result",result);
                 intent.putExtra("numbermedicine",medicine_count);
-                startActivity(intent);
+                startActivityForResult(intent,ACT_ALARM);
 
             }
         }
     }
+
 
     private void callCloudVision(final Bitmap bitmap) {
         // Switch text to loading
@@ -761,6 +783,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void toolbar_search() {
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
@@ -772,6 +795,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void toolbar_main() {
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
@@ -783,6 +807,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void toolbar_history() {
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
@@ -794,6 +819,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void toolbar_mypage() {
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
@@ -803,7 +829,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
+    public void toolbar_calendar() {
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        setup_nav(R.drawable.ic_menu);
+    }
     public void toolbar_my_default_time(){
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
@@ -814,6 +852,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setup_nav(R.drawable.ic_menu);
     }
     public void toolbar_edit_time(){
+        toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
@@ -843,4 +882,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(menuImage);
     }
+    public void MakeNotification(){
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel("makenoti", "makenotificaition", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(mChannel);
+            builder = new NotificationCompat.Builder(this, mChannel.getId());
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        Intent snoozeIntent = new Intent(this, example.class);
+        snoozeIntent.setAction("nananan");
+        snoozeIntent.putExtra("EXTRA_NOTIFICATION_ID", 0);
+        PendingIntent snoozePendingIntent =
+                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.noti_logo));
+        builder.setSmallIcon(R.drawable.small_icon);
+        builder.setTicker("알람 간단한 설명");
+        builder.setContentTitle("00:00 AM");
+        builder.setContentText("(나의 복용약) 복용시간입니다.");
+        builder.setWhen(System.currentTimeMillis());
+        builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.addAction(R.drawable.btn_o, "복용",snoozePendingIntent);
+        builder.addAction(R.drawable.btn_x,"미복용",snoozePendingIntent);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+        builder.setNumber(999);
+
+        notificationManager.notify(0, builder.build());
+
+    }
+
 }

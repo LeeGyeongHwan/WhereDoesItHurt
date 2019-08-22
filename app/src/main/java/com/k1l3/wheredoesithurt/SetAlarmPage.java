@@ -2,7 +2,9 @@ package com.k1l3.wheredoesithurt;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,8 +26,9 @@ public class SetAlarmPage extends AppCompatActivity {
     public Button nextBtn,cancelBtn;
     public TextView title,alarm_num,from_dateText,to_dateText;
     public ImageView from_img,to_img;
-    public LinearLayout from_linear,to_linear;
+    public LinearLayout from_linear,to_linear,from_contain,to_contain;
     public DatePicker from_date,to_date;
+    private final static int ACT_ALARM = 99;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -43,6 +46,8 @@ public class SetAlarmPage extends AppCompatActivity {
         to_date=findViewById(R.id.to_datepicker);
         from_dateText=findViewById(R.id.from_dateText);
         to_dateText=findViewById(R.id.to_dateText);
+        from_contain=findViewById(R.id.from_linear);
+        to_contain=findViewById(R.id.to_linear);
 
         Intent intent=getIntent();
         String title_pre=intent.getStringExtra("title");
@@ -197,13 +202,13 @@ public class SetAlarmPage extends AppCompatActivity {
             text=text.concat(str+" ");
         }
 
-        from_img.setOnClickListener(new View.OnClickListener() {
+        from_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imglistener(1);
             }
         });
-        to_img.setOnClickListener(new View.OnClickListener() {
+        to_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imglistener(2);
@@ -221,7 +226,9 @@ public class SetAlarmPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent moveintent= new Intent(SetAlarmPage.this,Addword_Activity.class);
+                moveintent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(moveintent);
+                finish();
             }
         });
 

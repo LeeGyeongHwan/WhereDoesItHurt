@@ -10,5 +10,8 @@
     <string name="dialog_select_camera">Camera</string>
     <string name="dialog_select_gallery">Gallery</string>
 
+    <string name="channel_name">Notification channel</string>
+    <string name="channel_description">Notification description</string>
+
     <string name="image_picker_error">Something is wrong with that image. Pick a different one please.</string>
 </resources>

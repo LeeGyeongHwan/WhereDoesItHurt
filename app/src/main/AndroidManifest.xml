@@ -44,6 +44,7 @@
         </provider>
         <activity android:name=".Addword_Activity"></activity>
         <activity android:name="SetAlarmPage"></activity>
+        <activity android:name=".example"></activity>
     </application>
 
 </manifest>

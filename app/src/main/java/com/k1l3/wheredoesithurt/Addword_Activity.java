@@ -1,5 +1,6 @@
 package com.k1l3.wheredoesithurt;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -127,6 +129,11 @@ public class Addword_Activity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent outIntent = getIntent();
+                //putextra로 정보들 넣기!
+                outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
+                setResult(RESULT_OK,outIntent);
+                Log.d("please", "onClick: addword");
                 finish();
             }
         });
