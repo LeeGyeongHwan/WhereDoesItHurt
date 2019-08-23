@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -17,6 +18,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 
@@ -35,8 +41,9 @@ public class Addword_Activity extends AppCompatActivity {
     private int[] check = new int[15];
     private Prescription prescription;
     private ArrayList<String> hashtags;
-
-
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +54,15 @@ public class Addword_Activity extends AppCompatActivity {
         word_flexboxlayout = (FlexboxLayout)findViewById(R.id.word_flexboxlayout);
         saveButton = (Button)findViewById(R.id.save_button);
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
         spannableString = new SpannableString(textView.getText().toString());
         hashtags = new ArrayList<>();
 
         Intent intent = getIntent();
-
+        id=intent.getStringExtra("id");
+        Log.e(TAG,"id : "+id);
         prescription = (Prescription)intent.getSerializableExtra("prescription");
 
         Custom_text("처방전");
@@ -151,11 +162,32 @@ public class Addword_Activity extends AppCompatActivity {
     private void savePrescription(){
         Log.i(TAG, "savePrescription");
 
-        prescription.setHashTag(hashtags);
+        /*prescription.setHashTag(hashtags);
 
         User.getInstance().getPrescriptions().add(prescription);
 
-        User.getInstance().syncWithDatabase();
+        User.getInstance().syncWithDatabase();*/
+        databaseReference = database.getReference("users").child(id);
+        ValueEventListener databaseListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User info = dataSnapshot.getValue(User.class);
+                prescription.setHashTag(hashtags);
+                if(info.getPrescriptions()==null){
+                    ArrayList<Prescription> prescriptionArray = new ArrayList<>();
+                    prescriptionArray.add(prescription);
+                    info.setPrescriptions(prescriptionArray);
+                }
+                else{
+                    info.getPrescriptions().add(prescription);
+                }
+                databaseReference.setValue(info);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        databaseReference.addListenerForSingleValueEvent(databaseListener);
     }
 
     void Custom_text(String word) {

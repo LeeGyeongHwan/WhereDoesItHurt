@@ -25,7 +25,7 @@ public class SetAlarmPage extends AppCompatActivity {
     private ImageView from_img, to_img;
     private LinearLayout from_linear, to_linear;
     private DatePicker from_date, to_date;
-
+    private String id;
     final private ArrayList<TextView> arrayText = new ArrayList<>();
     final private ArrayList<TimePicker> arrayPicker = new ArrayList<>();
     final private ArrayList<ImageView> arrayImg = new ArrayList<>();
@@ -57,6 +57,7 @@ public class SetAlarmPage extends AppCompatActivity {
         String title_pre = intent.getStringExtra("title");
         String alarmnum = intent.getStringExtra("alarmcount");
         String alarmday = intent.getStringExtra("alarmday");
+        id=intent.getStringExtra("id");
         prescription = (Prescription) intent.getSerializableExtra("prescription");
         times = new Times();
 
@@ -216,7 +217,7 @@ public class SetAlarmPage extends AppCompatActivity {
 
                 Intent moveintent = new Intent(SetAlarmPage.this, Addword_Activity.class);
                 moveintent.putExtra("prescription",prescription);
-
+                moveintent.putExtra("id",id);
                 startActivity(moveintent);
             }
         });

@@ -11,13 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.k1l3.wheredoesithurt.models.Medicine;
-import java.util.ArrayList;
-
 import com.k1l3.wheredoesithurt.models.Prescription;
-import com.k1l3.wheredoesithurt.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +25,7 @@ public class ResultOfVision extends AppCompatActivity {
     private Prescription prescription;
     private ArrayList<Medicine> medicines;
     private int index=0;
-
+    private String id;
     private final ArrayList<EditText> EditList1 = new ArrayList<>();
     private final ArrayList<EditText> EditList2 = new ArrayList<>();
     private final ArrayList<EditText> EditList3 = new ArrayList<>();
@@ -55,6 +51,7 @@ public class ResultOfVision extends AppCompatActivity {
 
         Intent intent = getIntent();
         String getStr= intent.getStringExtra("result");
+        id=intent.getStringExtra("id");
         int getCount=intent.getIntExtra("numbermedicine",1);
         Log.d("check", "onCreate: "+getStr);
 
@@ -126,7 +123,7 @@ public class ResultOfVision extends AppCompatActivity {
                 addMedicines();
                 prescription.setMedicines(medicines);
                 intent.putExtra("prescription",prescription);
-                
+                intent.putExtra("id",id);
                 startActivity(intent);
             }
         } );

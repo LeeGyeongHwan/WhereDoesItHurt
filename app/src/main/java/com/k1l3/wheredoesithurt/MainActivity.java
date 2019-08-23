@@ -603,6 +603,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
                 intent.putExtra("result",result);
                 intent.putExtra("numbermedicine",medicine_count);
+                intent.putExtra("id",id.toString());
                 startActivity(intent);
 
             }
@@ -864,56 +865,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeAsUpIndicator(menuImage);
     }
 
-    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<MainActivity> mActivityWeakReference;
-        ProgressDialog asyncDialog = new ProgressDialog(
-                MainActivity.this);
-        private Vision.Images.Annotate mRequest;
-
-        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
-            mActivityWeakReference = new WeakReference<>(activity);
-            mRequest = annotate;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("분석중입니다..");
-
-            // show dialog
-            asyncDialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-            try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
-                BatchAnnotateImagesResponse response = mRequest.execute();
-                return convertResponseToString(response);
-
-            } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
-            } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
-            }
-            return "Cloud Vision API request failed. Check logs for details.";
-        }
-
-        protected void onPostExecute(String result) {
-            MainActivity activity = mActivityWeakReference.get();
-            asyncDialog.dismiss();
-            if (activity != null && !activity.isFinishing()) {
-                Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
-                intent.putExtra("result", result);
-                startActivity(intent);
-
-                //TextView imageDetail = activity.findViewById(R.id.image_details);
-                //imageDetail.setText(result);
-            }
-        }
-    }
     public String getId(){
         return id.toString();
     }
