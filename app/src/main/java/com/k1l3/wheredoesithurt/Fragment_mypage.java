@@ -24,7 +24,7 @@ import static android.support.constraint.Constraints.TAG;
 public class Fragment_mypage extends Fragment {
     View viewGroup;
     String image,name,email;
-    LinearLayout my_default_time;
+    LinearLayout my_default_time,my_info;
     FragmentManager manager;
     FragmentTransaction transaction;
     @Nullable
@@ -61,6 +61,14 @@ public class Fragment_mypage extends Fragment {
             @Override
             public void onClick(View v) {
                 replaceFragment(new Fragment_my_default_time());
+            }
+        });
+        //나의 정보 페이지로 가기
+        my_info=(LinearLayout)viewGroup.findViewById(R.id.my_info);
+        my_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Fragment_myinfo());
             }
         });
         return viewGroup;

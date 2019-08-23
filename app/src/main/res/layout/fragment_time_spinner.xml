@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#ffffff"
     android:layout_height="match_parent">
@@ -24,36 +25,50 @@
 
     </TimePicker>
 
-    <Button
+    <ImageButton
         android:id="@+id/finish"
-        android:text="∨"
-        android:textColor="#ffffff"
-        android:background="#ADA5FD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/default_save"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/mypage_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.876"
+        app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_picker"
-        app:layout_constraintVertical_bias="0.221" />
+        app:layout_constraintVertical_bias="0.43" />
 
-    <Button
+    <ImageButton
         android:id="@+id/cancel"
-        android:text="─"
-        android:textColor="#ffffff"
-        android:background="#ff0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/default_delete"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/mypage_delete1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.87"
+        app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/finish" />
+        app:layout_constraintTop_toBottomOf="@+id/finish"
+        app:layout_constraintVertical_bias="0.120000005" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="340dp" />
 </android.support.constraint.ConstraintLayout>

@@ -770,6 +770,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -781,6 +782,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -792,6 +794,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -803,6 +806,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -813,6 +817,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -823,12 +828,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(false); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+    }
+    public void toolbar_myinfo(){
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.VISIBLE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
     }
     public void setup_nav(int menuImage){
         setSupportActionBar(toolbar);
@@ -845,5 +862,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(menuImage);
+    }
+
+    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
+        private final WeakReference<MainActivity> mActivityWeakReference;
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
+        private Vision.Images.Annotate mRequest;
+
+        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
+            mActivityWeakReference = new WeakReference<>(activity);
+            mRequest = annotate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("분석중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Object... params) {
+            try {
+                Log.d(TAG, "created Cloud Vision request object, sending request");
+                BatchAnnotateImagesResponse response = mRequest.execute();
+                return convertResponseToString(response);
+
+            } catch (GoogleJsonResponseException e) {
+                Log.d(TAG, "failed to make API request because " + e.getContent());
+            } catch (IOException e) {
+                Log.d(TAG, "failed to make API request because of other IOException " +
+                        e.getMessage());
+            }
+            return "Cloud Vision API request failed. Check logs for details.";
+        }
+
+        protected void onPostExecute(String result) {
+            MainActivity activity = mActivityWeakReference.get();
+            asyncDialog.dismiss();
+            if (activity != null && !activity.isFinishing()) {
+                Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
+                intent.putExtra("result", result);
+                startActivity(intent);
+
+                //TextView imageDetail = activity.findViewById(R.id.image_details);
+                //imageDetail.setText(result);
+            }
+        }
+    }
+    public String getId(){
+        return id.toString();
     }
 }
