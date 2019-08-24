@@ -4,7 +4,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class User { //TODO (@nono5546) : User정보 관리하는 클래스 만들기.
     private static final User instance = new User();
@@ -19,7 +18,7 @@ public class User { //TODO (@nono5546) : User정보 관리하는 클래스 만�
         return instance;
     }
 
-    public List<Prescription> getPrescriptions() {
+    public ArrayList<Prescription> getPrescriptions() {
         return Prescriptions;
     }
 

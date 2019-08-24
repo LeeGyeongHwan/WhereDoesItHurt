@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/no_medicine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="#ffffff"
+        android:text="복용중인 약이 없습니다"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:fillViewport="true"
+        android:scrollbarThumbVertical="@drawable/scroll_color"
+        android:scrollbars="vertical"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ListView
+            android:id="@+id/mymedicine_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_marginTop="8dp"
+            android:divider="@null"
+            android:dividerHeight="0px"
+            android:fastScrollEnabled="true"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal"
+            app:layout_constraintVertical_bias="0.0"></ListView>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

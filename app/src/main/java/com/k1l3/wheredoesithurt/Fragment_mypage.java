@@ -24,7 +24,7 @@ import static android.support.constraint.Constraints.TAG;
 public class Fragment_mypage extends Fragment {
     View viewGroup;
     String image,name,email;
-    LinearLayout my_default_time,my_info;
+    LinearLayout my_default_time,my_info,my_medicine;
     FragmentManager manager;
     FragmentTransaction transaction;
     @Nullable
@@ -69,6 +69,15 @@ public class Fragment_mypage extends Fragment {
             @Override
             public void onClick(View v) {
                 replaceFragment(new Fragment_myinfo());
+            }
+        });
+
+        //복용약 페이지 들어가기
+        my_medicine=(LinearLayout)viewGroup.findViewById(R.id.my_medicine);
+        my_medicine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Fragment_mymedicine());
             }
         });
         return viewGroup;
