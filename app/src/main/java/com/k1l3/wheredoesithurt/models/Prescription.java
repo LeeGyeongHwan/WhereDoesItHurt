@@ -16,6 +16,7 @@ public class    Prescription implements Serializable {
     private ArrayList<Medicine> medicines;
     private ArrayList<String> hashTag;
     private Times times;
+    private String memo;
 
     private boolean isVisible = false;
 
@@ -84,6 +85,14 @@ public class    Prescription implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public boolean isVisible() {
