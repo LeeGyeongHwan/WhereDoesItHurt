@@ -772,6 +772,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -784,6 +785,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -796,6 +798,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -808,6 +811,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173,165,253));
         setup_nav(R.drawable.ic_menu);
     }
@@ -819,6 +823,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }
@@ -830,6 +835,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -845,6 +851,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.VISIBLE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
+        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        setup_nav(R.drawable.ic_menu);
+    }
+    public void toolbar_mymedicine(){
+        toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
+        toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(Color.rgb(255,255,255));
         setup_nav(R.drawable.ic_menu);
     }

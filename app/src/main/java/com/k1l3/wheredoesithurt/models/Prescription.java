@@ -5,10 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Prescription implements Serializable {
+public class    Prescription implements Serializable {
     private String begin;
     private String end;
-
+    private String name;
     @Nullable
     private int caution;
     @Nullable
@@ -16,6 +16,7 @@ public class Prescription implements Serializable {
     private ArrayList<Medicine> medicines;
     private ArrayList<String> hashTag;
     private Times times;
+    private String memo;
 
     private boolean isVisible = false;
 
@@ -76,6 +77,22 @@ public class Prescription implements Serializable {
 
     public void setHashTag(@Nullable ArrayList<String> hashTag) {
         this.hashTag = hashTag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public boolean isVisible() {
