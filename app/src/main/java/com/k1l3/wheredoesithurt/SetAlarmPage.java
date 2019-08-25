@@ -26,6 +26,7 @@ public class SetAlarmPage extends AppCompatActivity {
     private LinearLayout from_linear, to_linear;
     private DatePicker from_date, to_date;
     private String id;
+
     final private ArrayList<TextView> arrayText = new ArrayList<>();
     final private ArrayList<TimePicker> arrayPicker = new ArrayList<>();
     final private ArrayList<ImageView> arrayImg = new ArrayList<>();
@@ -249,8 +250,21 @@ public class SetAlarmPage extends AppCompatActivity {
     }
 
     public void initiate_datepicker(int num) {
-        final String fromdate = from_date.getYear() + "." + Integer.toString(from_date.getMonth() + 1) + "." + from_date.getDayOfMonth();
+        String fromdate = from_date.getYear() + ".";
+        if (from_date.getMonth() + 1 < 10) {
+            fromdate += "0" + (from_date.getMonth() + 1) + ".";
+        } else {
+            fromdate += (from_date.getMonth() + 1) + ".";
+        }
+
+        if (from_date.getDayOfMonth() < 10) {
+            fromdate += "." + from_date.getDayOfMonth();
+        } else {
+            fromdate += from_date.getDayOfMonth();
+        }
+
         from_dateText.setText(fromdate);
+
 
         from_date.init(from_date.getYear(), from_date.getMonth(), from_date.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
             @Override
@@ -283,7 +297,20 @@ public class SetAlarmPage extends AppCompatActivity {
                 });
             }
         });
-        String todate = to_date.getYear() + "." + Integer.toString(to_date.getMonth() + 1) + "." + to_date.getDayOfMonth();
+
+        String todate = to_date.getYear() + ".";
+        if (to_date.getMonth() + 1 < 10) {
+            todate += "0" + (to_date.getMonth() + 1) + ".";
+        } else {
+            todate += (to_date.getMonth() + 1) + ".";
+        }
+
+        if (to_date.getDayOfMonth() < 10) {
+            todate += "." + to_date.getDayOfMonth();
+        } else {
+            todate += to_date.getDayOfMonth();
+        }
+
         to_dateText.setText(todate);
     }
 
