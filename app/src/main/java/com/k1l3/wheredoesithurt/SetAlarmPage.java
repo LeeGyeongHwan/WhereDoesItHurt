@@ -57,12 +57,11 @@ public class SetAlarmPage extends AppCompatActivity {
         String title_pre = intent.getStringExtra("title");
         String alarmnum = intent.getStringExtra("alarmcount");
         String alarmday = intent.getStringExtra("alarmday");
-        id=intent.getStringExtra("id");
+        id = intent.getStringExtra("id");
         prescription = (Prescription) intent.getSerializableExtra("prescription");
         times = new Times();
 
         alarm_num.setText(alarmnum + "회씩");
-
 
         initiate_datepicker(Integer.parseInt(alarmday));
 
@@ -214,10 +213,12 @@ public class SetAlarmPage extends AppCompatActivity {
                 addTimes();
 
                 prescription.setTimes(times);
+                prescription.setBegin(from_dateText.getText().toString());
+                prescription.setEnd(to_dateText.getText().toString());
 
                 Intent moveintent = new Intent(SetAlarmPage.this, Addword_Activity.class);
-                moveintent.putExtra("prescription",prescription);
-                moveintent.putExtra("id",id);
+                moveintent.putExtra("prescription", prescription);
+                moveintent.putExtra("id", id);
                 startActivity(moveintent);
             }
         });
@@ -299,7 +300,7 @@ public class SetAlarmPage extends AppCompatActivity {
     }
 
     private void addTimes() {
-        for (int i = 0; i < arrayText.size();++i){
+        for (int i = 0; i < arrayText.size(); ++i) {
             times.addTime(arrayText.get(i).getText().toString());
         }
     }
