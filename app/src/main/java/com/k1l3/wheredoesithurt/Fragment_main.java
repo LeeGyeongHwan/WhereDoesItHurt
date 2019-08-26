@@ -16,13 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.k1l3.wheredoesithurt.models.DayClick;
 import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.User;
 
@@ -35,7 +39,7 @@ public class Fragment_main extends Fragment {
     private View viewGroup;
     public int[] check = new int[3];
     private EditText medicine_search;
-    private ViewGroup btn1, btn2, btn3;
+    private View btn1, btn2, btn3;
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private ListView my_medicine_info, my_caution_food;
@@ -43,7 +47,11 @@ public class Fragment_main extends Fragment {
     private SpannableString spannableString;
     private Adapter adapter;
     private foodAdapter foodAdapter;
-
+    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private String id;
+    public Calendar cal = Calendar.getInstance();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -53,8 +61,24 @@ public class Fragment_main extends Fragment {
         medicine_search = (EditText) viewGroup.findViewById(R.id.medicin_search);
         medicine_search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         medicine_search.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        when1 = viewGroup.findViewById(R.id.when1);
+        time1 = viewGroup.findViewById(R.id.time1);
+        iseat1 = viewGroup.findViewById(R.id.iseat1);
+        when2 = viewGroup.findViewById(R.id.when2);
+        time2 = viewGroup.findViewById(R.id.time2);
+        iseat2 = viewGroup.findViewById(R.id.iseat2);
+        when3 = viewGroup.findViewById(R.id.when3);
+        time3 = viewGroup.findViewById(R.id.time3);
+        iseat3 = viewGroup.findViewById(R.id.iseat3);
+        btn1 = viewGroup.findViewById(R.id.flipbtn1);
+        btn2 = viewGroup.findViewById(R.id.flipbtn2);
+        btn3 = viewGroup.findViewById(R.id.flipbtn3);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
+        id = ((MainActivity)getActivity()).getId();
+
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -71,80 +95,6 @@ public class Fragment_main extends Fragment {
             }
         });
 
-        //버튼 클릭
-        Button.OnClickListener onClickListener = new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView when, time, iseat;
-                switch (view.getId()) {
-                    case R.id.flipbtn1:
-                        check[0]++;
-                        when = viewGroup.findViewById(R.id.when1);
-                        time = viewGroup.findViewById(R.id.time1);
-                        iseat = viewGroup.findViewById(R.id.iseat1);
-
-                        if (check[0] % 2 == 0) {
-                            btn1.setBackgroundResource(R.drawable.flip_purple);
-                            iseat.setText("못먹었어요");
-                            when.setTextColor(Color.parseColor("#ffffff"));
-                            time.setTextColor(Color.parseColor("#ffffff"));
-                            iseat.setTextColor(Color.parseColor("#ffffff"));
-                        } else {
-                            btn1.setBackgroundResource(R.drawable.flip_white);
-                            iseat.setText("먹었어요");
-                            when.setTextColor(Color.parseColor("#776DE0"));
-                            time.setTextColor(Color.parseColor("#776DE0"));
-                            iseat.setTextColor(Color.parseColor("#776DE0"));
-                        }
-                        break;
-                    case R.id.flipbtn2:
-                        check[1]++;
-                        when = viewGroup.findViewById(R.id.when2);
-                        time = viewGroup.findViewById(R.id.time2);
-                        iseat = viewGroup.findViewById(R.id.iseat2);
-                        if (check[1] % 2 == 0) {
-                            btn2.setBackgroundResource(R.drawable.flip_purple);
-                            iseat.setText("못먹었어요");
-                            when.setTextColor(Color.parseColor("#ffffff"));
-                            time.setTextColor(Color.parseColor("#ffffff"));
-                            iseat.setTextColor(Color.parseColor("#ffffff"));
-                        } else {
-                            btn2.setBackgroundResource(R.drawable.flip_white);
-                            iseat.setText("먹었어요");
-                            when.setTextColor(Color.parseColor("#776DE0"));
-                            time.setTextColor(Color.parseColor("#776DE0"));
-                            iseat.setTextColor(Color.parseColor("#776DE0"));
-                        }
-                        break;
-                    case R.id.flipbtn3:
-                        check[2]++;
-                        when = viewGroup.findViewById(R.id.when3);
-                        time = viewGroup.findViewById(R.id.time3);
-                        iseat = viewGroup.findViewById(R.id.iseat3);
-                        if (check[2] % 2 == 0) {
-                            btn3.setBackgroundResource(R.drawable.flip_purple);
-                            iseat.setText("못먹었어요");
-                            when.setTextColor(Color.parseColor("#ffffff"));
-                            time.setTextColor(Color.parseColor("#ffffff"));
-                            iseat.setTextColor(Color.parseColor("#ffffff"));
-                        } else {
-                            btn3.setBackgroundResource(R.drawable.flip_white);
-                            iseat.setText("먹었어요");
-                            when.setTextColor(Color.parseColor("#776DE0"));
-                            time.setTextColor(Color.parseColor("#776DE0"));
-                            iseat.setTextColor(Color.parseColor("#776DE0"));
-                        }
-                        break;
-                }
-            }
-        };
-
-        btn1 = viewGroup.findViewById(R.id.flipbtn1);
-        btn1.setOnClickListener(onClickListener);
-        btn2 = viewGroup.findViewById(R.id.flipbtn2);
-        btn2.setOnClickListener(onClickListener);
-        btn3 = viewGroup.findViewById(R.id.flipbtn3);
-        btn3.setOnClickListener(onClickListener);
         //약 이름
         my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
         adapter = new Adapter();
@@ -154,6 +104,9 @@ public class Fragment_main extends Fragment {
         my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
         foodAdapter = new foodAdapter();
         getCautionFood();
+
+        //버튼
+        setButton();
         return viewGroup;
     }
 
@@ -210,6 +163,7 @@ public class Fragment_main extends Fragment {
         }
     }
 
+    //주의해야할 음식
     private void getCautionFood() {
         User user = User.getInstance();
         StringBuffer buffer = new StringBuffer();
@@ -231,7 +185,7 @@ public class Fragment_main extends Fragment {
                                 foodAdapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
                             }
                             my_caution_food.setAdapter(foodAdapter);
-                            setListViewHeightBasedOnChildren(my_caution_food);
+                            //setListViewHeightBasedOnChildren(my_caution_food);
                             break;
                         } else {
                             currentCount++;
@@ -246,6 +200,7 @@ public class Fragment_main extends Fragment {
         }
     }
 
+    //나의 약 정보 Adapter
     private class Adapter extends BaseAdapter {
         ArrayList<Medicine> items = new ArrayList<Medicine>();
 
@@ -287,6 +242,7 @@ public class Fragment_main extends Fragment {
         }
     }
 
+    //주의해야할 음식 Adapter
     private class foodAdapter extends BaseAdapter {
         ArrayList<Medicine> items = new ArrayList<Medicine>();
 
@@ -368,26 +324,188 @@ public class Fragment_main extends Fragment {
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
+    //버튼
+    private void setButton() {
+        User user = User.getInstance();
+        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 2) { //알람시간 2개
+            btn3.setVisibility(View.INVISIBLE);
+            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+            int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
+            setButtonDate(user,get_0);
+            setButtonDate(user,get_1);
+        } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 1) { //알람시간 1개
+            btn2.setVisibility(View.INVISIBLE);
+            btn3.setVisibility(View.INVISIBLE);
+
+            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+            setButtonDate(user,get_0);
+        }else if(user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 3){
+            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+            int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
+            int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(3, 5));
+            setButtonDate(user,get_0);
+            setButtonDate(user,get_1);
+            setButtonDate(user,get_2);
         }
-
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
+        buttonClick(btn1,0);
+        buttonClick(btn2,1);
+        buttonClick(btn3,2);
     }
+    //버튼 날짜,종류 설정
+    private void setButtonDate(User user, int get_0){
+        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2).equals("AM")) {
+            if (get_0 >= 5 && get_0 <= 9) {
+                when1.setText("아침");
+            } else if (get_0 >= 10) {
+                when1.setText("점심");
+            } else if (get_0 < 5) {
+                when1.setText("저녁");
+            }
+        } else {
+            if (get_0 == 12 || get_0 <= 4) {
+                when1.setText("점심");
+            } else if (get_0 > 4) {
+                when1.setText("저녁");
+            }
+        }
+        time1.setText(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 8));
+    }
+    //Button click이벤트
+    public void buttonClick(View fliptbtn1, final int i){
+        databaseReference = database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount))
+        .child(String.valueOf(cal.get(Calendar.YEAR))).child(String.valueOf(cal.get(Calendar.MONTH)+1)).child(String.valueOf(cal.get(Calendar.DATE)));
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DayClick item = dataSnapshot.getValue(DayClick.class);
+                if(item!=null){
+                    for(int i=0;i<3;i++){
+                        if(i==0){
+                            check[i]=item.getOne();
+                            if(check[i]==0){
+                                btn1.setBackgroundResource(R.drawable.flip_purple);
+                                iseat1.setText("못먹었어요");
+                                when1.setTextColor(Color.parseColor("#ffffff"));
+                                time1.setTextColor(Color.parseColor("#ffffff"));
+                                iseat1.setTextColor(Color.parseColor("#ffffff"));
+                            }else{
+                                btn1.setBackgroundResource(R.drawable.flip_white);
+                                iseat1.setText("먹었어요");
+                                when1.setTextColor(Color.parseColor("#776DE0"));
+                                time1.setTextColor(Color.parseColor("#776DE0"));
+                                iseat1.setTextColor(Color.parseColor("#776DE0"));
+                            }
+                        }else if(i==1){
+                            check[i]=item.getTwo();
+                            if(check[i]==0){
+                                btn2.setBackgroundResource(R.drawable.flip_purple);
+                                iseat2.setText("못먹었어요");
+                                when2.setTextColor(Color.parseColor("#ffffff"));
+                                time2.setTextColor(Color.parseColor("#ffffff"));
+                                iseat2.setTextColor(Color.parseColor("#ffffff"));
+                            }else{
+                                btn2.setBackgroundResource(R.drawable.flip_white);
+                                iseat2.setText("먹었어요");
+                                when2.setTextColor(Color.parseColor("#776DE0"));
+                                time2.setTextColor(Color.parseColor("#776DE0"));
+                                iseat2.setTextColor(Color.parseColor("#776DE0"));
+                            }
+                        }else if(i==2){
+                            check[i]=item.getThree();
+                            if(check[i]==0){
+                                btn3.setBackgroundResource(R.drawable.flip_purple);
+                                iseat3.setText("못먹었어요");
+                                when3.setTextColor(Color.parseColor("#ffffff"));
+                                time3.setTextColor(Color.parseColor("#ffffff"));
+                                iseat3.setTextColor(Color.parseColor("#ffffff"));
+                            }else{
+                                btn3.setBackgroundResource(R.drawable.flip_white);
+                                iseat3.setText("먹었어요");
+                                when3.setTextColor(Color.parseColor("#776DE0"));
+                                time3.setTextColor(Color.parseColor("#776DE0"));
+                                iseat3.setTextColor(Color.parseColor("#776DE0"));
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        fliptbtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(i==0) {
+                    if (check[i] % 2 == 1) {
+                        btn1.setBackgroundResource(R.drawable.flip_purple);
+                        iseat1.setText("못먹었어요");
+                        when1.setTextColor(Color.parseColor("#ffffff"));
+                        time1.setTextColor(Color.parseColor("#ffffff"));
+                        iseat1.setTextColor(Color.parseColor("#ffffff"));
+                        check[i]--;
+                    } else {
+                        btn1.setBackgroundResource(R.drawable.flip_white);
+                        iseat1.setText("먹었어요");
+                        when1.setTextColor(Color.parseColor("#776DE0"));
+                        time1.setTextColor(Color.parseColor("#776DE0"));
+                        iseat1.setTextColor(Color.parseColor("#776DE0"));
+                        check[i]++;
+                    }
+                }else if(i==1){
+                    if (check[i] % 2 == 1) {
+                        btn2.setBackgroundResource(R.drawable.flip_purple);
+                        iseat2.setText("못먹었어요");
+                        when2.setTextColor(Color.parseColor("#ffffff"));
+                        time2.setTextColor(Color.parseColor("#ffffff"));
+                        iseat2.setTextColor(Color.parseColor("#ffffff"));
+                        check[i]--;
+                    } else {
+                        btn2.setBackgroundResource(R.drawable.flip_white);
+                        iseat2.setText("먹었어요");
+                        when2.setTextColor(Color.parseColor("#776DE0"));
+                        time2.setTextColor(Color.parseColor("#776DE0"));
+                        iseat2.setTextColor(Color.parseColor("#776DE0"));
+                        check[i]++;
+                    }
+                }else if(i==2){
+                    if (check[i] % 2 == 1) {
+                        btn3.setBackgroundResource(R.drawable.flip_purple);
+                        iseat3.setText("못먹었어요");
+                        when3.setTextColor(Color.parseColor("#ffffff"));
+                        time3.setTextColor(Color.parseColor("#ffffff"));
+                        iseat3.setTextColor(Color.parseColor("#ffffff"));
+                        check[i]--;
+                    } else {
+                        btn3.setBackgroundResource(R.drawable.flip_white);
+                        iseat3.setText("먹었어요");
+                        when3.setTextColor(Color.parseColor("#776DE0"));
+                        time3.setTextColor(Color.parseColor("#776DE0"));
+                        iseat3.setTextColor(Color.parseColor("#776DE0"));
+                        check[i]++;
+                    }
+                }
+                buttonDatabase(check);
+            }
+        });
+    }
+    //Button database
+    private void buttonDatabase(final int[] check){
+        databaseReference = database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount))
+                    .child(String.valueOf(cal.get(Calendar.YEAR))).child(String.valueOf(cal.get(Calendar.MONTH)+1)).child(String.valueOf(cal.get(Calendar.DATE)));
+        ValueEventListener databaseListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DayClick dayClick = new DayClick(check[0],check[1],check[2]);
+                databaseReference.setValue(dayClick);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        databaseReference.addListenerForSingleValueEvent(databaseListener);
+    }
 }

@@ -46,4 +46,28 @@ public class Medicine implements Serializable {
     public void setCaution(int caution) {
         this.caution = caution;
     }
+
+    public int getDailyDosage() {
+        return dailyDosage;
+    }
+
+    public void setDailyDosage(int dailyDosage) {
+        this.dailyDosage = dailyDosage;
+    }
+
+    public int getNumberOfDoses() {
+        return numberOfDoses;
+    }
+
+    public void setNumberOfDoses(int numberOfDoses) {
+        this.numberOfDoses = numberOfDoses;
+    }
+
+    public int getNumberOfDay() {
+        return numberOfDay;
+    }
+
+    public void setNumberOfDay(int numberOfDay) {
+        this.numberOfDay = numberOfDay;
+    }
 }

@@ -220,10 +220,8 @@ public class ResultOfVision extends AppCompatActivity {
                                 medicine_kind = xpp.getText();
                                 if (medicine_kind.contains("mL") || medicine_kind.contains("리터")) {
                                     kind = "물약";
-                                    //item.add("물약");
                                 } else {
                                     kind = "알약";
-                                    //item.add("알약");
                                 }
 
                             } else if (tag.equals("EE_DOC_DATA")) {
