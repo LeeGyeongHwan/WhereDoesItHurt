@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <EditText
@@ -37,12 +37,21 @@
         app:layout_constraintTop_toBottomOf="@+id/medicin_search"
         app:layout_constraintVertical_bias="0.0">
 
-        <TextView
+        <com.dinuscxj.progressbar.CircleProgressBar
+            android:id="@+id/progress_bar"
             android:layout_width="0dp"
             android:layout_height="130dp"
             android:layout_weight="0.8"
             android:gravity="center"
-            android:text="그래프" />
+            android:max="100"
+            app:drawBackgroundOutsideProgress="true"
+            app:progress_background_color="#ffffff"
+            app:progress_end_color="#776DE0"
+            app:progress_start_color="#776DE0"
+            app:progress_start_degree="-90"
+            app:progress_stroke_width="30dp"
+            app:progress_text_color="#000000"
+            app:style="solid_line" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -68,11 +77,11 @@
 
             <ScrollView
                 android:id="@+id/scrollView3"
-                android:layout_centerHorizontal="true"
-                android:background="#ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
+                android:background="#ffffff"
                 android:fillViewport="true"
                 android:scrollbarThumbVertical="@drawable/scroll_color"
                 android:scrollbars="vertical"
@@ -203,9 +212,9 @@
             android:id="@+id/flipbtn3"
             android:layout_width="0dp"
             android:layout_height="120dp"
+            android:layout_gravity="center"
             android:layout_margin="3dp"
             android:layout_weight="1"
-            android:layout_gravity="center"
             android:background="@drawable/flip_purple"
             android:orientation="vertical"
             android:padding="5dp">
@@ -277,11 +286,11 @@
 
         <ScrollView
             android:id="@+id/scrollView2"
-            android:layout_centerHorizontal="true"
-            android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
+            android:background="#ffffff"
             android:fillViewport="true"
             android:scrollbarThumbVertical="@drawable/scroll_color"
             android:scrollbars="vertical"
