@@ -4,7 +4,7 @@ public class UserInfo {
     private String Age;
     private String Disease;
     private String Gender;
-    private String LifeStyles;
+    private LifeStyles LifeStyles;
     private String Name;
     private Times defaultTimes;
 
@@ -35,11 +35,11 @@ public class UserInfo {
         Gender = gender;
     }
 
-    public String getLifeStyles() {
+    public LifeStyles getLifeStyles() {
         return LifeStyles;
     }
 
-    public void setLifeStyles(String lifeStyles) {
+    public void setLifeStyles(LifeStyles lifeStyles) {
         LifeStyles = lifeStyles;
     }
 

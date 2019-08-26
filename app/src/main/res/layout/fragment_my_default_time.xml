@@ -5,17 +5,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:fillViewport="true"
+        android:scrollbarThumbVertical="@drawable/scroll_color"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ListView
+            android:id="@+id/defaultTimeListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_marginTop="8dp"
+            android:divider="@null"
+            android:dividerHeight="0px"
+            android:fastScrollEnabled="true"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal"
+            app:layout_constraintVertical_bias="0.0"></ListView>
+    </ScrollView>
+    <ImageButton
         android:id="@+id/add_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="#ADA5FD"
-        android:text="+"
-        android:textColor="#ffffff"
-        android:textSize="30dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@drawable/default_save"
+        android:src="@drawable/mypage_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.931"

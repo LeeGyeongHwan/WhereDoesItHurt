@@ -2,12 +2,13 @@ package com.k1l3.wheredoesithurt.models;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Prescription {
+public class    Prescription implements Serializable {
     private String begin;
     private String end;
-
+    private String name;
     @Nullable
     private int caution;
     @Nullable
@@ -15,6 +16,7 @@ public class Prescription {
     private ArrayList<Medicine> medicines;
     private ArrayList<String> hashTag;
     private Times times;
+    private String memo;
 
     private boolean isVisible = false;
 
@@ -35,6 +37,14 @@ public class Prescription {
 
     public void setCaution(int caution) {
         this.caution = caution;
+    }
+
+    public Times getTimes() {
+        return times;
+    }
+
+    public void setTimes(Times times) {
+        this.times = times;
     }
 
     public String getEnd() {
@@ -67,6 +77,22 @@ public class Prescription {
 
     public void setHashTag(@Nullable ArrayList<String> hashTag) {
         this.hashTag = hashTag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public boolean isVisible() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -17,33 +18,53 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Addword_Activity extends AppCompatActivity {
-    ArrayList<String> word_in;
-    TextView textView, hash_tag_text;
-    EditText add_text_hash;
-    Button saveButton;
-    SpannableString spannableString;
-    FlexboxLayout flexboxLayout,word_flexboxlayout;
-    StringBuffer hash_tag;
-    int[] check = new int[15];
-
+    private static final String TAG = "AddwordActivity";
+    private ArrayList<String> word_in;
+    private TextView textView;
+    private EditText add_text_hash;
+    private Button saveButton;
+    private SpannableString spannableString;
+    private FlexboxLayout flexboxLayout,word_flexboxlayout;
+    private int[] check = new int[15];
+    private Prescription prescription;
+    private ArrayList<String> hashtags;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_word);
+
         textView = (TextView)findViewById(R.id.textView);
-        //hash_tag_text = (TextView)findViewById(R.id.hash_tag_text);
         flexboxLayout = (FlexboxLayout)findViewById(R.id.add_flexboxlayout);
         word_flexboxlayout = (FlexboxLayout)findViewById(R.id.word_flexboxlayout);
         saveButton = (Button)findViewById(R.id.save_button);
-        hash_tag = new StringBuffer();
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
+
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
         spannableString = new SpannableString(textView.getText().toString());
+        hashtags = new ArrayList<>();
+
+        Intent intent = getIntent();
+        id=intent.getStringExtra("id");
+        Log.e(TAG,"id : "+id);
+        prescription = (Prescription)intent.getSerializableExtra("prescription");
+
         Custom_text("처방전");
         Custom_text("단어");
         textView.setText(spannableString);
@@ -75,6 +96,8 @@ public class Addword_Activity extends AppCompatActivity {
                     button.setTextColor(Color.BLACK);
                     button.setBackgroundColor(Color.WHITE);
                     check[checking]++;
+
+                    hashtags.remove(word_button.getText().toString());
                 }
             });
             button.setOnClickListener(new View.OnClickListener() {
@@ -84,18 +107,15 @@ public class Addword_Activity extends AppCompatActivity {
                         button.setTextColor(Color.WHITE);
                         button.setBackgroundColor(Color.BLACK);
                         check[checking]++;
-                        //hash_tag.append(" #"+button.getText().toString());
-                        //hash_tag_text.setText(hash_tag.toString());
                         word_flexboxlayout.addView(word_button);
+                        hashtags.add(button.getText().toString());
                     }
                     else{
                         button.setTextColor(Color.BLACK);
                         button.setBackgroundColor(Color.WHITE);
                         check[checking]++;
                         word_flexboxlayout.removeView(word_button);
-                        /*hash_tag.delete(hash_tag.indexOf(button.getText().toString())-2,
-                                hash_tag.indexOf(button.getText().toString())+button.getText().toString().length());
-                        hash_tag_text.setText(hash_tag.toString());*/
+                        hashtags.remove(button.getText().toString());
                     }
                 }
             });
@@ -118,10 +138,13 @@ public class Addword_Activity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         word_flexboxlayout.removeView(v);
+                        hashtags.remove(word_button.getText().toString());
                         }
                 });
                 word_flexboxlayout.addView(word_button);
                 add_text_hash.setText("");
+
+                hashtags.add(add_text_hash.getText().toString());
                 return false;
             }
         });
@@ -129,13 +152,45 @@ public class Addword_Activity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                savePrescription();
+
                 Intent outIntent = getIntent();
                 outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
                 setResult(RESULT_OK,outIntent);
-                Log.d("please", "onClick: addword");
                 finish();
             }
         });
+    }
+
+    private void savePrescription(){
+        Log.i(TAG, "savePrescription");
+
+        /*prescription.setHashTag(hashtags);
+
+        User.getInstance().getPrescriptions().add(prescription);
+
+        User.getInstance().syncWithDatabase();*/
+        databaseReference = database.getReference("users").child(id);
+        ValueEventListener databaseListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User info = dataSnapshot.getValue(User.class);
+                prescription.setHashTag(hashtags);
+                if(info.getPrescriptions()==null){
+                    ArrayList<Prescription> prescriptionArray = new ArrayList<>();
+                    prescriptionArray.add(prescription);
+                    info.setPrescriptions(prescriptionArray);
+                }
+                else{
+                    info.getPrescriptions().add(prescription);
+                }
+                databaseReference.setValue(info);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        databaseReference.addListenerForSingleValueEvent(databaseListener);
     }
 
     void Custom_text(String word) {

@@ -34,6 +34,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/medicine_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -138,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="메모를 입력하세요"
-                    android:inputType="text|textMultiLine"
+                    android:inputType="text"
                     android:scrollHorizontally="false"
                     android:singleLine="false"
                     android:textSize="14dp" />
