@@ -130,7 +130,6 @@ public class Addword_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent outIntent = getIntent();
-                //putextra로 정보들 넣기!
                 outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
                 setResult(RESULT_OK,outIntent);
                 Log.d("please", "onClick: addword");

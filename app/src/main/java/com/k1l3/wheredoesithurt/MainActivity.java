@@ -465,7 +465,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             uploadImage(photoUri);
         } else if (requestCode == ACT_ALARM && resultCode ==RESULT_OK){
             MakeNotification();
-            Log.d("please", "onActivityResult: "+requestCode +" result ok"+ resultCode);
         }
     }
 
@@ -662,7 +661,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        StringBuilder message = new StringBuilder("I found these things:\n\n");
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
         List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
@@ -682,64 +680,84 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (labels != null) {
             // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
-
-
+            boolean first=true , second = true ,third = true;
             for (EntityAnnotation label : labels) {
                 String labelstr=label.getDescription();
-                if(labelstr.equals("량") || labelstr.equals("투약량")){
+                if(!first && !second && !third){
+                    break;
+                }
+                if(first &&( labelstr.equals("투약")||labelstr.equals("량") || labelstr.equals("투약량"))){
                     int firstX=label.getBoundingPoly().getVertices().get(0).getX();
                     int secondX=label.getBoundingPoly().getVertices().get(1).getX();
                     vertixArray[0][0]=firstX;
                     vertixArray[0][1]=secondX;
-                }else if(labelstr.equals("투여횟수")||labelstr.equals("투여")){
+                    first=false;
+                }else if(second && (labelstr.equals("횟수")|| labelstr.equals("투여횟수")||labelstr.equals("투여"))){
                     int firstX=label.getBoundingPoly().getVertices().get(0).getX();
                     int secondX=label.getBoundingPoly().getVertices().get(1).getX();
                     vertixArray[1][0]=firstX;
                     vertixArray[1][1]=secondX;
-                }else if(labelstr.equals("투약일수")||labelstr.equals("일수")){
+                    second=false;
+                }else if(third && (labelstr.equals("투약") || labelstr.equals("투약일수")||labelstr.equals("일수"))){
                     int firstX=label.getBoundingPoly().getVertices().get(0).getX();
                     int secondX=label.getBoundingPoly().getVertices().get(1).getX();
                     vertixArray[2][0]=firstX;
                     vertixArray[2][1]=secondX;
+                    third=false;
                 }
             }
             for( int i=0;i<3;i++){
                 for(int j=0;j<2;j++){
-                    Log.d("gallery", "convertResponseToString: vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
+                    Log.d("gallery", "vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
                 }
             }
 
             //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
 
             int findcount=3;
-            for (EntityAnnotation label : labels) {
+            boolean chance=false;
+            String tmpLabel="";
+            for(EntityAnnotation label : labels){
                 String labelstr = label.getDescription();
                 if(findcount==2){
                     medicine[arrcount]=labelstr;
+                    Log.d(TAG, "findcount==2 tmplabel :"+tmpLabel);
                     Y_eachmedicine[arrcount]=label.getBoundingPoly().getVertices().get(0).getY();
                     arrcount++;
+                    tmpLabel="";
+                    chance=false;
                 }
-                //message.append(String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription()));
+                Log.d("galler", "label.getDescription() : "+label.getDescription());
+                Log.d("galler", "label.getDescription().getVertices() : "+label.getBoundingPoly().getVertices());
+                try{
 
-                if(labelstr.length()==9){
-                    try{
+                    Integer.parseInt(labelstr);
+                    tmpLabel=tmpLabel.concat(labelstr);
+                    Log.d("gallery", "tmpLabel : " +tmpLabel);
+                    if(tmpLabel.length()==9){
                         findcount=0;
-                        Integer.parseInt(labelstr);
-                        Log.d("gallery", "convertResponseToString: "+labelstr);
-                    }catch (NumberFormatException e){
-                        Log.d("exception", "convertResponseToString: "+e);
+                    }else if(chance){
+                        tmpLabel="";
+                        chance=false;
+                    }else{
+                        chance=true;
+                    }
+                }catch(NumberFormatException e){
+                    Log.d("exception","convert error"+labelstr+", tmplabel : "+tmpLabel);
+                    if(chance){
+                        tmpLabel="";
+                        chance=false;
+                    }
+                    if(tmpLabel.isEmpty()){
                         findcount=3;
+                        continue;
                     }
                 }
-                Log.d("galler", "convertResponseToString: "+label.getDescription());
-                Log.d("galler", "convertResponseToString: "+label.getBoundingPoly().getVertices());
-                //9자리번호 찾기  func find()getvertices.get(0,1,2,3,4,)로
-                //투약,투여,횟수시기,일수, x,y좌표 가져오기
                 findcount++;
             }
             for(int i=0;i<5;i++){
-                Log.d("gallery", "convertResponseToString: "+ Y_eachmedicine[i]);
-                Log.d("gallery", "convertResponseToString: "+ medicine[i]);
+                Log.d("gallery", "Y_eachmedicine["+i+"]"+ Y_eachmedicine[i]);
+                Log.d("gallery", "medicin["+i+"] "+ medicine[i]);
             }
 
             for (EntityAnnotation label : labels) {
@@ -747,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 int labelX2=label.getBoundingPoly().getVertices().get(1).getX();
                 int labelY=label.getBoundingPoly().getVertices().get(0).getY();
                 for(int i=0;i<arrcount;i++){
-                    if((Y_eachmedicine[i]-10<labelY) && (Y_eachmedicine[i]+10>labelY)){
+                    if((Y_eachmedicine[i]-20<labelY) && (Y_eachmedicine[i]+20>labelY)){
                         Log.d(TAG, "convertResponseToString: labely"+labelY);
                         for(int j=0;j<arrcount;j++){
                             if((vertixArray[j][0]-40<labelX) && (vertixArray[j][1]+40>labelX2)) {
@@ -765,8 +783,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
             }
-        } else {
-            message.append("nothing");
         }
 
         String returnstr="";
@@ -777,7 +793,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         medicine_count=arrcount;
-        Log.d("gallery", "convertResponseToString: "+returnstr);
+        Log.d("gallery", "returnstr :  "+returnstr);
         return returnstr;
     }
 
@@ -885,9 +901,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void MakeNotification(){
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder;
+        Intent main = new Intent(this,MainActivity.class);
+        PendingIntent mainPending= PendingIntent.getActivity(this,0,main,PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel("makenoti", "makenotificaition", NotificationManager.IMPORTANCE_DEFAULT);
@@ -901,18 +917,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         snoozeIntent.setAction("nananan");
         snoozeIntent.putExtra("EXTRA_NOTIFICATION_ID", 0);
         PendingIntent snoozePendingIntent =
-                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+                PendingIntent.getActivity(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.noti_logo));
         builder.setSmallIcon(R.drawable.small_icon);
-        builder.setTicker("알람 간단한 설명");
+        builder.setTicker("알람");
         builder.setContentTitle("00:00 AM");
         builder.setContentText("(나의 복용약) 복용시간입니다.");
         builder.setWhen(System.currentTimeMillis());
         builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setContentIntent(mainPending);
         builder.addAction(R.drawable.btn_o, "복용",snoozePendingIntent);
         builder.addAction(R.drawable.btn_x,"미복용",snoozePendingIntent);
-        builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         builder.setNumber(999);
 
