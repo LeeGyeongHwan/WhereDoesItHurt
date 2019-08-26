@@ -38,10 +38,12 @@ public class Fragment_main extends Fragment {
     private ViewGroup btn1, btn2, btn3;
     private FragmentManager manager;
     private FragmentTransaction transaction;
-    private ListView my_medicine_info;
+    private ListView my_medicine_info, my_caution_food;
     private int currentCount = 0;
     private SpannableString spannableString;
     private Adapter adapter;
+    private foodAdapter foodAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -143,10 +145,15 @@ public class Fragment_main extends Fragment {
         btn2.setOnClickListener(onClickListener);
         btn3 = viewGroup.findViewById(R.id.flipbtn3);
         btn3.setOnClickListener(onClickListener);
-
-        my_medicine_info =  viewGroup.findViewById(R.id.my_medicine_info);
-        adapter=new Adapter();
+        //약 이름
+        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+        adapter = new Adapter();
         getMedicineName();
+
+        //주의해야할 음식
+        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+        foodAdapter = new foodAdapter();
+        getCautionFood();
         return viewGroup;
     }
 
@@ -171,7 +178,7 @@ public class Fragment_main extends Fragment {
         User user = User.getInstance();
         StringBuffer buffer = new StringBuffer();
         StringBuffer buffer2 = new StringBuffer();
-        if (user.getPrescriptions().size()!=0) {
+        if (user.getPrescriptions().size() != 0) {
             while (true) {
                 int startYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(0, 4));
                 int startMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(5, 7));
@@ -188,7 +195,43 @@ public class Fragment_main extends Fragment {
                                 adapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
                             }
                             my_medicine_info.setAdapter(adapter);
-                            setListViewHeightBasedOnChildren(my_medicine_info);
+                            //setListViewHeightBasedOnChildren(my_medicine_info);
+                            break;
+                        } else {
+                            currentCount++;
+                        }
+                    } else {
+                        currentCount++;
+                    }
+                } else {
+                    currentCount++;
+                }
+            }
+        }
+    }
+
+    private void getCautionFood() {
+        User user = User.getInstance();
+        StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer2 = new StringBuffer();
+        if (user.getPrescriptions().size() != 0) {
+            while (true) {
+                int startYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(0, 4));
+                int startMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(5, 7));
+                int startDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(8, 10));
+                int endYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(0, 4));
+                int endMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(5, 7));
+                int endDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(8, 10));
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                            for (int i = 0; i < user.getPrescriptions().get(currentCount).getMedicines().size(); i++) {
+
+                                foodAdapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
+                            }
+                            my_caution_food.setAdapter(foodAdapter);
+                            setListViewHeightBasedOnChildren(my_caution_food);
                             break;
                         } else {
                             currentCount++;
@@ -243,6 +286,88 @@ public class Fragment_main extends Fragment {
             return view;
         }
     }
+
+    private class foodAdapter extends BaseAdapter {
+        ArrayList<Medicine> items = new ArrayList<Medicine>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public void addItem(Medicine item) {
+            items.add(item);
+        }
+
+        public void addItem(ArrayList<Medicine> item) {
+            items = item;
+        }
+
+        public void deleteItem(Medicine item) {
+            items.remove(item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Caution_foodView view = new Caution_foodView(viewGroup.getContext());
+            Medicine item = items.get(position);
+            view.setMedicine_name(item.getName());
+
+            int caution = item.getCaution();
+            if (caution == 0) {
+                view.setFood(" 없음");
+            } else {
+                for (int i = 0; i < 11; i++) {
+                    switch (caution % 2) {
+                        case 0:
+                            caution = caution / 2;
+                            break;
+                        case 1:
+                            if (i == 0) {//감기
+                                view.setFood(view.getFood().getText().toString() + " 초콜릿 커피 카페인");
+                            } else if (i == 1) {//철분제
+                                view.setFood(view.getFood().getText().toString() + " 녹차 유제품");
+                            } else if (i == 2) {//알레르기
+                                view.setFood(view.getFood().getText().toString() + " 과일주스");
+                            } else if (i == 3) {//통풍
+                                view.setFood(view.getFood().getText().toString() + " 고기 생선 조개 시금치 맥주");
+                            } else if (i == 4) {//골다공증
+                                view.setFood(view.getFood().getText().toString() + " 탄산음료");
+                            } else if (i == 5) {//기관지확장제
+                                view.setFood(view.getFood().getText().toString() + " 카페인");
+                            } else if (i == 6) {//변비
+                                view.setFood(view.getFood().getText().toString() + " 우유");
+                            } else if (i == 7) {//결핵
+                                view.setFood(view.getFood().getText().toString() + " 치즈");
+                            } else if (i == 8) {//고혈압
+                                view.setFood(view.getFood().getText().toString() + " 자몽주스 바나나 자몽");
+                            } else if (i == 9) {//항응고
+                                view.setFood(view.getFood().getText().toString() + " 시금치 등 푸른채소");
+                            } else if (i == 10) {//빈혈
+                                view.setFood(view.getFood().getText().toString() + " 홍차 녹차");
+                            }
+                            caution = caution / 2;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return view;
+        }
+    }
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

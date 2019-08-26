@@ -9,15 +9,18 @@ public class Medicine implements Serializable {
     private int numberOfDoses;
     private int numberOfDay;
 
+    private int caution;
+
     public Medicine() {
     }
 
-    public Medicine(String name, int dailyDosage, int numberOfDoses, int numberOfDay, String kind) {
+    public Medicine(String name, int dailyDosage, int numberOfDoses, int numberOfDay, String kind, int caution) {
         this.name = name;
         this.dailyDosage = dailyDosage;
         this.numberOfDoses = numberOfDoses;
         this.numberOfDay = numberOfDay;
         this.kind = kind;
+        this.caution = caution;
     }
 
     public String getName() {
@@ -34,5 +37,13 @@ public class Medicine implements Serializable {
 
     public void setKind(String kind) {
         this.kind = kind;
+    }
+
+    public int getCaution() {
+        return caution;
+    }
+
+    public void setCaution(int caution) {
+        this.caution = caution;
     }
 }

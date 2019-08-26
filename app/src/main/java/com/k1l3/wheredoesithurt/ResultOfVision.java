@@ -23,8 +23,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class ResultOfVision extends AppCompatActivity {
     private Button cancelBtn, nextPage, addMedBtn;
     private EditText title_pre;
@@ -39,7 +37,7 @@ public class ResultOfVision extends AppCompatActivity {
     private final ArrayList<EditText> EditList3 = new ArrayList<>();
     private final ArrayList<EditText> EditList4 = new ArrayList<>();
 
-    private ArrayList<String> medicine_kind;
+    private ArrayList<Pair> medicine_kind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +129,6 @@ public class ResultOfVision extends AppCompatActivity {
                 name = title_pre.getText().toString();
 
                 addMedicines(intent);
-
-                /*prescription.setMedicines(medicines);
-                prescription.setName(name);
-
-                intent.putExtra("prescription", prescription);
-                intent.putExtra("id", id);
-                startActivity(intent);*/
             }
         });
 
@@ -179,7 +170,7 @@ public class ResultOfVision extends AppCompatActivity {
                             Integer.parseInt(EditList2.get(i).getText().toString()),
                             Integer.parseInt(EditList3.get(i).getText().toString()),
                             Integer.parseInt(EditList4.get(i).getText().toString()),
-                            medicine_kind.get(i)));
+                            medicine_kind.get(i).getKind(), medicine_kind.get(i).getCaution()));
                 }
                 prescription.setMedicines(medicines);
                 prescription.setName(name);
@@ -191,11 +182,16 @@ public class ResultOfVision extends AppCompatActivity {
         }).start();
     }
 
-    private ArrayList<String> getXmlData(ArrayList<EditText> EditList) {
+    private ArrayList<Pair> getXmlData(ArrayList<EditText> EditList) {
 
         StringBuffer buffer = new StringBuffer();
         String medicine_kind = null;
-        ArrayList<String> item = new ArrayList<>();
+        String ee_doc_data = null;
+        String kind = null;
+        int caution = 0;
+        ArrayList<Pair> item = new ArrayList<>();
+        int stopping = 0;
+        boolean stop = true;
         for (int i = 0; i < EditList.size(); ++i) {
             try {
                 URL url = new URL("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?ServiceKey=" + getString(R.string.api_data_key) + "&item_name=" + EditList.get(i).getText().toString());
@@ -206,11 +202,11 @@ public class ResultOfVision extends AppCompatActivity {
                 xpp.setInput(new InputStreamReader(is, "UTF-8"));
 
                 String tag;
-
+                stop = true;
                 xpp.next();
                 int eventType = xpp.getEventType();
 
-                while (eventType != XmlPullParser.END_DOCUMENT) {
+                while (stop) {
                     switch (eventType) {
                         case XmlPullParser.START_DOCUMENT:
                             break;
@@ -222,15 +218,23 @@ public class ResultOfVision extends AppCompatActivity {
                             else if (tag.equals("PACK_UNIT")) {
                                 xpp.next();
                                 medicine_kind = xpp.getText();
-                                Log.e("check", medicine_kind + "입니다");
                                 if (medicine_kind.contains("mL") || medicine_kind.contains("리터")) {
-                                    Log.e(TAG, "물약");
-                                    item.add("물약");
+                                    kind = "물약";
+                                    //item.add("물약");
                                 } else {
-                                    Log.e(TAG, "알약");
-                                    item.add("알약");
+                                    kind = "알약";
+                                    //item.add("알약");
                                 }
 
+                            } else if (tag.equals("EE_DOC_DATA")) {
+                                stopping = 1;
+                            } else if (tag.equals("PARAGRAPH") && stopping == 1) {
+                                xpp.next();
+                                ee_doc_data = ee_doc_data + xpp.getText() + "\n";
+                            } else if (tag.equals("ARTICLE") && stopping == 1) {
+                                ee_doc_data = ee_doc_data + xpp.getAttributeValue(0) + "\n";
+                            } else if (tag.equals("UD_DOC_DATA")) {
+                                stopping = 0;
                             }
                             break;
 
@@ -239,18 +243,58 @@ public class ResultOfVision extends AppCompatActivity {
 
                         case XmlPullParser.END_TAG:
                             tag = xpp.getName();
-
+                            if (tag.equals("item")) {
+                                if (ee_doc_data.contains("빈혈")) {
+                                    caution = caution + 1024;
+                                }
+                                if (ee_doc_data.contains("항응고")) {
+                                    caution = caution + 512;
+                                }
+                                if (ee_doc_data.contains("고혈압")) {
+                                    caution = caution + 256;
+                                }
+                                if (ee_doc_data.contains("결핵")) {
+                                    caution = caution + 128;
+                                }
+                                if (ee_doc_data.contains("변비")) {
+                                    caution = caution + 64;
+                                }
+                                if (ee_doc_data.contains("기관지확장")) {
+                                    caution = caution + 32;
+                                }
+                                if (ee_doc_data.contains("골다공증")) {
+                                    caution = caution + 16;
+                                }
+                                if (ee_doc_data.contains("통풍")) {
+                                    caution = caution + 8;
+                                }
+                                if (ee_doc_data.contains("알레르기")) {
+                                    caution = caution + 4;
+                                }
+                                if (ee_doc_data.contains("철분")) {
+                                    caution = caution + 2;
+                                }
+                                if (ee_doc_data.contains("감기")) {
+                                    caution = caution + 1;
+                                }
+                                Pair pair = new Pair(kind, caution);
+                                item.add(pair);
+                                kind = "";
+                                ee_doc_data = "";
+                                caution = 0;
+                                stop = false;
+                            }
                             break;
                     }
 
                     eventType = xpp.next();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "오류 1 :" + e.toString());
             }
         }
 
         return item;
 
     }
+
 }
