@@ -1,6 +1,7 @@
 package com.k1l3.wheredoesithurt;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -80,6 +81,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -190,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
+                        intent.putExtra("id",id.toString());
                         startActivityForResult(intent,ACT_ALARM);
                     }
                 });
@@ -467,7 +470,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             uploadImage(photoUri);
         } else if (requestCode == ACT_ALARM && resultCode ==RESULT_OK){
-            MakeNotification();
+            String titlePre = data.getStringExtra("titlePre");
+            MakeAlarmService(titlePre);
         }
     }
 
@@ -938,42 +942,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(menuImage);
     }
-    public void MakeNotification(){
+    public void MakeAlarmService(String title){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(MainActivity.this,Handle_Alarm.class);
+        intent.putExtra("title",title);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder;
-        Intent main = new Intent(this,MainActivity.class);
-        PendingIntent mainPending= PendingIntent.getActivity(this,0,main,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel("makenoti", "makenotificaition", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(mChannel);
-            builder = new NotificationCompat.Builder(this, mChannel.getId());
-        } else {
-            builder = new NotificationCompat.Builder(this);
-        }
+        //리퀘스트 코드 -> 개인 id *100 + index 으로 차이주기
+        PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+        Calendar calendar = Calendar.getInstance();
 
-        Intent snoozeIntent = new Intent(this, example.class);
-        snoozeIntent.setAction("nananan");
-        snoozeIntent.putExtra("EXTRA_NOTIFICATION_ID", 0);
-        PendingIntent snoozePendingIntent =
-                PendingIntent.getActivity(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //시간 특별히주기 3개
+        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DATE),20,0,0);
 
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.noti_logo));
-        builder.setSmallIcon(R.drawable.small_icon);
-        builder.setTicker("알람");
-        builder.setContentTitle("00:00 AM");
-        builder.setContentText("(나의 복용약) 복용시간입니다.");
-        builder.setWhen(System.currentTimeMillis());
-        builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-        builder.setContentIntent(mainPending);
-        builder.addAction(R.drawable.btn_o, "복용",snoozePendingIntent);
-        builder.addAction(R.drawable.btn_x,"미복용",snoozePendingIntent);
-        builder.setAutoCancel(true);
-        builder.setNumber(999);
 
-        notificationManager.notify(0, builder.build());
-
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),24*60*60*1000,makeAlarm);
     }
 
 

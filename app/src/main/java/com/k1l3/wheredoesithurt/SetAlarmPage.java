@@ -192,13 +192,13 @@ public class SetAlarmPage extends AppCompatActivity {
 
         title.setText(title_pre);
 
-        from_img.setOnClickListener(new View.OnClickListener() {
+        from_contain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imglistener(1);
             }
         });
-        to_linear.setOnClickListener(new View.OnClickListener() {
+        to_contain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 imglistener(2);

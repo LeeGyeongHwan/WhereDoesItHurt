@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
 
     <application
         android:name=".App"
@@ -45,6 +47,9 @@
         <activity android:name=".Addword_Activity"></activity>
         <activity android:name=".SetAlarmPage"></activity>
         <activity android:name=".example"></activity>
+        <receiver android:name=".Handle_Alarm"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

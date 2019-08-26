@@ -156,6 +156,7 @@ public class Addword_Activity extends AppCompatActivity {
 
                 Intent outIntent = getIntent();
                 outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
+                outIntent.putExtra("titlePre",prescription.getName());
                 setResult(RESULT_OK,outIntent);
                 finish();
             }
