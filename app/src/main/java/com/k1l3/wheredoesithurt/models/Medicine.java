@@ -3,7 +3,7 @@ package com.k1l3.wheredoesithurt.models;
 import java.io.Serializable;
 
 public class Medicine implements Serializable {
-    private String name;
+    private String name, kind;
 
     private int dailyDosage;
     private int numberOfDoses;
@@ -12,11 +12,12 @@ public class Medicine implements Serializable {
     public Medicine() {
     }
 
-    public Medicine(String name, int dailyDosage, int numberOfDoses, int numberOfDay) {
+    public Medicine(String name, int dailyDosage, int numberOfDoses, int numberOfDay, String kind) {
         this.name = name;
         this.dailyDosage = dailyDosage;
         this.numberOfDoses = numberOfDoses;
         this.numberOfDay = numberOfDay;
+        this.kind = kind;
     }
 
     public String getName() {
@@ -25,5 +26,13 @@ public class Medicine implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }

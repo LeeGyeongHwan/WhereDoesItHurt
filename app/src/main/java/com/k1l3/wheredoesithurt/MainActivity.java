@@ -54,14 +54,8 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
-import com.k1l3.wheredoesithurt.models.UserInfo;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
 import com.kakao.usermgmt.UserManagement;
@@ -122,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = intent.getStringExtra("email");
         id = intent.getLongExtra("id", 0);
 
-        existDatabase();
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -284,60 +277,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (!drawer.isDrawerOpen(GravityCompat.START) && current_fragment != fragment_main) {
             manager.popBackStack();
         }
-    }
-
-    private void loadDatabase(DataSnapshot dataSnapshot) {
-        final ArrayList<Prescription> prescriptions = new ArrayList<>();
-
-        user.setUserInfo(dataSnapshot.getValue(UserInfo.class));
-
-        for (DataSnapshot dataSnapshotChild : dataSnapshot.child("prescriptions").getChildren()) {
-            prescriptions.add(dataSnapshotChild.getValue(Prescription.class));
-            Log.i(TAG, "loadPrescription");
-        }
-
-        user.setPrescriptions(prescriptions);
-
-        user.setId(id.toString());
-
-        Log.i(TAG, "loadDatabase: " + id);
-    }
-
-    private void existDatabase() { //TODO (@nono5546) : Rename
-        final DatabaseReference userDatabaseReference = firebaseDatabase.getReference("users");
-
-        ValueEventListener databaseListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(id.toString())) {
-                    createDatabase();
-                } else {
-                    loadDatabase(dataSnapshot.child(id.toString()));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled: ", databaseError.toException());
-            }
-        };
-
-        userDatabaseReference.addListenerForSingleValueEvent(databaseListener);
-    }
-
-    private void createDatabase() {
-        final DatabaseReference databaseReference = firebaseDatabase.getReference("users");
-        final UserInfo userInfo = new UserInfo();
-
-        userInfo.setName(name);
-
-        user.setUserInfo(userInfo);
-        user.setPrescriptions(new ArrayList<Prescription>());
-        user.setId(id.toString());
-
-        databaseReference.child(id.toString()).setValue(user);
-
-        Log.i(TAG, "createDatabase: " + id);
     }
 
     public void logout() {

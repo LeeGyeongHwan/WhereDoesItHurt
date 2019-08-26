@@ -15,7 +15,15 @@ import android.widget.TextView;
 import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.Prescription;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class ResultOfVision extends AppCompatActivity {
     private Button cancelBtn, nextPage, addMedBtn;
@@ -30,6 +38,8 @@ public class ResultOfVision extends AppCompatActivity {
     private final ArrayList<EditText> EditList2 = new ArrayList<>();
     private final ArrayList<EditText> EditList3 = new ArrayList<>();
     private final ArrayList<EditText> EditList4 = new ArrayList<>();
+
+    private ArrayList<String> medicine_kind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,14 +130,14 @@ public class ResultOfVision extends AppCompatActivity {
 
                 name = title_pre.getText().toString();
 
-                addMedicines();
+                addMedicines(intent);
 
-                prescription.setMedicines(medicines);
+                /*prescription.setMedicines(medicines);
                 prescription.setName(name);
 
                 intent.putExtra("prescription", prescription);
                 intent.putExtra("id", id);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 
@@ -157,12 +167,90 @@ public class ResultOfVision extends AppCompatActivity {
         });
     }
 
-    private void addMedicines() {
-        for (int i = 0; i < EditList1.size(); ++i) {
-            medicines.add(new Medicine(EditList1.get(i).getText().toString(),
-                    Integer.parseInt(EditList2.get(i).getText().toString()),
-                    Integer.parseInt(EditList3.get(i).getText().toString()),
-                    Integer.parseInt(EditList4.get(i).getText().toString())));
+    private void addMedicines(final Intent intent) {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                medicine_kind = getXmlData(EditList1);
+
+                for (int i = 0; i < EditList1.size(); ++i) {
+                    medicines.add(new Medicine(EditList1.get(i).getText().toString(),
+                            Integer.parseInt(EditList2.get(i).getText().toString()),
+                            Integer.parseInt(EditList3.get(i).getText().toString()),
+                            Integer.parseInt(EditList4.get(i).getText().toString()),
+                            medicine_kind.get(i)));
+                }
+                prescription.setMedicines(medicines);
+                prescription.setName(name);
+
+                intent.putExtra("prescription", prescription);
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+        }).start();
+    }
+
+    private ArrayList<String> getXmlData(ArrayList<EditText> EditList) {
+
+        StringBuffer buffer = new StringBuffer();
+        String medicine_kind = null;
+        ArrayList<String> item = new ArrayList<>();
+        for (int i = 0; i < EditList.size(); ++i) {
+            try {
+                URL url = new URL("http://apis.data.go.kr/1471057/MdcinPrductPrmisnInfoService/getMdcinPrductItem?ServiceKey=" + getString(R.string.api_data_key) + "&item_name=" + EditList.get(i).getText().toString());
+                InputStream is = url.openStream();
+
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                XmlPullParser xpp = factory.newPullParser();
+                xpp.setInput(new InputStreamReader(is, "UTF-8"));
+
+                String tag;
+
+                xpp.next();
+                int eventType = xpp.getEventType();
+
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    switch (eventType) {
+                        case XmlPullParser.START_DOCUMENT:
+                            break;
+
+                        case XmlPullParser.START_TAG:
+                            tag = xpp.getName();
+
+                            if (tag.equals("item")) ;
+                            else if (tag.equals("PACK_UNIT")) {
+                                xpp.next();
+                                medicine_kind = xpp.getText();
+                                Log.e("check", medicine_kind + "입니다");
+                                if (medicine_kind.contains("mL") || medicine_kind.contains("리터")) {
+                                    Log.e(TAG, "물약");
+                                    item.add("물약");
+                                } else {
+                                    Log.e(TAG, "알약");
+                                    item.add("알약");
+                                }
+
+                            }
+                            break;
+
+                        case XmlPullParser.TEXT:
+                            break;
+
+                        case XmlPullParser.END_TAG:
+                            tag = xpp.getName();
+
+                            break;
+                    }
+
+                    eventType = xpp.next();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "오류 1 :" + e.toString());
+            }
         }
+
+        return item;
+
     }
 }
