@@ -174,7 +174,7 @@ public class ResultOfVision extends AppCompatActivity {
                 }
                 prescription.setMedicines(medicines);
                 prescription.setName(name);
-
+                prescription.setTotalClick(0);
                 intent.putExtra("prescription", prescription);
                 intent.putExtra("id", id);
                 startActivity(intent);

@@ -327,48 +327,50 @@ public class Fragment_main extends Fragment {
     //버튼
     private void setButton() {
         User user = User.getInstance();
-        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 2) { //알람시간 2개
-            btn3.setVisibility(View.INVISIBLE);
-            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
-            int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
-            setButtonDate(user,get_0);
-            setButtonDate(user,get_1);
-        } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 1) { //알람시간 1개
-            btn2.setVisibility(View.INVISIBLE);
-            btn3.setVisibility(View.INVISIBLE);
+        if(user.getPrescriptions().size()!=0) {
+            if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 2) { //알람시간 2개
+                btn3.setVisibility(View.INVISIBLE);
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
+                setButtonDate(user, get_0,when1,time1,0);
+                setButtonDate(user, get_1,when2,time2,1);
+            } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 1) { //알람시간 1개
+                btn2.setVisibility(View.INVISIBLE);
+                btn3.setVisibility(View.INVISIBLE);
 
-            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
-            setButtonDate(user,get_0);
-        }else if(user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 3){
-            int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
-            int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
-            int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(3, 5));
-            setButtonDate(user,get_0);
-            setButtonDate(user,get_1);
-            setButtonDate(user,get_2);
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+                setButtonDate(user, get_0,when1,time1,0);
+            } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 3) { //알람시간 3개
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
+                int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(3, 5));
+                setButtonDate(user, get_0,when1,time1,0);
+                setButtonDate(user, get_1,when2,time2,1);
+                setButtonDate(user, get_2,when3,time3,2);
+            }
+            buttonClick(btn1, 0);
+            buttonClick(btn2, 1);
+            buttonClick(btn3, 2);
         }
-        buttonClick(btn1,0);
-        buttonClick(btn2,1);
-        buttonClick(btn3,2);
     }
     //버튼 날짜,종류 설정
-    private void setButtonDate(User user, int get_0){
-        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2).equals("AM")) {
+    private void setButtonDate(User user, int get_0, TextView when, TextView time,int i){
+        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(0, 2).equals("AM")) {
             if (get_0 >= 5 && get_0 <= 9) {
-                when1.setText("아침");
+                when.setText("아침");
             } else if (get_0 >= 10) {
-                when1.setText("점심");
+                when.setText("점심");
             } else if (get_0 < 5) {
-                when1.setText("저녁");
+                when.setText("저녁");
             }
         } else {
             if (get_0 == 12 || get_0 <= 4) {
-                when1.setText("점심");
+                when.setText("점심");
             } else if (get_0 > 4) {
-                when1.setText("저녁");
+                when.setText("저녁");
             }
         }
-        time1.setText(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 8));
+        time.setText(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(3, 8));
     }
     //Button click이벤트
     public void buttonClick(View fliptbtn1, final int i){
