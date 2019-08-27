@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
@@ -33,6 +34,7 @@ public class Addword_Activity extends AppCompatActivity {
     private TextView textView;
     private EditText add_text_hash;
     private Button saveButton;
+    private ImageButton cancelBtn;
     private SpannableString spannableString;
     private FlexboxLayout flexboxLayout, word_flexboxlayout;
     private int[] check = new int[15];
@@ -52,7 +54,7 @@ public class Addword_Activity extends AppCompatActivity {
         word_flexboxlayout = (FlexboxLayout) findViewById(R.id.word_flexboxlayout);
         saveButton = (Button) findViewById(R.id.save_button);
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
-
+        cancelBtn = findViewById(R.id.canceladdword);
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
         spannableString = new SpannableString(textView.getText().toString());
@@ -174,6 +176,12 @@ public class Addword_Activity extends AppCompatActivity {
 
                 hashtags.add(add_text_hash.getText().toString());
                 return false;
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
         //저장하기 버튼

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +27,8 @@ public class SetAlarmPage extends AppCompatActivity {
     final private ArrayList<LinearLayout> arrayLinear = new ArrayList<>();
     final private ArrayList<Button> arrayBtn = new ArrayList<>();
     public LinearLayout from_linear, to_linear, from_contain, to_contain;
-    private Button nextBtn, cancelBtn;
+    private Button nextBtn;
+    private ImageButton cancelBtn;
     private TextView title, alarm_num, from_dateText, to_dateText;
     private ImageView from_img, to_img;
     private DatePicker from_date, to_date;

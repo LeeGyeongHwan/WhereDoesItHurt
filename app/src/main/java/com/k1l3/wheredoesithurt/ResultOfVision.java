@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,7 +29,8 @@ public class ResultOfVision extends AppCompatActivity {
     private final ArrayList<EditText> EditList2 = new ArrayList<>();
     private final ArrayList<EditText> EditList3 = new ArrayList<>();
     private final ArrayList<EditText> EditList4 = new ArrayList<>();
-    private Button cancelBtn, nextPage, addMedBtn;
+    private Button  nextPage, addMedBtn;
+    private ImageButton cancelBtn;
     private EditText title_pre;
     private Prescription prescription;
     private ArrayList<Medicine> medicines;
