@@ -59,10 +59,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loadDatabase(DataSnapshot dataSnapshot, String id) {
         final ArrayList<Prescription> prescriptions = new ArrayList<>();
-        final Times defaultTimes = new Times();
 
-        user.setUserInfo(dataSnapshot.getValue(UserInfo.class));
-        user.getUserInfo().setDefaultTimes(defaultTimes);
+        if(dataSnapshot.hasChild("userInfo")) {
+            user.setUserInfo(dataSnapshot.child("userInfo").getValue(UserInfo.class));
+        }
+
+        if(user.getUserInfo().getDefaultTimes() == null) {
+            final Times defaultTimes = new Times();
+            user.getUserInfo().setDefaultTimes(defaultTimes);
+        }
 
         for (DataSnapshot dataSnapshotChild : dataSnapshot.child("prescriptions").getChildren()) {
             prescriptions.add(dataSnapshotChild.getValue(Prescription.class));
@@ -87,7 +92,9 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     loadDatabase(dataSnapshot.child(id), id);
                 }
+
                 startActivity(intent);
+
                 finish();
             }
 
