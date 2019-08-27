@@ -179,6 +179,7 @@ public class ResultOfVision extends AppCompatActivity {
                 prescription.setTotalClick(0);
                 intent.putExtra("prescription", prescription);
                 intent.putExtra("id", id);
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(intent);
             }
         }).start();
