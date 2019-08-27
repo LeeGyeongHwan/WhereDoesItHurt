@@ -18,6 +18,8 @@ public class    Prescription implements Serializable {
     private Times times;
     private String memo;
 
+    private int totalClick;
+
     private boolean isVisible = false;
 
     public Prescription() {
@@ -93,6 +95,14 @@ public class    Prescription implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public int getTotalClick() {
+        return totalClick;
+    }
+
+    public void setTotalClick(int totalClick) {
+        this.totalClick = totalClick;
     }
 
     public boolean isVisible() {

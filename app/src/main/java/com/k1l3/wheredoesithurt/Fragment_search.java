@@ -137,7 +137,10 @@ public class Fragment_search extends Fragment {
                         } else if (tag.equals("PARAGRAPH") && stopping == 1) {
                             xpp.next();
                             ee_doc_data = ee_doc_data + xpp.getText() + "\n";
-                        } else if (tag.equals("UD_DOC_DATA")) {
+                        } else if (tag.equals("ARTICLE") &&stopping == 1){
+                            ee_doc_data = ee_doc_data + xpp.getAttributeValue(0)+ "\n";
+                        }
+                        else if (tag.equals("UD_DOC_DATA")) {
                             stopping = 2;
                         } else if (tag.equals("PARAGRAPH") && stopping == 2) {
                             xpp.next();
