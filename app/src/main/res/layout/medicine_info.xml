@@ -11,10 +11,7 @@
         android:text="파티엔 정"
         android:textSize="15dp"
         android:fontFamily="@font/applesdgothicneor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" | "
-        android:textSize="15dp" />
+         />
 
     <TextView
         android:id="@+id/medicine_kind"
@@ -22,7 +19,5 @@
         android:layout_height="wrap_content"
         android:text="알약"
         android:textSize="15dp"
-        android:fontFamily="@font/applesdgothicneoeb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:fontFamily="@font/applesdgothicneoeb" />
 </LinearLayout>

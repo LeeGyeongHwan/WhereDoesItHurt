@@ -12,10 +12,7 @@
         android:background="@drawable/historybox"
         android:text="약 이름"
         android:fontFamily="@font/applesdgothicneor"
-        android:background="@drawable/historybox"
-        android:textColor="#ADA5FD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textColor="#ADA5FD" />
     <LinearLayout
         android:id="@+id/my_medicine_layout"
         android:layout_width="match_parent"
@@ -52,9 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:fontFamily="@font/applesdgothicneoeb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:fontFamily="@font/applesdgothicneoeb" />
         </LinearLayout>
 
         <TextView
@@ -81,9 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:fontFamily="@font/applesdgothicneoeb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:fontFamily="@font/applesdgothicneoeb" />
         </LinearLayout>
 
         <TextView
@@ -92,8 +85,7 @@
             android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="9:00 12:00 20:00" />
+            android:layout_marginTop="5dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -111,8 +103,6 @@
                 android:src="@drawable/mypage_info_icon3" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:fontFamily="@font/applesdgothicneoeb"
@@ -121,7 +111,6 @@
 
         <TextView
             android:id="@+id/my_medicine_info"
-            android:text="파티엠 정 다이엔캡슐 카푸리엔스 정"
             android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
