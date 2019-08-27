@@ -15,16 +15,16 @@ import java.util.Calendar;
 public class monthPicker extends DialogFragment {
 
 
-    private DatePickerDialog.OnDateSetListener listener;
     public Calendar cal = Calendar.getInstance();
+    private DatePickerDialog.OnDateSetListener listener;
+    private Button btnConfirm;
+    private Button btnCancel;
+    private int month;
 
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
         this.listener = listener;
     }
 
-    private Button btnConfirm;
-    private Button btnCancel;
-    private int month;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -37,23 +37,23 @@ public class monthPicker extends DialogFragment {
 
         final NumberPicker monthPicker = (NumberPicker) dialog.findViewById(R.id.picker_month);
 
-        btnCancel.setOnClickListener(new View.OnClickListener(){
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 monthPicker.this.getDialog().cancel();
             }
         });
 
-        btnConfirm.setOnClickListener(new View.OnClickListener(){
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onDateSet(null, monthPicker.getValue(), monthPicker.getValue(),0);
+                listener.onDateSet(null, monthPicker.getValue(), monthPicker.getValue(), 0);
                 monthPicker.this.getDialog().cancel();
             }
         });
-        if(getArguments()==null) {
+        if (getArguments() == null) {
             month = cal.get(Calendar.MONTH + 1);
-        }else{
+        } else {
             month = getArguments().getInt("month");
         }
         monthPicker.setMinValue(1);

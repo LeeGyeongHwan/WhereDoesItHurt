@@ -136,7 +136,9 @@ public class History_itemView extends LinearLayout {
         this.history_memo.setText(history_memo);
     }
 
-    public TextView getSeperator() { return seperator; }
+    public TextView getSeperator() {
+        return seperator;
+    }
 
     public TextView getMedicine_name() {
         return medicine_name;

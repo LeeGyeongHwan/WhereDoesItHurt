@@ -2,9 +2,7 @@ package com.k1l3.wheredoesithurt;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,22 +20,20 @@ import com.k1l3.wheredoesithurt.models.Times;
 import java.util.ArrayList;
 
 public class SetAlarmPage extends AppCompatActivity {
-    private Button nextBtn, cancelBtn;
-    private TextView title, alarm_num, from_dateText, to_dateText;
-    private ImageView from_img, to_img;
-    private DatePicker from_date, to_date;
-    private String id;
-
     final private ArrayList<TextView> arrayText = new ArrayList<>();
     final private ArrayList<TimePicker> arrayPicker = new ArrayList<>();
     final private ArrayList<ImageView> arrayImg = new ArrayList<>();
     final private ArrayList<LinearLayout> arrayLinear = new ArrayList<>();
     final private ArrayList<Button> arrayBtn = new ArrayList<>();
-
+    public LinearLayout from_linear, to_linear, from_contain, to_contain;
+    private Button nextBtn, cancelBtn;
+    private TextView title, alarm_num, from_dateText, to_dateText;
+    private ImageView from_img, to_img;
+    private DatePicker from_date, to_date;
+    private String id;
     private Prescription prescription;
     private Times times;
 
-    public LinearLayout from_linear,to_linear,from_contain,to_contain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +42,17 @@ public class SetAlarmPage extends AppCompatActivity {
         nextBtn = findViewById(R.id.alarm_nextpage);
         cancelBtn = findViewById(R.id.cancelalarm);
         title = findViewById(R.id.title_alarm);
-        from_img=findViewById(R.id.from_imgBtn);
-        to_img=findViewById(R.id.to_imBtn);
-        from_linear=findViewById(R.id.from_datelinear);
-        to_linear=findViewById(R.id.to_datelinear);
-        alarm_num=findViewById(R.id.alarm_num);
-        from_date=findViewById(R.id.from_datepicker);
-        to_date=findViewById(R.id.to_datepicker);
-        from_dateText=findViewById(R.id.from_dateText);
-        to_dateText=findViewById(R.id.to_dateText);
-        from_contain=findViewById(R.id.from_linear);
-        to_contain=findViewById(R.id.to_linear);
+        from_img = findViewById(R.id.from_imgBtn);
+        to_img = findViewById(R.id.to_imBtn);
+        from_linear = findViewById(R.id.from_datelinear);
+        to_linear = findViewById(R.id.to_datelinear);
+        alarm_num = findViewById(R.id.alarm_num);
+        from_date = findViewById(R.id.from_datepicker);
+        to_date = findViewById(R.id.to_datepicker);
+        from_dateText = findViewById(R.id.from_dateText);
+        to_dateText = findViewById(R.id.to_dateText);
+        from_contain = findViewById(R.id.from_linear);
+        to_contain = findViewById(R.id.to_linear);
 
         Intent intent = getIntent();
         String title_pre = intent.getStringExtra("title");

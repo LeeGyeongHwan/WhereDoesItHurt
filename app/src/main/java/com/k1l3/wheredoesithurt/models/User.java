@@ -22,16 +22,16 @@ public class User { //TODO (@nono5546) : User정보 관리하는 클래스 만�
         return Prescriptions;
     }
 
+    public void setPrescriptions(ArrayList<Prescription> prescriptions) {
+        Prescriptions = prescriptions;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setPrescriptions(ArrayList<Prescription> prescriptions) {
-        Prescriptions = prescriptions;
     }
 
     public UserInfo getUserInfo() {
@@ -42,7 +42,7 @@ public class User { //TODO (@nono5546) : User정보 관리하는 클래스 만�
         this.userInfo = userInfo;
     }
 
-    public void syncWithDatabase(){
+    public void syncWithDatabase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("users");
 

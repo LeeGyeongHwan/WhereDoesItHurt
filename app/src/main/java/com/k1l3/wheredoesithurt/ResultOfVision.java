@@ -2,16 +2,13 @@ package com.k1l3.wheredoesithurt;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ResultOfVision extends AppCompatActivity {
+    private final ArrayList<EditText> EditList1 = new ArrayList<>();
+    private final ArrayList<EditText> EditList2 = new ArrayList<>();
+    private final ArrayList<EditText> EditList3 = new ArrayList<>();
+    private final ArrayList<EditText> EditList4 = new ArrayList<>();
     private Button cancelBtn, nextPage, addMedBtn;
     private EditText title_pre;
     private Prescription prescription;
@@ -34,12 +35,6 @@ public class ResultOfVision extends AppCompatActivity {
     private int index = 0;
     private String id;
     private String name;
-
-    private final ArrayList<EditText> EditList1 = new ArrayList<>();
-    private final ArrayList<EditText> EditList2 = new ArrayList<>();
-    private final ArrayList<EditText> EditList3 = new ArrayList<>();
-    private final ArrayList<EditText> EditList4 = new ArrayList<>();
-
     private ArrayList<Pair> medicine_kind;
 
     @Override

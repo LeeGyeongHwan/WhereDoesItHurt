@@ -52,12 +52,12 @@ public class Fragment_history extends Fragment {
         listView = viewGroup.findViewById(R.id.history_list_view);
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
-        id = ((MainActivity)getActivity()).getId();
+        id = ((MainActivity) getActivity()).getId();
         adapter = new Adapter();
 
         getPrescriptions();
 
-        history_search = (EditText)viewGroup.findViewById(R.id.history_search);
+        history_search = (EditText) viewGroup.findViewById(R.id.history_search);
         history_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -79,15 +79,15 @@ public class Fragment_history extends Fragment {
         listView.setAdapter(adapter);
     }
 
-    private void getSearchPrescriptions(String searchWord){
+    private void getSearchPrescriptions(String searchWord) {
         User user = User.getInstance();
 
         for (Prescription prescription : user.getPrescriptions()) {
-            if(prescription.getName().contains(searchWord)) {
+            if (prescription.getName().contains(searchWord)) {
                 adapter.addItem(prescription);
-            }else{
-                for(int i=0;i<prescription.getHashTag().size();i++){
-                    if(prescription.getHashTag().get(i).contains(searchWord)){
+            } else {
+                for (int i = 0; i < prescription.getHashTag().size(); i++) {
+                    if (prescription.getHashTag().get(i).contains(searchWord)) {
                         adapter.addItem(prescription);
                     }
                 }
@@ -98,6 +98,7 @@ public class Fragment_history extends Fragment {
 
         listView.setAdapter(adapter);
     }
+
     void ImageClick(ImageView imageView) {
         View rView = getLayoutInflater().inflate(R.layout.full_screen, null);
         PhotoView a = rView.findViewById(R.id.full_image);
@@ -145,7 +146,7 @@ public class Fragment_history extends Fragment {
 
             view.setPresc_date(item.getBegin());
             view.setMedicine_name(item.getName());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT ) ;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             for (int i = 0; i < item.getHashTag().size(); i++) {
                 TextView textView = new TextView(getContext());
                 textView.setText(item.getHashTag().get(i));
@@ -154,8 +155,8 @@ public class Fragment_history extends Fragment {
                 textView.setTextSize(13);
                 textView.setIncludeFontPadding(false);
                 textView.setPadding(30, 20, 30, 20);
-                params.setMargins( 0, 10, 10, 0 );
-                textView.setLayoutParams( params );
+                params.setMargins(0, 10, 10, 0);
+                textView.setLayoutParams(params);
                 view.getFlexboxlayout().addView(textView);
             }
             if (item.getMedicines().size() >= 1) {
@@ -208,6 +209,7 @@ public class Fragment_history extends Fragment {
                             info.getPrescriptions().get(position).setMemo(view.getHistory_memo().getText().toString());
                             databaseReference.setValue(info);
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }

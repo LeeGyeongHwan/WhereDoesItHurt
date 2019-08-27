@@ -34,22 +34,23 @@ public class Addword_Activity extends AppCompatActivity {
     private EditText add_text_hash;
     private Button saveButton;
     private SpannableString spannableString;
-    private FlexboxLayout flexboxLayout,word_flexboxlayout;
+    private FlexboxLayout flexboxLayout, word_flexboxlayout;
     private int[] check = new int[15];
     private Prescription prescription;
     private ArrayList<String> hashtags;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private String id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_word);
 
-        textView = (TextView)findViewById(R.id.textView);
-        flexboxLayout = (FlexboxLayout)findViewById(R.id.add_flexboxlayout);
-        word_flexboxlayout = (FlexboxLayout)findViewById(R.id.word_flexboxlayout);
-        saveButton = (Button)findViewById(R.id.save_button);
+        textView = (TextView) findViewById(R.id.textView);
+        flexboxLayout = (FlexboxLayout) findViewById(R.id.add_flexboxlayout);
+        word_flexboxlayout = (FlexboxLayout) findViewById(R.id.word_flexboxlayout);
+        saveButton = (Button) findViewById(R.id.save_button);
         add_text_hash = (EditText) findViewById(R.id.add_text_hash);
 
         database = FirebaseDatabase.getInstance();
@@ -58,9 +59,9 @@ public class Addword_Activity extends AppCompatActivity {
         hashtags = new ArrayList<>();
 
         Intent intent = getIntent();
-        id=intent.getStringExtra("id");
-        Log.e(TAG,"id : "+id);
-        prescription = (Prescription)intent.getSerializableExtra("prescription");
+        id = intent.getStringExtra("id");
+        Log.e(TAG, "id : " + id);
+        prescription = (Prescription) intent.getSerializableExtra("prescription");
 
         Custom_text("처방전");
         Custom_text("단어");
@@ -79,8 +80,8 @@ public class Addword_Activity extends AppCompatActivity {
             button.setIncludeFontPadding(false);
 
             //boxsize
-            FlexboxLayout.LayoutParams parms = new FlexboxLayout.LayoutParams(word_in.get(counting).length()*82,130);
-            parms.setMargins(25,25,0,0);
+            FlexboxLayout.LayoutParams parms = new FlexboxLayout.LayoutParams(word_in.get(counting).length() * 82, 130);
+            parms.setMargins(25, 25, 0, 0);
             button.setLayoutParams(parms);
             button.setPadding(15, 15, 15, 15);
 
@@ -90,17 +91,17 @@ public class Addword_Activity extends AppCompatActivity {
             word_button.setTextColor(Color.BLACK);
 //            word_button.setBackgroundColor(Color.WHITE);
             button.setBackgroundResource(R.drawable.roundborder_grey);
-            word_button.setText("#"+button.getText().toString());
+            word_button.setText("#" + button.getText().toString());
             word_button.setTextSize(15);
 
 
             //boxsize
-            FlexboxLayout.LayoutParams parms2 = new FlexboxLayout.LayoutParams(button.getText().toString().length()*82,130);
-            parms2.setMargins(25,25,0,0);
+            FlexboxLayout.LayoutParams parms2 = new FlexboxLayout.LayoutParams(button.getText().toString().length() * 82, 130);
+            parms2.setMargins(25, 25, 0, 0);
             button.setLayoutParams(parms2);
             word_button.setLayoutParams(parms2);
 
-            parms.setMargins(25,25,0,0);
+            parms.setMargins(25, 25, 0, 0);
             button.setLayoutParams(parms);
             button.setPadding(15, 15, 15, 15);
 
@@ -130,8 +131,7 @@ public class Addword_Activity extends AppCompatActivity {
                         check[checking]++;
                         word_flexboxlayout.addView(word_button);
                         hashtags.add(button.getText().toString());
-                    }
-                    else{
+                    } else {
                         button.setTextColor(Color.BLACK);
                         button.setBackgroundResource(R.drawable.roundborder_grey);
 //                        button.setBackgroundColor(Color.WHITE);
@@ -153,12 +153,12 @@ public class Addword_Activity extends AppCompatActivity {
                 word_button.setTextColor(Color.parseColor("#292929"));
                 word_button.setBackgroundColor(Color.WHITE);
 //                word_button.setBackgroundResource(R.drawable.white);
-                word_button.setText("#"+add_text_hash.getText().toString());
+                word_button.setText("#" + add_text_hash.getText().toString());
                 word_button.setTextSize(15);
                 word_button.setIncludeFontPadding(false);
                 //boxsize
-                FlexboxLayout.LayoutParams parms3 = new FlexboxLayout.LayoutParams(add_text_hash.getText().toString().length()*65,130);
-                parms3.setMargins(25,25,0,0);
+                FlexboxLayout.LayoutParams parms3 = new FlexboxLayout.LayoutParams(add_text_hash.getText().toString().length() * 65, 130);
+                parms3.setMargins(25, 25, 0, 0);
                 word_button.setLayoutParams(parms3);
                 word_button.setLayoutParams(parms3);
 //                word_button.setPadding(20, 20, 20, 20);
@@ -167,7 +167,7 @@ public class Addword_Activity extends AppCompatActivity {
                     public void onClick(View v) {
                         word_flexboxlayout.removeView(v);
                         hashtags.remove(word_button.getText().toString());
-                        }
+                    }
                 });
                 word_flexboxlayout.addView(word_button);
                 add_text_hash.setText("");
@@ -184,14 +184,14 @@ public class Addword_Activity extends AppCompatActivity {
 
                 Intent outIntent = getIntent();
                 outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
-                outIntent.putExtra("titlePre",prescription.getName());
-                setResult(RESULT_OK,outIntent);
+                outIntent.putExtra("titlePre", prescription.getName());
+                setResult(RESULT_OK, outIntent);
                 finish();
             }
         });
     }
 
-    private void savePrescription(){
+    private void savePrescription() {
         Log.i(TAG, "savePrescription");
 
         prescription.setHashTag(hashtags);

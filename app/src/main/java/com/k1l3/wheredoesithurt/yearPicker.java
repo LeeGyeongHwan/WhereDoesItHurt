@@ -15,16 +15,16 @@ import java.util.Calendar;
 public class yearPicker extends DialogFragment {
 
 
-    private DatePickerDialog.OnDateSetListener listener;
     public Calendar cal = Calendar.getInstance();
+    private DatePickerDialog.OnDateSetListener listener;
+    private Button btnConfirm;
+    private Button btnCancel;
+    private int year;
 
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
         this.listener = listener;
     }
 
-    private Button btnConfirm;
-    private Button btnCancel;
-    private int year;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -37,23 +37,23 @@ public class yearPicker extends DialogFragment {
 
         final NumberPicker yearPicker = (NumberPicker) dialog.findViewById(R.id.picker_year);
 
-        btnCancel.setOnClickListener(new View.OnClickListener(){
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 yearPicker.this.getDialog().cancel();
             }
         });
 
-        btnConfirm.setOnClickListener(new View.OnClickListener(){
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onDateSet(null, yearPicker.getValue(), yearPicker.getValue(),0);
+                listener.onDateSet(null, yearPicker.getValue(), yearPicker.getValue(), 0);
                 yearPicker.this.getDialog().cancel();
             }
         });
-        if(getArguments()==null) {
+        if (getArguments() == null) {
             year = cal.get(Calendar.YEAR);
-        }else{
+        } else {
             year = getArguments().getInt("year");
         }
         yearPicker.setMinValue(1900);

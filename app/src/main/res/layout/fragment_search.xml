@@ -35,23 +35,26 @@
             android:paddingRight="17dp"
             android:textSize="15dp"
             app:layout_constraintVertical_bias="0.057" />
+
         <ImageView
-            android:background="#ffffff"
             android:id="@+id/loading"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <ScrollView
-            android:id="@+id/scrollView3"
-            android:layout_centerHorizontal="true"
-            android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:id="@+id/scrollView3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
+            android:background="#ffffff"
             android:fillViewport="true"
             android:scrollbarThumbVertical="@drawable/scroll_color"
             android:scrollbars="vertical"
             app:layout_constraintVertical_bias="1.0">
+
             <ListView
                 android:id="@+id/search_list_view"
                 android:layout_width="match_parent"

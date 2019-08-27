@@ -3,22 +3,17 @@ package com.k1l3.wheredoesithurt;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -27,7 +22,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -94,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final User user = User.getInstance();
     private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private static final String CHANNEL_ID = "noti";
-
+    static int medicine_count;
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
     String image;
@@ -103,8 +97,144 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String email;
     FragmentManager manager;
     FragmentTransaction transaction;
-    Button mypagebtn,myCalendar;
-    static int medicine_count;
+    Button mypagebtn, myCalendar;
+
+    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
+        Log.d("gallery", "getresponse " + response.getResponses().toString());
+
+        List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
+        Log.d("gallery", "convertResponseToString: " + pages.size());
+
+        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
+        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
+        Log.d("gallery", "label" + labels);
+        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
+        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+
+        int vertixArray[][] = new int[3][2];
+        int Y_eachmedicine[] = new int[5];
+        String medicine[] = new String[5];
+        int info_med[][] = new int[5][3];
+        int arrcount = 0;
+
+        if (labels != null) {
+            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
+            boolean first = true, second = true, third = true;
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if (!first && !second && !third) {
+                    break;
+                }
+                if (first && (labelstr.equals("투약") || labelstr.equals("량") || labelstr.equals("투약량"))) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[0][0] = firstX;
+                    vertixArray[0][1] = secondX;
+                    first = false;
+                } else if (second && (labelstr.equals("횟수") || labelstr.equals("투여횟수") || labelstr.equals("투여"))) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[1][0] = firstX;
+                    vertixArray[1][1] = secondX;
+                    second = false;
+                } else if (third && (labelstr.equals("투약") || labelstr.equals("투약일수") || labelstr.equals("일수"))) {
+                    int firstX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int secondX = label.getBoundingPoly().getVertices().get(1).getX();
+                    vertixArray[2][0] = firstX;
+                    vertixArray[2][1] = secondX;
+                    third = false;
+                }
+            }
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 2; j++) {
+                    Log.d("gallery", "vertix[" + i + "][" + j + "] : " + vertixArray[i][j]);
+                }
+            }
+
+            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
+
+            int findcount = 3;
+            boolean chance = false;
+            String tmpLabel = "";
+            for (EntityAnnotation label : labels) {
+                String labelstr = label.getDescription();
+                if (findcount == 2) {
+                    medicine[arrcount] = labelstr;
+                    Log.d(TAG, "findcount==2 tmplabel :" + tmpLabel);
+                    Y_eachmedicine[arrcount] = label.getBoundingPoly().getVertices().get(0).getY();
+                    arrcount++;
+                    tmpLabel = "";
+                    chance = false;
+                }
+                Log.d("galler", "label.getDescription() : " + label.getDescription());
+                Log.d("galler", "label.getDescription().getVertices() : " + label.getBoundingPoly().getVertices());
+                try {
+
+                    Integer.parseInt(labelstr);
+                    tmpLabel = tmpLabel.concat(labelstr);
+                    Log.d("gallery", "tmpLabel : " + tmpLabel);
+                    if (tmpLabel.length() == 9) {
+                        findcount = 0;
+                    } else if (chance) {
+                        tmpLabel = "";
+                        chance = false;
+                    } else {
+                        chance = true;
+                    }
+                } catch (NumberFormatException e) {
+                    Log.d("exception", "convert error" + labelstr + ", tmplabel : " + tmpLabel);
+                    if (chance) {
+                        tmpLabel = "";
+                        chance = false;
+                    }
+                    if (tmpLabel.isEmpty()) {
+                        findcount = 3;
+                        continue;
+                    }
+                }
+                findcount++;
+            }
+            for (int i = 0; i < 5; i++) {
+                Log.d("gallery", "Y_eachmedicine[" + i + "]" + Y_eachmedicine[i]);
+                Log.d("gallery", "medicin[" + i + "] " + medicine[i]);
+            }
+
+            for (EntityAnnotation label : labels) {
+                int labelX = label.getBoundingPoly().getVertices().get(0).getX();
+                int labelX2 = label.getBoundingPoly().getVertices().get(1).getX();
+                int labelY = label.getBoundingPoly().getVertices().get(0).getY();
+                for (int i = 0; i < arrcount; i++) {
+                    if ((Y_eachmedicine[i] - 20 < labelY) && (Y_eachmedicine[i] + 20 > labelY)) {
+                        Log.d(TAG, "convertResponseToString: labely" + labelY);
+                        for (int j = 0; j < arrcount; j++) {
+                            if ((vertixArray[j][0] - 40 < labelX) && (vertixArray[j][1] + 40 > labelX2)) {
+                                Log.d("gallery", "convertResponseToString: labelx" + labelX);
+                                try {
+                                    info_med[i][j] = Integer.parseInt(label.getDescription());
+                                    Log.d("gallery", "convertResponseToString: [" + i + "][" + j + "]: " + info_med[i][j]);
+                                } catch (NumberFormatException e) {
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        String returnstr = "";
+        for (int i = 0; i < arrcount; i++) {
+            returnstr = returnstr.concat(medicine[i] + " ");
+            for (int j = 0; j < arrcount; j++) {
+                returnstr = returnstr.concat(info_med[i][j] + " ");
+            }
+        }
+        medicine_count = arrcount;
+        Log.d("gallery", "returnstr :  " + returnstr);
+        return returnstr;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,16 +288,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        ImageView plusbtn= findViewById(R.id.plusBtn);
+        ImageView plusbtn = findViewById(R.id.plusBtn);
         plusbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.cam_direct_layout, null);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.cam_direct_layout, null);
 
                 LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
-                        (LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.FILL_PARENT);
+                        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
                 addContentView(ll, paramll);
 
                 Button cambtn = findViewById(R.id.camBtn);
@@ -176,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinearLayout ll = (LinearLayout)findViewById(R.id.cam_dir_lin);
+                        LinearLayout ll = (LinearLayout) findViewById(R.id.cam_dir_lin);
                         ((ViewManager) ll.getParent()).removeView(ll);
                     }
                 });
@@ -184,9 +314,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 directbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
-                        intent.putExtra("id",id.toString());
-                        startActivityForResult(intent,ACT_ALARM);
+                        Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
+                        intent.putExtra("id", id.toString());
+                        startActivityForResult(intent, ACT_ALARM);
                     }
                 });
 
@@ -229,8 +359,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Fragment fragment_mypage = new Fragment_mypage();
                 Bundle bundle = new Bundle();
                 bundle.putString("profile", image);
-                bundle.putString("name",name);
-                bundle.putString("email",email);
+                bundle.putString("name", name);
+                bundle.putString("email", email);
                 fragment_mypage.setArguments(bundle);
                 replaceFragment(fragment_mypage);
 
@@ -402,13 +532,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("please", "onActivityResult: code"+requestCode+" result : "+resultCode);
+        Log.d("please", "onActivityResult: code" + requestCode + " result : " + resultCode);
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             uploadImage(data.getData());
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             uploadImage(photoUri);
-        } else if (requestCode == ACT_ALARM && resultCode ==RESULT_OK){
+        } else if (requestCode == ACT_ALARM && resultCode == RESULT_OK) {
             String titlePre = data.getStringExtra("titlePre");
             MakeAlarmService(titlePre);
         }
@@ -521,59 +651,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return annotateRequest;
     }
 
-    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<MainActivity> mActivityWeakReference;
-        private Vision.Images.Annotate mRequest;
-
-        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
-            mActivityWeakReference = new WeakReference<>(activity);
-            mRequest = annotate;
-        }
-
-        ProgressDialog asyncDialog = new ProgressDialog(
-                MainActivity.this);
-
-        @Override
-        protected void onPreExecute() {
-            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("분석중입니다..");
-
-            // show dialog
-            asyncDialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(Object... params) {
-            try {
-                Log.d(TAG, "created Cloud Vision request object, sending request");
-                BatchAnnotateImagesResponse response = mRequest.execute();
-                return convertResponseToString(response);
-
-            } catch (GoogleJsonResponseException e) {
-                Log.d(TAG, "failed to make API request because " + e.getContent());
-            } catch (IOException e) {
-                Log.d(TAG, "failed to make API request because of other IOException " +
-                        e.getMessage());
-            }
-            return "Cloud Vision API request failed. Check logs for details.";
-        }
-
-        protected void onPostExecute(String result) {
-            MainActivity activity = mActivityWeakReference.get();
-            asyncDialog.dismiss();
-            if (activity != null && !activity.isFinishing()) {
-                Intent intent = new Intent (MainActivity.this,ResultOfVision.class);
-                intent.putExtra("result",result);
-                intent.putExtra("numbermedicine",medicine_count);
-                intent.putExtra("id",id.toString());
-                startActivityForResult(intent,ACT_ALARM);
-
-            }
-        }
-    }
-
-
     private void callCloudVision(final Bitmap bitmap) {
         // Switch text to loading
 
@@ -607,144 +684,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    private static String convertResponseToString(BatchAnnotateImagesResponse response) {
-        Log.d("gallery", "getresponse " + response.getResponses().toString());
-
-        List<Page> pages =response.getResponses().get(0).getFullTextAnnotation().getPages();
-        Log.d("gallery", "convertResponseToString: "+pages.size());
-
-        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
-        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
-        Log.d("gallery", "label" + labels);
-        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
-        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
-
-        int vertixArray[][]=new int[3][2];
-        int Y_eachmedicine[] = new int[5];
-        String medicine[] = new String[5];
-        int info_med[][] = new int[5][3];
-        int arrcount=0;
-
-        if (labels != null) {
-            // 첫번째. 투약량 투여횟수 투약일수 x좌표 뽑기
-            boolean first=true , second = true ,third = true;
-            for (EntityAnnotation label : labels) {
-                String labelstr=label.getDescription();
-                if(!first && !second && !third){
-                    break;
-                }
-                if(first &&( labelstr.equals("투약")||labelstr.equals("량") || labelstr.equals("투약량"))){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[0][0]=firstX;
-                    vertixArray[0][1]=secondX;
-                    first=false;
-                }else if(second && (labelstr.equals("횟수")|| labelstr.equals("투여횟수")||labelstr.equals("투여"))){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[1][0]=firstX;
-                    vertixArray[1][1]=secondX;
-                    second=false;
-                }else if(third && (labelstr.equals("투약") || labelstr.equals("투약일수")||labelstr.equals("일수"))){
-                    int firstX=label.getBoundingPoly().getVertices().get(0).getX();
-                    int secondX=label.getBoundingPoly().getVertices().get(1).getX();
-                    vertixArray[2][0]=firstX;
-                    vertixArray[2][1]=secondX;
-                    third=false;
-                }
-            }
-            for( int i=0;i<3;i++){
-                for(int j=0;j<2;j++){
-                    Log.d("gallery", "vertix["+i+"]["+j+"] : "+ vertixArray[i][j]);
-                }
-            }
-
-            //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
-
-            int findcount=3;
-            boolean chance=false;
-            String tmpLabel="";
-            for(EntityAnnotation label : labels){
-                String labelstr = label.getDescription();
-                if(findcount==2){
-                    medicine[arrcount]=labelstr;
-                    Log.d(TAG, "findcount==2 tmplabel :"+tmpLabel);
-                    Y_eachmedicine[arrcount]=label.getBoundingPoly().getVertices().get(0).getY();
-                    arrcount++;
-                    tmpLabel="";
-                    chance=false;
-                }
-                Log.d("galler", "label.getDescription() : "+label.getDescription());
-                Log.d("galler", "label.getDescription().getVertices() : "+label.getBoundingPoly().getVertices());
-                try{
-
-                    Integer.parseInt(labelstr);
-                    tmpLabel=tmpLabel.concat(labelstr);
-                    Log.d("gallery", "tmpLabel : " +tmpLabel);
-                    if(tmpLabel.length()==9){
-                        findcount=0;
-                    }else if(chance){
-                        tmpLabel="";
-                        chance=false;
-                    }else{
-                        chance=true;
-                    }
-                }catch(NumberFormatException e){
-                    Log.d("exception","convert error"+labelstr+", tmplabel : "+tmpLabel);
-                    if(chance){
-                        tmpLabel="";
-                        chance=false;
-                    }
-                    if(tmpLabel.isEmpty()){
-                        findcount=3;
-                        continue;
-                    }
-                }
-                findcount++;
-            }
-            for(int i=0;i<5;i++){
-                Log.d("gallery", "Y_eachmedicine["+i+"]"+ Y_eachmedicine[i]);
-                Log.d("gallery", "medicin["+i+"] "+ medicine[i]);
-            }
-
-            for (EntityAnnotation label : labels) {
-                int labelX=label.getBoundingPoly().getVertices().get(0).getX();
-                int labelX2=label.getBoundingPoly().getVertices().get(1).getX();
-                int labelY=label.getBoundingPoly().getVertices().get(0).getY();
-                for(int i=0;i<arrcount;i++){
-                    if((Y_eachmedicine[i]-20<labelY) && (Y_eachmedicine[i]+20>labelY)){
-                        Log.d(TAG, "convertResponseToString: labely"+labelY);
-                        for(int j=0;j<arrcount;j++){
-                            if((vertixArray[j][0]-40<labelX) && (vertixArray[j][1]+40>labelX2)) {
-                                Log.d("gallery", "convertResponseToString: labelx"+labelX);
-                                try {
-                                    info_med[i][j] = Integer.parseInt(label.getDescription());
-                                    Log.d("gallery", "convertResponseToString: ["+i+"]["+j+"]: "+info_med[i][j]);
-                                } catch (NumberFormatException e) {
-
-                                }
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-
-        String returnstr="";
-        for(int i=0;i<arrcount;i++){
-            returnstr=returnstr.concat(medicine[i]+" ");
-            for(int j=0;j<arrcount;j++){
-                returnstr= returnstr.concat(info_med[i][j]+" ");
-            }
-        }
-        medicine_count=arrcount;
-        Log.d("gallery", "returnstr :  "+returnstr);
-        return returnstr;
-    }
-
-
     public void toolbar_search() {
         toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
@@ -755,7 +694,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        toolbar.setBackgroundColor(Color.rgb(173, 165, 253));
         setup_nav(R.drawable.ic_menu);
     }
 
@@ -769,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setup_nav(R.drawable.ic_menu);
     }
 
@@ -783,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setup_nav(R.drawable.ic_menu);
     }
 
@@ -797,9 +736,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        toolbar.setBackgroundColor(Color.rgb(173, 165, 253));
         setup_nav(R.drawable.ic_menu);
     }
+
     public void toolbar_calendar() {
         toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
@@ -808,10 +748,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_search).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_default_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(173,165,253));
+        toolbar.setBackgroundColor(Color.rgb(173, 165, 253));
         setup_nav(R.drawable.ic_menu);
     }
-    public void toolbar_my_default_time(){
+
+    public void toolbar_my_default_time() {
         toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
@@ -821,10 +762,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setup_nav(R.drawable.ic_menu);
     }
-    public void toolbar_edit_time(){
+
+    public void toolbar_edit_time() {
         toolbar.findViewById(R.id.toolbar_calendar).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
@@ -834,14 +776,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(false); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
     }
-    public void toolbar_myinfo(){
+
+    public void toolbar_myinfo() {
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
@@ -850,10 +793,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.VISIBLE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setup_nav(R.drawable.ic_menu);
     }
-    public void toolbar_mymedicine(){
+
+    public void toolbar_mymedicine() {
         toolbar.findViewById(R.id.toolbar_mypage).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_history).setVisibility(View.GONE);
         toolbar.findViewById(R.id.logo).setVisibility(View.GONE);
@@ -862,10 +806,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_edit_time).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.VISIBLE);
-        toolbar.setBackgroundColor(Color.rgb(255,255,255));
+        toolbar.setBackgroundColor(Color.rgb(255, 255, 255));
         setup_nav(R.drawable.ic_menu);
     }
-    public void setup_nav(int menuImage){
+
+    public void setup_nav(int menuImage) {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
@@ -881,25 +826,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
         actionBar.setHomeAsUpIndicator(menuImage);
     }
-    public void MakeAlarmService(String title){
+
+    public void MakeAlarmService(String title) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent = new Intent(MainActivity.this,Handle_Alarm.class);
-        intent.putExtra("title",title);
+        Intent intent = new Intent(MainActivity.this, Handle_Alarm.class);
+        intent.putExtra("title", title);
 
 
         //리퀘스트 코드 -> 개인 id *100 + index 으로 차이주기
-        PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+        PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
         Calendar calendar = Calendar.getInstance();
 
         //시간 특별히주기 3개
-        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DATE),20,0,0);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 20, 0, 0);
 
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),24*60*60*1000,makeAlarm);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, makeAlarm);
     }
 
-
-    public String getId(){
+    public String getId() {
         return id.toString();
+    }
+
+    private class LabelDetectionTask extends AsyncTask<Object, Void, String> {
+        private final WeakReference<MainActivity> mActivityWeakReference;
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
+        private Vision.Images.Annotate mRequest;
+
+        LabelDetectionTask(MainActivity activity, Vision.Images.Annotate annotate) {
+            mActivityWeakReference = new WeakReference<>(activity);
+            mRequest = annotate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("분석중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Object... params) {
+            try {
+                Log.d(TAG, "created Cloud Vision request object, sending request");
+                BatchAnnotateImagesResponse response = mRequest.execute();
+                return convertResponseToString(response);
+
+            } catch (GoogleJsonResponseException e) {
+                Log.d(TAG, "failed to make API request because " + e.getContent());
+            } catch (IOException e) {
+                Log.d(TAG, "failed to make API request because of other IOException " +
+                        e.getMessage());
+            }
+            return "Cloud Vision API request failed. Check logs for details.";
+        }
+
+        protected void onPostExecute(String result) {
+            MainActivity activity = mActivityWeakReference.get();
+            asyncDialog.dismiss();
+            if (activity != null && !activity.isFinishing()) {
+                Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
+                intent.putExtra("result", result);
+                intent.putExtra("numbermedicine", medicine_count);
+                intent.putExtra("id", id.toString());
+                startActivityForResult(intent, ACT_ALARM);
+
+            }
+        }
     }
 }

@@ -3,11 +3,12 @@ package com.k1l3.wheredoesithurt.models;
 import java.io.Serializable;
 
 public class DayClick implements Serializable {
-    int one,two,three;
+    int one, two, three;
 
-    public DayClick(){
+    public DayClick() {
 
     }
+
     public DayClick(int one, int two, int three) {
         this.one = one;
         this.two = two;

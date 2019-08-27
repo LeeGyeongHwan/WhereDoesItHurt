@@ -7,7 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class Caution_foodView extends LinearLayout {
-    TextView medicine_name, food ;
+    TextView medicine_name, food;
+
     public Caution_foodView(Context context) {
         super(context);
         init(context);

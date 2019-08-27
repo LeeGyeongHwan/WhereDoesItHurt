@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.k1l3.wheredoesithurt.models.User;
 
 import java.util.ArrayList;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_my_default_time extends Fragment {
     private View viewGroup;
@@ -32,9 +24,6 @@ public class Fragment_my_default_time extends Fragment {
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private ListView defaultList;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
-    private String id;
     private Adapter adapter;
     private ArrayList<String> defaultTime;
 
@@ -45,11 +34,8 @@ public class Fragment_my_default_time extends Fragment {
         viewGroup = inflater.inflate(R.layout.fragment_my_default_time, container, false);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        id = ((MainActivity)getActivity()).getId();
-        defaultList = (ListView)viewGroup.findViewById(R.id.defaultTimeListView);
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
-        ((MainActivity)getActivity()).toolbar_my_default_time();
+        defaultList = (ListView) viewGroup.findViewById(R.id.defaultTimeListView);
+        ((MainActivity) getActivity()).toolbar_my_default_time();
 
         add_time = viewGroup.findViewById(R.id.add_time);
         add_time.setOnClickListener(new View.OnClickListener() {
@@ -63,33 +49,33 @@ public class Fragment_my_default_time extends Fragment {
 
         User user = User.getInstance();
 
-        if(user.getUserInfo() != null){
-            defaultTime = user.getUserInfo().getDefaultTimes().getTimes();
-            for (int i = 0; i < defaultTime.size(); i++) {
-                adapter.addItem(new defaultTimeItem(defaultTime.get(i)));
-            }
-            defaultList.setAdapter(adapter);
+        defaultTime = user.getUserInfo().getDefaultTimes().getTimes();
+        for (int i = 0; i < defaultTime.size(); i++) {
+            adapter.addItem(new defaultTimeItem(defaultTime.get(i)));
         }
+        defaultList.setAdapter(adapter);
 
         defaultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment fragment_time_spinner = new Fragment_time_spinner();
+
                 Bundle bundle = new Bundle();
                 bundle.putString("time", defaultTime.get(position));
-                bundle.putInt("position",position);
+                bundle.putInt("position", position);
                 fragment_time_spinner.setArguments(bundle);
+
                 replaceFragment(fragment_time_spinner);
             }
         });
         return viewGroup;
     }
+
     private void replaceFragment(@NonNull Fragment fragment) {
-        transaction= manager.beginTransaction();
+        transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
-        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
     }
 
     private class Adapter extends BaseAdapter {

@@ -6,9 +6,9 @@ import java.util.ArrayList;
 public class Month implements Serializable {
     ArrayList<Day> days;
 
-    public Month(){
-        days=new ArrayList<>();
-        for(int i=0;i<31;i++){
+    public Month() {
+        days = new ArrayList<>();
+        for (int i = 0; i < 31; i++) {
             days.add(new Day());
         }
     }

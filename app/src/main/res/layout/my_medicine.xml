@@ -1,115 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_margin="20dp"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/medicine_name"
-        android:text="약 이름"
-        android:background="@drawable/historybox"
-        android:textColor="#ADA5FD"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/historybox"
+        android:text="약 이름"
+        android:textColor="#ADA5FD" />
+
     <LinearLayout
         android:id="@+id/my_medicine_layout"
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/historybox"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:visibility="gone">
+
         <TextView
             android:id="@+id/medicine_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="약 이름"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold" />
+
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <ImageView
-                android:src="@drawable/mypage_info_icon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="20dp"
+                android:adjustViewBounds="true"
                 android:maxWidth="20dp"
+                android:maxHeight="20dp"
                 android:scaleType="fitCenter"
-                android:adjustViewBounds="true" />
+                android:src="@drawable/mypage_info_icon1" />
+
             <TextView
-                android:text="기간"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="기간" />
         </LinearLayout>
+
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/my_medicine_date"
-            android:text="2019.xx.xx - 2019.xx.xx"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="2019.xx.xx - 2019.xx.xx" />
+
         <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
             <ImageView
-                android:src="@drawable/mypage_info_icon2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="20dp"
+                android:adjustViewBounds="true"
                 android:maxWidth="20dp"
+                android:maxHeight="20dp"
                 android:scaleType="fitCenter"
-                android:adjustViewBounds="true" />
+                android:src="@drawable/mypage_info_icon2" />
+
             <TextView
-                android:text="알람 시간"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="알람 시간" />
         </LinearLayout>
+
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/my_medicine_alarm"
-            android:text="9:00 12:00 20:00"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="9:00 12:00 20:00" />
+
         <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
             <ImageView
-                android:src="@drawable/mypage_info_icon3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="20dp"
+                android:adjustViewBounds="true"
                 android:maxWidth="20dp"
+                android:maxHeight="20dp"
                 android:scaleType="fitCenter"
-                android:adjustViewBounds="true" />
+                android:src="@drawable/mypage_info_icon3" />
+
             <TextView
-                android:text="세부 약 정보"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="세부 약 정보" />
         </LinearLayout>
+
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/my_medicine_info"
-            android:text="파티엠 정 다이엔캡슐 카푸리엔스 정"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="파티엠 정 다이엔캡슐 카푸리엔스 정" />
+
         <ImageButton
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:maxHeight="30dp"
-            android:maxWidth="30dp"
-            android:background="@drawable/default_save"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/mypage_delete2"/>
+            android:background="@drawable/default_save"
+            android:maxWidth="30dp"
+            android:maxHeight="30dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mypage_delete2" />
     </LinearLayout>
 </LinearLayout>
