@@ -13,6 +13,7 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -59,7 +60,7 @@ public class Fragment_main extends Fragment {
     private int currentClick;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
-
+    private float pressedX = 0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -109,7 +110,7 @@ public class Fragment_main extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
-                if(currentCount==-1) {
+                if (currentCount == -1) {
                     getRightcurrenCount();
                 }
                 if (info.getPrescriptions() != null) {
@@ -137,28 +138,27 @@ public class Fragment_main extends Fragment {
         });
 
         //드래그시 화면이동
-        /*constraintLayout.setOnTouchListener(new View.OnTouchListener() {
+        constraintLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 float distance = 0;
-                float pressedX = 0;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN: // 손가락을 touch 했을 떄 x 좌표값 저장
                         pressedX = event.getX();
-                        Log.e(TAG,"pressd : " + pressedX);
+                        //Log.e(TAG, "pressd : " + pressedX);
                         break;
                     case MotionEvent.ACTION_UP: // 손가락을 떼었을 때 저장해놓은 x좌표와의 거리 비교
                         distance = pressedX - event.getX();
-                        Log.e(TAG,"distance : " + distance);
+                        //Log.e(TAG, "distance : " + distance);
                         break;
                 } // 해당 거리가 100이 되지 않으면 이벤트 처리 하지 않는다.
-                if (Math.abs(distance) < 100) {
-                    Log.e(TAG,"이벤트처리x");
-                    return false;
+                if (Math.abs(distance) < 100 || distance ==0) {
+                    //Log.e(TAG, "이벤트처리x");
                 }
                 if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
-                    Log.e(TAG,"오른쪽");
+                    //Log.e(TAG, "오른쪽");
                     getRightcurrenCount();
+                    //Log.e(TAG,"카운트 : " + currentCount);
                     my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
                     adapter = new Adapter();
                     getMedicineName();
@@ -173,9 +173,10 @@ public class Fragment_main extends Fragment {
 
                     //그래프
                     setGraph();
-                } else {
-                    Log.e(TAG,"왼쪽");
+                } else if (distance < 0) {
+                    //Log.e(TAG, "왼쪽");
                     getLeftcurrenCount();
+                    //Log.e(TAG,"카운트 : " + currentCount);
                     my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
                     adapter = new Adapter();
                     getMedicineName();
@@ -193,7 +194,7 @@ public class Fragment_main extends Fragment {
                 }
                 return true;
             }
-        });*/
+        });
         return viewGroup;
     }
 
@@ -471,7 +472,7 @@ public class Fragment_main extends Fragment {
                 User info = dataSnapshot.getValue(User.class);
                 DayClick item;
                 if (info != null) {
-                    if(info.getPrescriptions().get(currentCount).getYear()!=null) {
+                    if (info.getPrescriptions().get(currentCount).getYear() != null) {
                         item = info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
                                 .getDayClick();
                         for (int i = 0; i < 3; i++) {
@@ -603,8 +604,8 @@ public class Fragment_main extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
                 DayClick dayClick = new DayClick(check[0], check[1], check[2]);
-                    info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
-                            .setDayClick(dayClick);
+                info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
+                        .setDayClick(dayClick);
                 databaseReference.setValue(info);
                 buttonTotalDB(clicking);
             }
@@ -658,22 +659,24 @@ public class Fragment_main extends Fragment {
     }
 
     private void getRightcurrenCount() {
-        currentCount = currentCount + 1;
         User user = User.getInstance();
-        if (user.getPrescriptions() != null) {
-            for (int i = 0; i < user.getPrescriptions().size(); i++) {
-                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
-                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
-                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
-                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
-                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
-                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
-                Calendar cal = Calendar.getInstance();
-                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                            currentCount = i;
-                            break;
+        if(currentCount<user.getPrescriptions().size()-1) {
+            currentCount = currentCount + 1;
+            if (user.getPrescriptions() != null) {
+                for (int i = currentCount; i < user.getPrescriptions().size(); i++) {
+                    int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
+                    int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
+                    int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
+                    int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
+                    int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
+                    int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                    Calendar cal = Calendar.getInstance();
+                    if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                        if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                            if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                                currentCount = i;
+                                break;
+                            }
                         }
                     }
                 }
@@ -682,22 +685,24 @@ public class Fragment_main extends Fragment {
     }
 
     private void getLeftcurrenCount() {
-        currentCount = currentCount - 1;
         User user = User.getInstance();
-        if (user.getPrescriptions() != null) {
-            for (int i = currentCount; i >= 0; i--) {
-                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
-                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
-                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
-                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
-                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
-                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
-                Calendar cal = Calendar.getInstance();
-                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                            currentCount = i;
-                            break;
+        if (currentCount > 0) {
+            currentCount = currentCount - 1;
+            if (user.getPrescriptions() != null) {
+                for (int i = currentCount; i >= 0; i--) {
+                    int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
+                    int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
+                    int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
+                    int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
+                    int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
+                    int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                    Calendar cal = Calendar.getInstance();
+                    if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                        if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                            if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                                currentCount = i;
+                                break;
+                            }
                         }
                     }
                 }
