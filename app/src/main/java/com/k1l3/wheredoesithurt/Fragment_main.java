@@ -1,5 +1,7 @@
 package com.k1l3.wheredoesithurt;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,7 +59,7 @@ public class Fragment_main extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private String id;
-    private int currentClick;
+    private int currentClick, availCounting = 0, currentAvail = 0;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private float pressedX = 0;
@@ -112,6 +115,8 @@ public class Fragment_main extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
+                getAvailable();
+                currentImage();
                 if (currentCount == -1) {
                     getRightcurrenCount();
                 }
@@ -160,6 +165,10 @@ public class Fragment_main extends Fragment {
                 if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
                     //Log.e(TAG, "오른쪽");
                     getRightcurrenCount();
+                    if(currentAvail<availCounting) {
+                        currentAvail++;
+                    }
+                    currentImage();
                     //Log.e(TAG,"카운트 : " + currentCount);
                     my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
                     adapter = new Adapter();
@@ -178,6 +187,10 @@ public class Fragment_main extends Fragment {
                 } else if (distance < 0) {
                     //Log.e(TAG, "왼쪽");
                     getLeftcurrenCount();
+                    if(availCounting>=currentAvail&&currentAvail>0) {
+                        currentAvail--;
+                    }
+                    currentImage();
                     //Log.e(TAG,"카운트 : " + currentCount);
                     my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
                     adapter = new Adapter();
@@ -198,7 +211,11 @@ public class Fragment_main extends Fragment {
             }
         });
 
+        //화면 이동 확인 이미지
+        counting_linear = viewGroup.findViewById(R.id.counting_layout);
+        getAvailable();
 
+        currentImage();
         return viewGroup;
     }
 
@@ -518,7 +535,7 @@ public class Fragment_main extends Fragment {
 
     private void setGraph() {
         databaseReference = database.getReference("users").child(id);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
@@ -528,7 +545,6 @@ public class Fragment_main extends Fragment {
                     int currentProgress = (currentClick * 100) / (info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
                             info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
                     progressBar.setProgress(currentProgress);
-                    Log.e("asdg", String.valueOf(currentProgress));
                 }
             }
 
@@ -711,6 +727,52 @@ public class Fragment_main extends Fragment {
             }
 
             return view;
+        }
+    }
+
+    private void getAvailable() {
+        availCounting=0;
+        User user = User.getInstance();
+        if (user.getPrescriptions() != null) {
+            for (int i = 0; i < user.getPrescriptions().size(); i++) {
+                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
+                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
+                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
+                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
+                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
+                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                            availCounting++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private void currentImage(){
+        counting_linear.removeAllViews();
+        Log.e(TAG,"current : " + currentAvail+ " avail : "+ availCounting);
+        for (int i = 0; i < availCounting; i++) {
+            if(i==currentAvail){
+                ImageView image = new ImageView(getContext());
+                Bitmap slid_full = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.slide_fill);
+                image.setImageBitmap(slid_full);
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(20,20);
+                parms.setMargins(2,0,2,0);
+                image.setLayoutParams(parms);
+                counting_linear.addView(image);
+            }else{
+                ImageView image = new ImageView(getContext());
+                Bitmap slid_empty = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.slide_empty);
+                image.setImageBitmap(slid_empty);
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(20,20);
+                parms.setMargins(2,0,2,0);
+                image.setLayoutParams(parms);
+                counting_linear.addView(image);
+            }
         }
     }
 }
