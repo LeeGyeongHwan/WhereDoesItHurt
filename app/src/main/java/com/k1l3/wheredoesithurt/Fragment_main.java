@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class Fragment_main extends Fragment {
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private float pressedX = 0;
+    private LinearLayout counting_linear;
 
     @Nullable
     @Override
@@ -81,6 +83,7 @@ public class Fragment_main extends Fragment {
         btn1 = viewGroup.findViewById(R.id.flipbtn1);
         btn2 = viewGroup.findViewById(R.id.flipbtn2);
         btn3 = viewGroup.findViewById(R.id.flipbtn3);
+        counting_linear = viewGroup.findViewById(R.id.counting_layout);
         progressBar = viewGroup.findViewById(R.id.progress_bar);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
@@ -194,6 +197,8 @@ public class Fragment_main extends Fragment {
                 return true;
             }
         });
+
+
         return viewGroup;
     }
 

@@ -11,9 +11,16 @@ public class defaultTimeItem {
         if (Integer.valueOf(time.substring(0, 2)) < 12) {
             AMPM = "AM";
             Time = time.substring(0, 2) + ":" + time.substring(2, 4);
+        } else if (Integer.valueOf(time.substring(0, 2)) == 12) {
+            AMPM = "PM";
+            Time = time.substring(0, 2) + ":" + time.substring(2, 4);
         } else {
             AMPM = "PM";
-            Time = "0" + String.valueOf(Integer.valueOf(time.substring(0, 2)) - 12) + ":" + time.substring(2, 4);
+            if (Integer.valueOf(time.substring(0, 2)) - 12 < 10) {
+                Time = "0" + String.valueOf(Integer.valueOf(time.substring(0, 2)) - 12) + ":" + time.substring(2, 4);
+            } else {
+                Time = String.valueOf(Integer.valueOf(time.substring(0, 2)) - 12) + ":" + time.substring(2, 4);
+            }
         }
     }
 
