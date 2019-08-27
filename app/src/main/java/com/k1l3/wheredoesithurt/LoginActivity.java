@@ -85,10 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("id", result.getId());
                     intent.putExtra("email", result.getKakaoAccount().getEmail());
 
-                    //startActivity(intent);
-
                     existDatabase(String.valueOf(result.getId()),result.getNickname(),intent);
-                    //finish();
                 }
             });
         }
