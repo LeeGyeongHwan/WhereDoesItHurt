@@ -37,6 +37,7 @@ public class Fragment_my_default_time extends Fragment {
     private String id;
     private Adapter adapter;
     private ArrayList<String> defaultTime;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -50,7 +51,7 @@ public class Fragment_my_default_time extends Fragment {
         databaseReference = database.getReference();
         ((MainActivity)getActivity()).toolbar_my_default_time();
 
-        add_time = (ImageButton)viewGroup.findViewById(R.id.add_time);
+        add_time = viewGroup.findViewById(R.id.add_time);
         add_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,25 +59,18 @@ public class Fragment_my_default_time extends Fragment {
             }
         });
 
-    //    adapter = new Adapter();
-        databaseReference = database.getReference("users").child(id);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    adapter = new Adapter();
-                    User info = dataSnapshot.getValue(User.class);
-                    if(info.getUserInfo().getDefaultTimes()!=null) {
-                        defaultTime = info.getUserInfo().getDefaultTimes().getTimes();
-                        for (int i = 0; i < defaultTime.size(); i++) {
-                            adapter.addItem(new defaultTimeItem(defaultTime.get(i)));
-                        }
-                        defaultList.setAdapter(adapter);
-                    }
+        adapter = new Adapter();
+
+        User user = User.getInstance();
+
+        if(user.getUserInfo() != null){
+            defaultTime = user.getUserInfo().getDefaultTimes().getTimes();
+            for (int i = 0; i < defaultTime.size(); i++) {
+                adapter.addItem(new defaultTimeItem(defaultTime.get(i)));
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+            defaultList.setAdapter(adapter);
+        }
+
         defaultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
