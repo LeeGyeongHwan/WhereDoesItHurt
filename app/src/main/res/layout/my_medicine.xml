@@ -7,6 +7,7 @@
     <TextView
         android:id="@+id/medicine_name"
         android:text="약 이름"
+        android:fontFamily="@font/applesdgothicneor"
         android:background="@drawable/historybox"
         android:textColor="#ADA5FD"
         android:layout_width="match_parent"
@@ -21,6 +22,7 @@
         <TextView
             android:id="@+id/medicine_name2"
             android:text="약 이름"
+            android:fontFamily="@font/applesdgothicneob"
             android:textSize="20dp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -41,6 +43,7 @@
             <TextView
                 android:text="기간"
                 android:layout_marginLeft="10dp"
+                android:fontFamily="@font/applesdgothicneoeb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -49,6 +52,7 @@
             android:id="@+id/my_medicine_date"
             android:text="2019.xx.xx - 2019.xx.xx"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_height="wrap_content" />
         <LinearLayout
             android:layout_marginTop="20dp"
@@ -66,6 +70,7 @@
             <TextView
                 android:text="알람 시간"
                 android:layout_marginLeft="10dp"
+                android:fontFamily="@font/applesdgothicneoeb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -73,6 +78,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/my_medicine_alarm"
             android:text="9:00 12:00 20:00"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <LinearLayout
@@ -92,12 +98,14 @@
                 android:text="세부 약 정보"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
+                android:fontFamily="@font/applesdgothicneoeb"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <TextView
             android:layout_marginTop="5dp"
             android:id="@+id/my_medicine_info"
             android:text="파티엠 정 다이엔캡슐 카푸리엔스 정"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ImageButton

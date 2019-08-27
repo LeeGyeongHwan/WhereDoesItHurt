@@ -50,13 +50,15 @@
                 android:gravity="center"
                 android:max="100"
                 app:drawBackgroundOutsideProgress="true"
-                app:progress_background_color="#ffffff"
+                app:progress_background_color="#FFD4C9"
+                app:progress_stroke_cap="round"
                 app:progress_end_color="#FD7A59"
                 app:progress_start_color="#FD7A59"
                 app:progress_start_degree="-90"
                 app:progress_stroke_width="25dp"
                 app:progress_text_color="#000000"
-                app:style="solid_line" />
+                app:style="solid_line"
+                app:progress_text_size="20dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -295,10 +297,12 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
-            android:background="#ffffff"
+            android:background="@drawable/caution_food"
+            android:elevation="5dp"
             android:fillViewport="true"
             android:scrollbarThumbVertical="@drawable/scroll_color"
             android:scrollbars="vertical"
+            android:layout_margin="10dp"
             app:layout_constraintVertical_bias="1.0">
 
 

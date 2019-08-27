@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="이름"
         android:textSize="20dp"
-        android:textStyle="bold"
+        android:fontFamily="@font/applesdgothicneoeb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
@@ -25,6 +25,7 @@
         android:text="김호석"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/applesdgothicneor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
@@ -38,7 +39,7 @@
         android:layout_height="wrap_content"
         android:text="성별"
         android:textSize="20dp"
-        android:textStyle="bold"
+        android:fontFamily="@font/applesdgothicneoeb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
@@ -62,6 +63,7 @@
             android:id="@+id/female"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_weight="1"
             android:text="여자" />
 
@@ -69,6 +71,7 @@
             android:id="@+id/male"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_weight="1"
             android:text="남자" />
     </RadioGroup>
@@ -79,7 +82,7 @@
         android:layout_height="wrap_content"
         android:text="생년월일"
         android:textSize="20dp"
-        android:textStyle="bold"
+        android:fontFamily="@font/applesdgothicneoeb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
@@ -103,6 +106,7 @@
         <Button
             android:id="@+id/year"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/applesdgothicneor"
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:text="2019" />
@@ -111,6 +115,7 @@
             android:id="@+id/month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/applesdgothicneor"
             android:background="#ffffff"
             android:text="03" />
 
@@ -119,6 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#ffffff"
+            android:fontFamily="@font/applesdgothicneor"
             android:text="14" />
     </LinearLayout>
 
@@ -128,7 +134,7 @@
         android:layout_height="wrap_content"
         android:text="나의 특징"
         android:textSize="20dp"
-        android:textStyle="bold"
+        android:fontFamily="@font/applesdgothicneoeb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
@@ -162,6 +168,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="흡연"
+                android:fontFamily="@font/applesdgothicneor"
                 android:textSize="15dp" />
 
             <CheckBox
@@ -185,6 +192,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="음주"
+                android:fontFamily="@font/applesdgothicneor"
                 android:textSize="15dp" />
 
             <CheckBox
@@ -208,6 +216,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="임신"
+                android:fontFamily="@font/applesdgothicneor"
                 android:textSize="15dp" />
 
             <CheckBox
@@ -231,6 +240,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="비만"
+                android:fontFamily="@font/applesdgothicneor"
                 android:textSize="15dp" />
 
             <CheckBox
