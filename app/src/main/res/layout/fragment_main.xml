@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <EditText
@@ -35,14 +36,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/medicin_search"
         app:layout_constraintVertical_bias="0.0">
-
-        <TextView
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="20dp"
             android:layout_width="0dp"
-            android:layout_height="130dp"
             android:layout_weight="0.8"
-            android:gravity="center"
-            android:text="그래프" />
-
+            android:layout_height="wrap_content">
+            <com.dinuscxj.progressbar.CircleProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:gravity="center"
+                android:max="100"
+                app:drawBackgroundOutsideProgress="true"
+                app:progress_background_color="#ffffff"
+                app:progress_end_color="#FD7A59"
+                app:progress_start_color="#FD7A59"
+                app:progress_start_degree="-90"
+                app:progress_stroke_width="25dp"
+                app:progress_text_color="#000000"
+                app:style="solid_line" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -66,18 +80,30 @@
                 android:background="#706CD4" />
 
             <ScrollView
+                android:id="@+id/scrollView3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:background="#ffffff"
+                android:fillViewport="true"
                 android:scrollbarThumbVertical="@drawable/scroll_color"
-                android:scrollbars="vertical">
+                android:scrollbars="vertical"
+                app:layout_constraintVertical_bias="1.0">
 
-                <TextView
+                <ListView
+                    android:id="@+id/my_medicine_info"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="left"
-                    android:text="나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n
-                                  나의약정보 = listview로 놔야함\n나의약정보 = listview로 놔야함\n" />
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_marginTop="8dp"
+                    android:divider="@null"
+                    android:dividerHeight="0px"
+                    android:fastScrollEnabled="true"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal"
+                    app:layout_constraintVertical_bias="0.0"></ListView>
             </ScrollView>
         </LinearLayout>
     </LinearLayout>
@@ -190,6 +216,7 @@
             android:id="@+id/flipbtn3"
             android:layout_width="0dp"
             android:layout_height="120dp"
+            android:layout_gravity="center"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/flip_purple"
@@ -225,51 +252,68 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView2"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="15dp"
-        android:text="주의해야할 음식"
-        android:textColor="#776DE0"
-        android:textSize="19dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1.5dp"
-        android:layout_margin="6dp"
-        android:background="#675BDD"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="5dp"
-        android:scrollbarThumbVertical="@drawable/scroll_color"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.0">
 
-
         <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="15dp"
+            android:text="주의해야할 음식"
+            android:textColor="#776DE0"
+            android:textSize="19dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_margin="6dp"
+            android:background="#675BDD"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:elevation="0dp"
-            android:text="주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n주의해야할음식 = list view로 놓기\n" />
-    </ScrollView>
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:background="#ffffff"
+            android:fillViewport="true"
+            android:scrollbarThumbVertical="@drawable/scroll_color"
+            android:scrollbars="vertical"
+            app:layout_constraintVertical_bias="1.0">
+
+
+            <ListView
+                android:id="@+id/my_catuion_food"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentLeft="false"
+                android:layout_marginTop="8dp"
+                android:divider="@null"
+                android:dividerHeight="0px"
+                android:fastScrollEnabled="true"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
+                app:layout_constraintVertical_bias="0.0"></ListView>
+        </ScrollView>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

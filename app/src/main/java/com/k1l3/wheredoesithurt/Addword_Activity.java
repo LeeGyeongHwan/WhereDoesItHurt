@@ -166,32 +166,32 @@ public class Addword_Activity extends AppCompatActivity {
     private void savePrescription(){
         Log.i(TAG, "savePrescription");
 
-        /*prescription.setHashTag(hashtags);
+        prescription.setHashTag(hashtags);
 
         User.getInstance().getPrescriptions().add(prescription);
 
-        User.getInstance().syncWithDatabase();*/
-        databaseReference = database.getReference("users").child(id);
-        ValueEventListener databaseListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User info = dataSnapshot.getValue(User.class);
-                prescription.setHashTag(hashtags);
-                if(info.getPrescriptions()==null){
-                    ArrayList<Prescription> prescriptionArray = new ArrayList<>();
-                    prescriptionArray.add(prescription);
-                    info.setPrescriptions(prescriptionArray);
-                }
-                else{
-                    info.getPrescriptions().add(prescription);
-                }
-                databaseReference.setValue(info);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        };
-        databaseReference.addListenerForSingleValueEvent(databaseListener);
+        User.getInstance().syncWithDatabase();
+//        databaseReference = database.getReference("users").child(id);
+//        ValueEventListener databaseListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                User info = dataSnapshot.getValue(User.class);
+//                prescription.setHashTag(hashtags);
+//                if(info.getPrescriptions()==null){
+//                    ArrayList<Prescription> prescriptionArray = new ArrayList<>();
+//                    prescriptionArray.add(prescription);
+//                    info.setPrescriptions(prescriptionArray);
+//                }
+//                else{
+//                    info.getPrescriptions().add(prescription);
+//                }
+//                databaseReference.setValue(info);
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        };
+//        databaseReference.addListenerForSingleValueEvent(databaseListener);
     }
 
     void Custom_text(String word) {
