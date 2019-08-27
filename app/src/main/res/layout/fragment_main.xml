@@ -36,23 +36,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/medicin_search"
         app:layout_constraintVertical_bias="0.0">
-
-        <com.dinuscxj.progressbar.CircleProgressBar
-            android:id="@+id/progress_bar"
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="20dp"
             android:layout_width="0dp"
-            android:layout_height="130dp"
             android:layout_weight="0.8"
-            android:gravity="center"
-            android:max="100"
-            app:drawBackgroundOutsideProgress="true"
-            app:progress_background_color="#ffffff"
-            app:progress_end_color="#776DE0"
-            app:progress_start_color="#776DE0"
-            app:progress_start_degree="-90"
-            app:progress_stroke_width="30dp"
-            app:progress_text_color="#000000"
-            app:style="solid_line" />
-
+            android:layout_height="wrap_content">
+            <com.dinuscxj.progressbar.CircleProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:gravity="center"
+                android:max="100"
+                app:drawBackgroundOutsideProgress="true"
+                app:progress_background_color="#ffffff"
+                app:progress_end_color="#FD7A59"
+                app:progress_start_color="#FD7A59"
+                app:progress_start_degree="-90"
+                app:progress_stroke_width="25dp"
+                app:progress_text_color="#000000"
+                app:style="solid_line" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
