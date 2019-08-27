@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +24,8 @@ import com.google.api.services.vision.v1.Vision;
 import java.util.ArrayList;
 
 public class SetAlarmPage extends AppCompatActivity {
-    public Button nextBtn,cancelBtn;
+    public Button nextBtn;
+    public ImageButton cancelBtn;
     public TextView title,alarm_num,from_dateText,to_dateText;
     public ImageView from_img,to_img;
     public LinearLayout from_linear,to_linear,from_contain,to_contain;
@@ -165,7 +167,7 @@ public class SetAlarmPage extends AppCompatActivity {
                             textView.setText(timenow);
 
                             picker_linear.setVisibility(View.GONE);
-                            pickerBtn.setImageResource(R.drawable.down);
+                            pickerBtn.setImageResource(R.drawable.alarm_down);
                         }
                     });
                 }
@@ -176,11 +178,11 @@ public class SetAlarmPage extends AppCompatActivity {
                 public void onClick(View v) {
                     if(picker_linear.getVisibility()== View.GONE) {
                         picker_linear.setVisibility(View.VISIBLE);
-                        pickerBtn.setImageResource(R.drawable.up);
+                        pickerBtn.setImageResource(R.drawable.alarm_up);
                     }
                     else{
                         picker_linear.setVisibility(View.GONE);
-                        pickerBtn.setImageResource(R.drawable.down);
+                        pickerBtn.setImageResource(R.drawable.alarm_down);
                     }
                 }
             });

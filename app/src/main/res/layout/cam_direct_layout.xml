@@ -23,10 +23,11 @@
             android:layout_gravity="left"
             android:layout_weight="2"
             android:gravity="center"
+            android:textStyle="bold"
             android:background="#ffffff"
             android:text="사진으로 추가"
             android:textColor="#776DE0"
-            android:textSize="20dp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/returnBtn"
@@ -34,7 +35,7 @@
             android:layout_height="match_parent"
             android:textColor="#000000"
             android:layout_weight="1"
-            android:src="@drawable/example_x"
+            android:src="@drawable/main_add2"
             android:layout_gravity="center" />
 
         <Button
@@ -43,11 +44,12 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_weight="2"
+            android:textStyle="bold"
             android:background="#ffffff"
             android:gravity="center"
             android:text="직접 추가"
             android:textColor="#776DE0"
-            android:textSize="20dp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 

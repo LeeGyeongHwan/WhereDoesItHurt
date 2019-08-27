@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ResultOfVision extends AppCompatActivity {
-    public Button cancelBtn,nextPage,addMedBtn;
+    public Button nextPage,addMedBtn;
+    public ImageButton cancelBtn;
     public EditText title_pre;
     int index=0;
     public Prescription prescription;
@@ -34,7 +36,7 @@ public class ResultOfVision extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vision_analysis);
 
-        cancelBtn=(Button)findViewById(R.id.cancelvision);
+        cancelBtn=(ImageButton)findViewById(R.id.cancelvision);
         nextPage=findViewById(R.id.nextpage);
         addMedBtn=findViewById(R.id.addMedBtn);
         title_pre=findViewById(R.id.title_prescription);
@@ -55,7 +57,7 @@ public class ResultOfVision extends AppCompatActivity {
         int getCount=intent.getIntExtra("numbermedicine",1);
         Log.d("check", "onCreate: "+getStr);
 
-        cancelBtn = (Button) findViewById(R.id.cancelvision);
+        cancelBtn = (ImageButton) findViewById(R.id.cancelvision);
         nextPage = findViewById(R.id.nextpage);
         title_pre = findViewById(R.id.title_prescription);
 

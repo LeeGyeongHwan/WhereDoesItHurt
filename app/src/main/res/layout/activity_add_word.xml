@@ -4,17 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/cancelvision"
+        android:layout_width="50dp"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        android:background="#00ff0000"
+        android:layout_height="50dp"
+        android:src="@drawable/back"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_margin="10dp"
         android:text="처방전과 관련된\n단어를 선택해주세요"
         android:textSize="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintTop_toBottomOf="@+id/cancelvision" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/add_flexboxlayout"
@@ -23,6 +37,7 @@
         app:alignContent="flex_start"
         app:alignItems="flex_start"
         app:flexWrap="wrap"
+        android:layout_marginLeft="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -39,6 +54,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:hint="추가하고 싶은 단어를 입력하세요"
+        android:theme="@style/AppTheme.Edittext"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,9 +65,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:orientation="vertical"
+        android:elevation="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/tagbox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,18 +78,23 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:text="MY TAG"
-            android:textSize="25dp"
+            android:textColor="#000"
+            android:textSize="27sp"
             android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/word_flexboxlayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:elevation="10dp"
                 app:alignContent="flex_start"
                 app:alignItems="flex_start"
                 app:flexWrap="wrap"/>
@@ -81,8 +103,11 @@
         <Button
             android:id="@+id/save_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="처방전 저장" />
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:background="@drawable/roundbox_purple"
+            android:text="처방전 저장"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
