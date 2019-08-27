@@ -4,15 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="#ADA5FD"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -21,7 +15,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
+        <FrameLayout
+            android:background="#ADA5FD"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
         <EditText
             android:id="@+id/medicin_search_2"
             android:layout_width="match_parent"
@@ -35,11 +32,12 @@
             android:paddingRight="17dp"
             android:textSize="15dp"
             app:layout_constraintVertical_bias="0.057" />
-
+        </FrameLayout>
         <ImageView
             android:id="@+id/loading"
-            android:layout_width="match_parent"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:background="#ffffff"
             android:visibility="gone" />
 

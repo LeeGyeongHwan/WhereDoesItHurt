@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -50,7 +49,6 @@ public class Fragment_main extends Fragment {
     private FragmentTransaction transaction;
     private ListView my_medicine_info, my_caution_food;
     private int currentCount = -1;
-    private SpannableString spannableString;
     private Adapter adapter;
     private foodAdapter foodAdapter;
     private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3;

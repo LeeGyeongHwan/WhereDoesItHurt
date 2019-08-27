@@ -53,7 +53,6 @@ public class Fragment_search extends Fragment {
     TextView backgroundchange;
     ImageView loading;
     ScrollView scrollView;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +86,8 @@ public class Fragment_search extends Fragment {
             search_word = getArguments().getString("search_word");
             setListView(search_word);
         }
+
+        medicine_search.bringToFront();
         return viewGroup;
     }
 
