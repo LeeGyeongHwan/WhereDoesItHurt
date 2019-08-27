@@ -14,6 +14,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -70,6 +71,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -828,21 +830,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void MakeAlarmService(String title) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent intent = new Intent(MainActivity.this, Handle_Alarm.class);
         intent.putExtra("title", title);
 
+        ArrayList<String> alarmTime = user.getUserInfo().getDefaultTimes().getTimes();
+        //시간 구해서 현재시간과 비교 가장 가까운 미래시간 부터 시간차
+        GregorianCalendar currentCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+        int currentHourOfDay = currentCalendar.get(GregorianCalendar.HOUR_OF_DAY);
+        int currentMinute = currentCalendar.get(GregorianCalendar.MINUTE);
+        Log.d("what", "MakeAlarmService: gregorian hour : "+currentHourOfDay+", minute : "+ currentMinute);
+
+        int index=0;
+        boolean visit=false;
+        for(int i=0; i<alarmTime.size();i++){
+            String temp = alarmTime.get(i);
+            int hour = Integer.parseInt(temp.substring(0,2));
+            int min = Integer.parseInt(temp.substring(2,4));
+
+            if ( currentHourOfDay < hour || ( currentHourOfDay == hour && currentMinute < min ) ){
+                if(visit)
+                    continue;
+                index=i;
+                visit=true;
+                Log.d("what", "MakeAlarmService: first index : "+index+", hour : "+hour+",min : "+min);
+                //처음에 한해서 하는데 나머지 시간은 넘김
+            }
+        }
+        intent.putExtra("startIndex",index);
+        intent.putExtra("visited",visit);
+        intent.putStringArrayListExtra("alarmTime",alarmTime);
+
+
+        //visit==false -> 내일 처음시간
+        //visit == true -> 인덱스 부터 알람시작
 
         //리퀘스트 코드 -> 개인 id *100 + index 으로 차이주기
         PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-        Calendar calendar = Calendar.getInstance();
-
-        //시간 특별히주기 3개
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 20, 0, 0);
 
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, makeAlarm);
+        Log.d("what", "MakeAlarmService: makealarm pending info : "+makeAlarm.toString());
+        String time=alarmTime.get(index);
+
+        setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
+
     }
+
+    public void setOnceAlarm(int hourOfDay, int minute, PendingIntent alarmPendingIntent,boolean tomorrow) {
+        Log.d("what", "setOnceAlarm: alarmpending intent"+alarmPendingIntent.toString());
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow, hourOfDay, minute), alarmPendingIntent);
+        else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow,hourOfDay, minute), alarmPendingIntent);
+        else
+            alarmManager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow,hourOfDay, minute), alarmPendingIntent);
+    }
+
+
+    private long getTimeInMillis(boolean tomorrow, int hourOfDay, int minute) {
+        Log.d("what", "getTimeInMillis: tomorrow "+ tomorrow+", hour : "+hourOfDay+", minute : "+minute);
+
+        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+
+        if ( tomorrow )
+            calendar.add(GregorianCalendar.DAY_OF_YEAR, 1);
+
+        calendar.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(GregorianCalendar.MINUTE, minute);
+        calendar.set(GregorianCalendar.SECOND, 0);
+        calendar.set(GregorianCalendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
+
+    }
+
 
     public String getId() {
         return id.toString();
