@@ -42,20 +42,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:text="MYPAGE"
                 android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/toolbar_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:text="CALENDAR"
                 android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:visibility="gone" />
 
             <TextView
@@ -63,11 +64,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:text="HISTORY"
                 android:textColor="#776DE0"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/toolbar_my_default_time"
                 android:layout_width="wrap_content"
@@ -82,10 +84,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:text="의약품 검색"
                 android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 android:visibility="gone" />
 
             <ImageView
@@ -95,6 +97,7 @@
                 android:layout_gravity="center"
                 android:src="@drawable/logo"
                 android:textColor="#000000" />
+
             <TextView
                 android:id="@+id/toolbar_edit_time"
                 android:layout_width="wrap_content"
@@ -103,6 +106,7 @@
                 android:text="알람 시간 편집"
                 android:textColor="#776DE0"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/toolbar_my_info"
                 android:layout_width="wrap_content"
@@ -111,6 +115,7 @@
                 android:text="나의 정보"
                 android:textColor="#776DE0"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/toolbar_my_medicine"
                 android:layout_width="wrap_content"

@@ -8,9 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MyMedicine_itemView extends LinearLayout {
-    private TextView name,name2,date,alarm,medicine_info;
+    private TextView name, name2, date, alarm, medicine_info;
     private LinearLayout my_medicine_layout;
     private ImageButton delete;
+
     public MyMedicine_itemView(Context context) {
         super(context);
         init(context);
@@ -25,12 +26,12 @@ public class MyMedicine_itemView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.my_medicine, this, true);
         name = (TextView) findViewById(R.id.medicine_name);
-        name2 = (TextView)findViewById(R.id.medicine_name2);
+        name2 = (TextView) findViewById(R.id.medicine_name2);
         date = (TextView) findViewById(R.id.my_medicine_date);
-        alarm = (TextView)findViewById(R.id.my_medicine_alarm);
-        medicine_info = (TextView)findViewById(R.id.my_medicine_info);
-        my_medicine_layout = (LinearLayout)findViewById(R.id.my_medicine_layout);
-        delete = (ImageButton)findViewById(R.id.delete);
+        alarm = (TextView) findViewById(R.id.my_medicine_alarm);
+        medicine_info = (TextView) findViewById(R.id.my_medicine_info);
+        my_medicine_layout = (LinearLayout) findViewById(R.id.my_medicine_layout);
+        delete = (ImageButton) findViewById(R.id.delete);
     }
 
     public TextView getName() {

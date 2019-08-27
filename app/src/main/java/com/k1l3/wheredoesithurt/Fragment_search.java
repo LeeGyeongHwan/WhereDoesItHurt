@@ -64,8 +64,8 @@ public class Fragment_search extends Fragment {
         medicine_search = (EditText) viewGroup.findViewById(R.id.medicin_search_2);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        loading = (ImageView)viewGroup.findViewById(R.id.loading);
-        scrollView = (ScrollView)viewGroup.findViewById(R.id.scrollView3);
+        loading = (ImageView) viewGroup.findViewById(R.id.loading);
+        scrollView = (ScrollView) viewGroup.findViewById(R.id.scrollView3);
         Glide.with(this).load(R.raw.loading).into(loading);
         no_medicine_image = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.search_img);
         search_medicine_image = (ImageView) viewGroup.findViewById(R.id.search_medicine_image);
@@ -137,10 +137,9 @@ public class Fragment_search extends Fragment {
                         } else if (tag.equals("PARAGRAPH") && stopping == 1) {
                             xpp.next();
                             ee_doc_data = ee_doc_data + xpp.getText() + "\n";
-                        } else if (tag.equals("ARTICLE") &&stopping == 1){
-                            ee_doc_data = ee_doc_data + xpp.getAttributeValue(0)+ "\n";
-                        }
-                        else if (tag.equals("UD_DOC_DATA")) {
+                        } else if (tag.equals("ARTICLE") && stopping == 1) {
+                            ee_doc_data = ee_doc_data + xpp.getAttributeValue(0) + "\n";
+                        } else if (tag.equals("UD_DOC_DATA")) {
                             stopping = 2;
                         } else if (tag.equals("PARAGRAPH") && stopping == 2) {
                             xpp.next();
@@ -264,8 +263,8 @@ public class Fragment_search extends Fragment {
                         scrollView.setVisibility(View.GONE);
                     }
                 });
-                data= getXmlData(search_word);
-                for(int i=0;i<data.size();i++){
+                data = getXmlData(search_word);
+                for (int i = 0; i < data.size(); i++) {
                     imgBitmap = GetImageFromURL(data.get(i).getItem_name());
                     if (imgBitmap != null) {
                         data.get(i).setItem_image(imgBitmap);

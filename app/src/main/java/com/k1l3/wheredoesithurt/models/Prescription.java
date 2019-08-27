@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class    Prescription implements Serializable {
+public class Prescription implements Serializable {
     private String begin;
     private String end;
     private String name;

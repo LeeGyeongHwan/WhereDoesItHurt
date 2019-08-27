@@ -4,7 +4,7 @@ public class Pair {
     private String kind;
     private int caution;
 
-    public Pair(String kind, int caution){
+    public Pair(String kind, int caution) {
         this.kind = kind;
         this.caution = caution;
     }

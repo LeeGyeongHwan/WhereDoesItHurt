@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="7dp"
-    android:elevation="7dp"
-    android:clickable="true"
     android:background="@drawable/historybox"
+    android:clickable="true"
+    android:elevation="7dp"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -22,11 +22,11 @@
             android:layout_width="120dp"
             android:layout_height="150dp"
             android:layout_margin="10dp"
-            android:padding="5dp"
             android:elevation="10dp"
-            android:scaleType="centerCrop"
             android:foreground="@drawable/history_image"
-            android:src="@drawable/add_presc"/>
+            android:padding="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add_presc" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,12 +68,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/history_sep"
         android:layout_width="80dp"
         android:layout_height="4dp"
-        android:id="@+id/history_sep"
         android:layout_gravity="center"
         android:background="@drawable/history_sep"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -88,8 +88,8 @@
             android:layout_width="120dp"
             android:layout_height="150dp"
             android:layout_margin="10dp"
-            android:padding="5dp"
             android:elevation="10dp"
+            android:padding="5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/add_presc" />
 
@@ -102,36 +102,36 @@
 
 
             <TextView
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:text="복용 약"
-                android:textStyle="bold"
                 android:textColor="#000"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/presc_medicine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
-                android:textSize="14dp"/>
+                android:textSize="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="메모"
                 android:layout_marginTop="15dp"
-                android:textStyle="bold"
+                android:text="메모"
                 android:textColor="#000"
-                android:textSize="14dp"/>
+                android:textSize="14dp"
+                android:textStyle="bold" />
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true"
-                android:textColor="#000"
-                android:scrollbars="vertical">
+                android:scrollbars="vertical"
+                android:textColor="#000">
 
                 <EditText
                     android:id="@+id/history_memo"

@@ -23,18 +23,19 @@ import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_mypage extends Fragment {
     View viewGroup;
-    String image,name,email;
-    LinearLayout my_default_time,my_info,my_medicine;
+    String image, name, email;
+    LinearLayout my_default_time, my_info, my_medicine;
     FragmentManager manager;
     FragmentTransaction transaction;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewGroup = inflater.inflate(R.layout.fragment_mypage,container, false);
+        viewGroup = inflater.inflate(R.layout.fragment_mypage, container, false);
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        ((MainActivity)getActivity()).toolbar_mypage();
+        ((MainActivity) getActivity()).toolbar_mypage();
         image = getArguments().getString("profile");
         name = getArguments().getString("name");
         email = getArguments().getString("email");
@@ -56,7 +57,7 @@ public class Fragment_mypage extends Fragment {
             }
         });
         //기본 알람시간 페이지로 가기
-        my_default_time = (LinearLayout)viewGroup.findViewById(R.id.my_default_time);
+        my_default_time = (LinearLayout) viewGroup.findViewById(R.id.my_default_time);
         my_default_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +65,7 @@ public class Fragment_mypage extends Fragment {
             }
         });
         //나의 정보 페이지로 가기
-        my_info=(LinearLayout)viewGroup.findViewById(R.id.my_info);
+        my_info = (LinearLayout) viewGroup.findViewById(R.id.my_info);
         my_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +74,7 @@ public class Fragment_mypage extends Fragment {
         });
 
         //복용약 페이지 들어가기
-        my_medicine=(LinearLayout)viewGroup.findViewById(R.id.my_medicine);
+        my_medicine = (LinearLayout) viewGroup.findViewById(R.id.my_medicine);
         my_medicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,10 +85,10 @@ public class Fragment_mypage extends Fragment {
     }
 
     private void replaceFragment(@NonNull Fragment fragment) {
-        transaction= manager.beginTransaction();
+        transaction = manager.beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack("fragment");
         transaction.commit();
-        Log.e(TAG,"값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
+        Log.e(TAG, "값 : " + String.valueOf(getActivity().getSupportFragmentManager().getBackStackEntryCount()));
     }
 }

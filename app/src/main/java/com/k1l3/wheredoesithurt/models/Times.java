@@ -10,11 +10,11 @@ public class Times implements Serializable {
         this.times = new ArrayList<>();
     }
 
-    public void addTime(String time){
+    public void addTime(String time) {
         times.add(time);
     }
 
-    public ArrayList<String> getTimes(){
+    public ArrayList<String> getTimes() {
         return times;
     }
 }

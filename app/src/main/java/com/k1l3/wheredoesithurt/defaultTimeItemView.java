@@ -7,7 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class defaultTimeItemView extends LinearLayout {
-    TextView AMPM,Time;
+    TextView AMPM, Time;
+
     public defaultTimeItemView(Context context) {
         super(context);
         init(context);
@@ -22,7 +23,7 @@ public class defaultTimeItemView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.default_time_item, this, true);
         AMPM = (TextView) findViewById(R.id.AMPM);
-        Time = (TextView)findViewById(R.id.Time);
+        Time = (TextView) findViewById(R.id.Time);
     }
 
     public TextView getAMPM() {

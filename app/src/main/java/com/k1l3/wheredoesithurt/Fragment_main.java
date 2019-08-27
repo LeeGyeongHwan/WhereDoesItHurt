@@ -41,8 +41,9 @@ import java.util.Map;
 import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_main extends Fragment {
-    private View viewGroup;
     public int[] check = new int[3];
+    public Calendar cal = Calendar.getInstance();
+    private View viewGroup;
     private EditText medicine_search;
     private View btn1, btn2, btn3;
     private FragmentManager manager;
@@ -56,11 +57,11 @@ public class Fragment_main extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private String id;
-    public Calendar cal = Calendar.getInstance();
     private int currentClick;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private float pressedX = 0;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -152,7 +153,7 @@ public class Fragment_main extends Fragment {
                         //Log.e(TAG, "distance : " + distance);
                         break;
                 } // 해당 거리가 100이 되지 않으면 이벤트 처리 하지 않는다.
-                if (Math.abs(distance) < 100 || distance ==0) {
+                if (Math.abs(distance) < 100 || distance == 0) {
                     //Log.e(TAG, "이벤트처리x");
                 }
                 if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
@@ -285,130 +286,6 @@ public class Fragment_main extends Fragment {
                     currentCount++;
                 }
             }
-        }
-    }
-
-    //나의 약 정보 Adapter
-    private class Adapter extends BaseAdapter {
-        ArrayList<Medicine> items = new ArrayList<Medicine>();
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public void addItem(Medicine item) {
-            items.add(item);
-        }
-
-        public void addItem(ArrayList<Medicine> item) {
-            items = item;
-        }
-
-        public void deleteItem(Medicine item) {
-            items.remove(item);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Medicine_infoView view = new Medicine_infoView(viewGroup.getContext());
-            Medicine item = items.get(position);
-            view.setMedicine_name(item.getName());
-            view.setMedicine_kind(item.getKind());
-
-            return view;
-        }
-    }
-
-    //주의해야할 음식 Adapter
-    private class foodAdapter extends BaseAdapter {
-        ArrayList<Medicine> items = new ArrayList<Medicine>();
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public void addItem(Medicine item) {
-            items.add(item);
-        }
-
-        public void addItem(ArrayList<Medicine> item) {
-            items = item;
-        }
-
-        public void deleteItem(Medicine item) {
-            items.remove(item);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Caution_foodView view = new Caution_foodView(viewGroup.getContext());
-            Medicine item = items.get(position);
-            view.setMedicine_name(item.getName());
-
-            int caution = item.getCaution();
-            if (caution == 0) {
-                view.setFood(" 없음");
-            } else {
-                for (int i = 0; i < 11; i++) {
-                    switch (caution % 2) {
-                        case 0:
-                            caution = caution / 2;
-                            break;
-                        case 1:
-                            if (i == 0) {//감기
-                                view.setFood(view.getFood().getText().toString() + " 초콜릿 커피 카페인");
-                            } else if (i == 1) {//철분제
-                                view.setFood(view.getFood().getText().toString() + " 녹차 유제품");
-                            } else if (i == 2) {//알레르기
-                                view.setFood(view.getFood().getText().toString() + " 과일주스");
-                            } else if (i == 3) {//통풍
-                                view.setFood(view.getFood().getText().toString() + " 고기 생선 조개 시금치 맥주");
-                            } else if (i == 4) {//골다공증
-                                view.setFood(view.getFood().getText().toString() + " 탄산음료");
-                            } else if (i == 5) {//기관지확장제
-                                view.setFood(view.getFood().getText().toString() + " 카페인");
-                            } else if (i == 6) {//변비
-                                view.setFood(view.getFood().getText().toString() + " 우유");
-                            } else if (i == 7) {//결핵
-                                view.setFood(view.getFood().getText().toString() + " 치즈");
-                            } else if (i == 8) {//고혈압
-                                view.setFood(view.getFood().getText().toString() + " 자몽주스 바나나 자몽");
-                            } else if (i == 9) {//항응고
-                                view.setFood(view.getFood().getText().toString() + " 시금치 등 푸른채소");
-                            } else if (i == 10) {//빈혈
-                                view.setFood(view.getFood().getText().toString() + " 홍차 녹차");
-                            }
-                            caution = caution / 2;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            return view;
         }
     }
 
@@ -660,7 +537,7 @@ public class Fragment_main extends Fragment {
 
     private void getRightcurrenCount() {
         User user = User.getInstance();
-        if(currentCount<user.getPrescriptions().size()-1) {
+        if (currentCount < user.getPrescriptions().size() - 1) {
             currentCount = currentCount + 1;
             if (user.getPrescriptions() != null) {
                 for (int i = currentCount; i < user.getPrescriptions().size(); i++) {
@@ -707,6 +584,130 @@ public class Fragment_main extends Fragment {
                     }
                 }
             }
+        }
+    }
+
+    //나의 약 정보 Adapter
+    private class Adapter extends BaseAdapter {
+        ArrayList<Medicine> items = new ArrayList<Medicine>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public void addItem(Medicine item) {
+            items.add(item);
+        }
+
+        public void addItem(ArrayList<Medicine> item) {
+            items = item;
+        }
+
+        public void deleteItem(Medicine item) {
+            items.remove(item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Medicine_infoView view = new Medicine_infoView(viewGroup.getContext());
+            Medicine item = items.get(position);
+            view.setMedicine_name(item.getName());
+            view.setMedicine_kind(item.getKind());
+
+            return view;
+        }
+    }
+
+    //주의해야할 음식 Adapter
+    private class foodAdapter extends BaseAdapter {
+        ArrayList<Medicine> items = new ArrayList<Medicine>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public void addItem(Medicine item) {
+            items.add(item);
+        }
+
+        public void addItem(ArrayList<Medicine> item) {
+            items = item;
+        }
+
+        public void deleteItem(Medicine item) {
+            items.remove(item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Caution_foodView view = new Caution_foodView(viewGroup.getContext());
+            Medicine item = items.get(position);
+            view.setMedicine_name(item.getName());
+
+            int caution = item.getCaution();
+            if (caution == 0) {
+                view.setFood(" 없음");
+            } else {
+                for (int i = 0; i < 11; i++) {
+                    switch (caution % 2) {
+                        case 0:
+                            caution = caution / 2;
+                            break;
+                        case 1:
+                            if (i == 0) {//감기
+                                view.setFood(view.getFood().getText().toString() + " 초콜릿 커피 카페인");
+                            } else if (i == 1) {//철분제
+                                view.setFood(view.getFood().getText().toString() + " 녹차 유제품");
+                            } else if (i == 2) {//알레르기
+                                view.setFood(view.getFood().getText().toString() + " 과일주스");
+                            } else if (i == 3) {//통풍
+                                view.setFood(view.getFood().getText().toString() + " 고기 생선 조개 시금치 맥주");
+                            } else if (i == 4) {//골다공증
+                                view.setFood(view.getFood().getText().toString() + " 탄산음료");
+                            } else if (i == 5) {//기관지확장제
+                                view.setFood(view.getFood().getText().toString() + " 카페인");
+                            } else if (i == 6) {//변비
+                                view.setFood(view.getFood().getText().toString() + " 우유");
+                            } else if (i == 7) {//결핵
+                                view.setFood(view.getFood().getText().toString() + " 치즈");
+                            } else if (i == 8) {//고혈압
+                                view.setFood(view.getFood().getText().toString() + " 자몽주스 바나나 자몽");
+                            } else if (i == 9) {//항응고
+                                view.setFood(view.getFood().getText().toString() + " 시금치 등 푸른채소");
+                            } else if (i == 10) {//빈혈
+                                view.setFood(view.getFood().getText().toString() + " 홍차 녹차");
+                            }
+                            caution = caution / 2;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return view;
         }
     }
 }

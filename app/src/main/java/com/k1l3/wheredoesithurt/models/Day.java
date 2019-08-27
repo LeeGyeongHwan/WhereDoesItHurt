@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Day implements Serializable {
     DayClick dayClick;
 
-    public Day(){
+    public Day() {
         dayClick = new DayClick();
     }
 
