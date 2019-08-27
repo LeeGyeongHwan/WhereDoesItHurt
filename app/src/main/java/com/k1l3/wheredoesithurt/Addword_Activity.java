@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,13 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
+import com.k1l3.wheredoesithurt.models.Year;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -167,9 +164,8 @@ public class Addword_Activity extends AppCompatActivity {
         Log.i(TAG, "savePrescription");
 
         prescription.setHashTag(hashtags);
-
+        prescription.setYear(new Year());
         User.getInstance().getPrescriptions().add(prescription);
-
         User.getInstance().syncWithDatabase();
 //        databaseReference = database.getReference("users").child(id);
 //        ValueEventListener databaseListener = new ValueEventListener() {

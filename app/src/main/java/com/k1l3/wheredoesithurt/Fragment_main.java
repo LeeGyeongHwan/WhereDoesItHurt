@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -46,7 +48,7 @@ public class Fragment_main extends Fragment {
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private ListView my_medicine_info, my_caution_food;
-    private int currentCount = 0;
+    private int currentCount = -1;
     private SpannableString spannableString;
     private Adapter adapter;
     private foodAdapter foodAdapter;
@@ -57,6 +59,7 @@ public class Fragment_main extends Fragment {
     public Calendar cal = Calendar.getInstance();
     private int currentClick;
     private CircleProgressBar progressBar;
+    private ConstraintLayout constraintLayout;
 
     @Nullable
     @Override
@@ -85,7 +88,7 @@ public class Fragment_main extends Fragment {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
         id = ((MainActivity) getActivity()).getId();
-
+        constraintLayout = viewGroup.findViewById(R.id.constraint_layout);
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -102,27 +105,14 @@ public class Fragment_main extends Fragment {
             }
         });
 
-        //약 이름
-        /*my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-        adapter = new Adapter();
-        getMedicineName();
-
-        //주의해야할 음식
-        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-        foodAdapter = new foodAdapter();
-        getCautionFood();
-
-        //버튼
-        setButton();
-
-        //그래프
-        setGraph();*/
-
         databaseReference = database.getReference("users").child(id);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
+                if(currentCount==-1) {
+                    getRightcurrenCount();
+                }
                 if (info.getPrescriptions() != null) {
                     my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
                     adapter = new Adapter();
@@ -146,6 +136,65 @@ public class Fragment_main extends Fragment {
 
             }
         });
+
+        //드래그시 화면이동
+        /*constraintLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float distance = 0;
+                float pressedX = 0;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: // 손가락을 touch 했을 떄 x 좌표값 저장
+                        pressedX = event.getX();
+                        Log.e(TAG,"pressd : " + pressedX);
+                        break;
+                    case MotionEvent.ACTION_UP: // 손가락을 떼었을 때 저장해놓은 x좌표와의 거리 비교
+                        distance = pressedX - event.getX();
+                        Log.e(TAG,"distance : " + distance);
+                        break;
+                } // 해당 거리가 100이 되지 않으면 이벤트 처리 하지 않는다.
+                if (Math.abs(distance) < 100) {
+                    Log.e(TAG,"이벤트처리x");
+                    return false;
+                }
+                if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
+                    Log.e(TAG,"오른쪽");
+                    getRightcurrenCount();
+                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                    adapter = new Adapter();
+                    getMedicineName();
+
+                    //주의해야할 음식
+                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                    foodAdapter = new foodAdapter();
+                    getCautionFood();
+
+                    //버튼
+                    setButton();
+
+                    //그래프
+                    setGraph();
+                } else {
+                    Log.e(TAG,"왼쪽");
+                    getLeftcurrenCount();
+                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                    adapter = new Adapter();
+                    getMedicineName();
+
+                    //주의해야할 음식
+                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                    foodAdapter = new foodAdapter();
+                    getCautionFood();
+
+                    //버튼
+                    setButton();
+
+                    //그래프
+                    setGraph();
+                }
+                return true;
+            }
+        });*/
         return viewGroup;
     }
 
@@ -415,59 +464,63 @@ public class Fragment_main extends Fragment {
 
     //Button click이벤트
     public void buttonClick(View fliptbtn1, final int i) {
-        databaseReference = database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount))
-                .child(String.valueOf(cal.get(Calendar.YEAR))).child(String.valueOf(cal.get(Calendar.MONTH) + 1)).child(String.valueOf(cal.get(Calendar.DATE)));
+        databaseReference = database.getReference("users").child(id);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DayClick item = dataSnapshot.getValue(DayClick.class);
-                if (item != null) {
-                    for (int i = 0; i < 3; i++) {
-                        if (i == 0) {
-                            check[i] = item.getOne();
-                            if (check[i] == 0) {
-                                btn1.setBackgroundResource(R.drawable.flip_purple);
-                                iseat1.setText("못먹었어요");
-                                when1.setTextColor(Color.parseColor("#ffffff"));
-                                time1.setTextColor(Color.parseColor("#ffffff"));
-                                iseat1.setTextColor(Color.parseColor("#ffffff"));
-                            } else {
-                                btn1.setBackgroundResource(R.drawable.flip_white);
-                                iseat1.setText("먹었어요");
-                                when1.setTextColor(Color.parseColor("#776DE0"));
-                                time1.setTextColor(Color.parseColor("#776DE0"));
-                                iseat1.setTextColor(Color.parseColor("#776DE0"));
-                            }
-                        } else if (i == 1) {
-                            check[i] = item.getTwo();
-                            if (check[i] == 0) {
-                                btn2.setBackgroundResource(R.drawable.flip_purple);
-                                iseat2.setText("못먹었어요");
-                                when2.setTextColor(Color.parseColor("#ffffff"));
-                                time2.setTextColor(Color.parseColor("#ffffff"));
-                                iseat2.setTextColor(Color.parseColor("#ffffff"));
-                            } else {
-                                btn2.setBackgroundResource(R.drawable.flip_white);
-                                iseat2.setText("먹었어요");
-                                when2.setTextColor(Color.parseColor("#776DE0"));
-                                time2.setTextColor(Color.parseColor("#776DE0"));
-                                iseat2.setTextColor(Color.parseColor("#776DE0"));
-                            }
-                        } else if (i == 2) {
-                            check[i] = item.getThree();
-                            if (check[i] == 0) {
-                                btn3.setBackgroundResource(R.drawable.flip_purple);
-                                iseat3.setText("못먹었어요");
-                                when3.setTextColor(Color.parseColor("#ffffff"));
-                                time3.setTextColor(Color.parseColor("#ffffff"));
-                                iseat3.setTextColor(Color.parseColor("#ffffff"));
-                            } else {
-                                btn3.setBackgroundResource(R.drawable.flip_white);
-                                iseat3.setText("먹었어요");
-                                when3.setTextColor(Color.parseColor("#776DE0"));
-                                time3.setTextColor(Color.parseColor("#776DE0"));
-                                iseat3.setTextColor(Color.parseColor("#776DE0"));
+                User info = dataSnapshot.getValue(User.class);
+                DayClick item;
+                if (info != null) {
+                    if(info.getPrescriptions().get(currentCount).getYear()!=null) {
+                        item = info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
+                                .getDayClick();
+                        for (int i = 0; i < 3; i++) {
+                            if (i == 0) {
+                                check[i] = item.getOne();
+                                if (check[i] == 0) {
+                                    btn1.setBackgroundResource(R.drawable.flip_purple);
+                                    iseat1.setText("못먹었어요");
+                                    when1.setTextColor(Color.parseColor("#ffffff"));
+                                    time1.setTextColor(Color.parseColor("#ffffff"));
+                                    iseat1.setTextColor(Color.parseColor("#ffffff"));
+                                } else {
+                                    btn1.setBackgroundResource(R.drawable.flip_white);
+                                    iseat1.setText("먹었어요");
+                                    when1.setTextColor(Color.parseColor("#776DE0"));
+                                    time1.setTextColor(Color.parseColor("#776DE0"));
+                                    iseat1.setTextColor(Color.parseColor("#776DE0"));
+                                }
+                            } else if (i == 1) {
+                                check[i] = item.getTwo();
+                                if (check[i] == 0) {
+                                    btn2.setBackgroundResource(R.drawable.flip_purple);
+                                    iseat2.setText("못먹었어요");
+                                    when2.setTextColor(Color.parseColor("#ffffff"));
+                                    time2.setTextColor(Color.parseColor("#ffffff"));
+                                    iseat2.setTextColor(Color.parseColor("#ffffff"));
+                                } else {
+                                    btn2.setBackgroundResource(R.drawable.flip_white);
+                                    iseat2.setText("먹었어요");
+                                    when2.setTextColor(Color.parseColor("#776DE0"));
+                                    time2.setTextColor(Color.parseColor("#776DE0"));
+                                    iseat2.setTextColor(Color.parseColor("#776DE0"));
+                                }
+                            } else if (i == 2) {
+                                check[i] = item.getThree();
+                                if (check[i] == 0) {
+                                    btn3.setBackgroundResource(R.drawable.flip_purple);
+                                    iseat3.setText("못먹었어요");
+                                    when3.setTextColor(Color.parseColor("#ffffff"));
+                                    time3.setTextColor(Color.parseColor("#ffffff"));
+                                    iseat3.setTextColor(Color.parseColor("#ffffff"));
+                                } else {
+                                    btn3.setBackgroundResource(R.drawable.flip_white);
+                                    iseat3.setText("먹었어요");
+                                    when3.setTextColor(Color.parseColor("#776DE0"));
+                                    time3.setTextColor(Color.parseColor("#776DE0"));
+                                    iseat3.setTextColor(Color.parseColor("#776DE0"));
+                                }
                             }
                         }
                     }
@@ -545,13 +598,15 @@ public class Fragment_main extends Fragment {
 
     //Button database
     private void buttonDatabase(final int[] check, final int clicking) {
-        databaseReference = database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount))
-                .child(String.valueOf(cal.get(Calendar.YEAR))).child(String.valueOf(cal.get(Calendar.MONTH) + 1)).child(String.valueOf(cal.get(Calendar.DATE)));
+        databaseReference = database.getReference("users").child(id);
         ValueEventListener databaseListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User info = dataSnapshot.getValue(User.class);
                 DayClick dayClick = new DayClick(check[0], check[1], check[2]);
-                databaseReference.setValue(dayClick);
+                    info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
+                            .setDayClick(dayClick);
+                databaseReference.setValue(info);
                 buttonTotalDB(clicking);
             }
 
@@ -587,7 +642,7 @@ public class Fragment_main extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
-                if(info.getPrescriptions()!=null) {
+                if (info.getPrescriptions() != null) {
                     currentClick = info.getPrescriptions().get(currentCount).getTotalClick();
                     progressBar.setMax(100);
                     int currentProgress = (currentClick * 100) / (info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
@@ -601,5 +656,53 @@ public class Fragment_main extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    private void getRightcurrenCount() {
+        currentCount = currentCount + 1;
+        User user = User.getInstance();
+        if (user.getPrescriptions() != null) {
+            for (int i = 0; i < user.getPrescriptions().size(); i++) {
+                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
+                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
+                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
+                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
+                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
+                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                            currentCount = i;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void getLeftcurrenCount() {
+        currentCount = currentCount - 1;
+        User user = User.getInstance();
+        if (user.getPrescriptions() != null) {
+            for (int i = currentCount; i >= 0; i--) {
+                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
+                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
+                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
+                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
+                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
+                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
+                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
+                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
+                            currentCount = i;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

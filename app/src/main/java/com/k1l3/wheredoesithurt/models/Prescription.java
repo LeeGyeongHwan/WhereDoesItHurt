@@ -17,9 +17,9 @@ public class    Prescription implements Serializable {
     private ArrayList<String> hashTag;
     private Times times;
     private String memo;
-
     private int totalClick;
 
+    private Year year;
     private boolean isVisible = false;
 
     public Prescription() {
@@ -103,6 +103,14 @@ public class    Prescription implements Serializable {
 
     public void setTotalClick(int totalClick) {
         this.totalClick = totalClick;
+    }
+
+    public Year getYear() {
+        return year;
+    }
+
+    public void setYear(Year year) {
+        this.year = year;
     }
 
     public boolean isVisible() {
