@@ -103,7 +103,7 @@ public class Fragment_main extends Fragment {
         });
 
         //약 이름
-        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+        /*my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
         adapter = new Adapter();
         getMedicineName();
 
@@ -116,7 +116,36 @@ public class Fragment_main extends Fragment {
         setButton();
 
         //그래프
-        setGraph();
+        setGraph();*/
+
+        databaseReference = database.getReference("users").child(id);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User info = dataSnapshot.getValue(User.class);
+                if (info.getPrescriptions() != null) {
+                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                    adapter = new Adapter();
+                    getMedicineName();
+
+                    //주의해야할 음식
+                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                    foodAdapter = new foodAdapter();
+                    getCautionFood();
+
+                    //버튼
+                    setButton();
+
+                    //그래프
+                    setGraph();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return viewGroup;
     }
 
@@ -558,12 +587,14 @@ public class Fragment_main extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User info = dataSnapshot.getValue(User.class);
-                currentClick = info.getPrescriptions().get(currentCount).getTotalClick();
-                progressBar.setMax(100);
-                int currentProgress = (currentClick * 100) / (info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
-                        info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
-                progressBar.setProgress(currentProgress);
-                Log.e("asdg", String.valueOf(currentProgress));
+                if(info.getPrescriptions()!=null) {
+                    currentClick = info.getPrescriptions().get(currentCount).getTotalClick();
+                    progressBar.setMax(100);
+                    int currentProgress = (currentClick * 100) / (info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
+                            info.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
+                    progressBar.setProgress(currentProgress);
+                    Log.e("asdg", String.valueOf(currentProgress));
+                }
             }
 
             @Override
