@@ -1,8 +1,9 @@
 package com.k1l3.wheredoesithurt.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Month {
+public class Month implements Serializable {
     ArrayList<Day> days;
 
     public Month(){

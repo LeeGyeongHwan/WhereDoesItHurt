@@ -1,6 +1,8 @@
 package com.k1l3.wheredoesithurt.models;
 
-public class Day {
+import java.io.Serializable;
+
+public class Day implements Serializable {
     DayClick dayClick;
 
     public Day(){
