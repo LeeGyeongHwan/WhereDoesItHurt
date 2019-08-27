@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,19 +15,26 @@
         app:layout_constraintBottom_toTopOf="@+id/scrollview_analysis"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/cancelvision"
             android:layout_width="50dp"
+            android:scaleType="centerCrop"
+            android:background="#00ff0000"
             android:layout_height="50dp"
-            android:text="back" />
+            android:src="@drawable/back"
+            />
 
         <EditText
             android:id="@+id/title_prescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:textSize="23sp"
             android:text="나의 복용약"
-
+            android:paddingBottom="8dp"
+            android:background="@drawable/purple_line"
+            android:colorControlActivated="#776DEB"
+            android:theme="@style/AppTheme.Edittext"
             />
 
     </LinearLayout>
@@ -77,9 +85,13 @@
                         />
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="60dp"
+                        android:layout_height="35dp"
+                        android:background="#776DEB"
+                        android:textColor="#ffffff"
                         android:id="@+id/addMedBtn"
+                        android:layout_marginTop="10dp"
+                        android:textSize="15sp"
                         android:text="약 추가" />
 
 
@@ -100,7 +112,11 @@
         <Button
             android:id="@+id/nextpage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:layout_margin="10dp"
+            android:background="@drawable/roundbox_purple"
             android:text="다음" />
 
     </LinearLayout>

@@ -170,7 +170,7 @@ public class SetAlarmPage extends AppCompatActivity {
                             textView.setText(timenow);
 
                             picker_linear.setVisibility(View.GONE);
-                            pickerBtn.setImageResource(R.drawable.down);
+                            pickerBtn.setImageResource(R.drawable.alarm_down);
                         }
                     });
                 }
@@ -184,7 +184,7 @@ public class SetAlarmPage extends AppCompatActivity {
                         pickerBtn.setImageResource(R.drawable.up);
                     } else {
                         picker_linear.setVisibility(View.GONE);
-                        pickerBtn.setImageResource(R.drawable.down);
+                        pickerBtn.setImageResource(R.drawable.alarm_down);
                     }
                 }
             });

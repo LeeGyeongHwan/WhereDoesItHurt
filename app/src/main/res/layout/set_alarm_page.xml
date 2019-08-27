@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -15,20 +16,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/scrollview_alarm"
         >
-        <Button
+        <ImageButton
             android:layout_width="50dp"
+            android:scaleType="centerCrop"
             android:id="@+id/cancelalarm"
             android:layout_height="50dp"
-            android:text="back"
+            android:background="#00ff0000"
+            android:src="@drawable/back"
             />
         <TextView
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title_alarm"
-            android:textSize="20dp"
-            android:textColor="#9152EC"
-            android:padding="10dp"
+            android:paddingBottom="8dp"
+            android:textSize="23sp"
+            android:textColor="#5F53E0"
             android:text="나의 복용약"
             />
         <LinearLayout
@@ -136,6 +139,9 @@
                 android:id="@+id/to_datelinear"
                 android:orientation="horizontal">
                 <DatePicker
+
+
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:datePickerMode="spinner"
@@ -208,7 +214,11 @@
         <Button
             android:id="@+id/alarm_nextpage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/roundbox_purple"
+            android:textSize="18sp"
+            android:layout_margin="10dp"
+            android:textColor="#ffffff"
             android:text="다음" />
 
     </LinearLayout>
