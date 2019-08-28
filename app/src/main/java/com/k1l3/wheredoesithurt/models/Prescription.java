@@ -106,6 +106,8 @@ public class Prescription implements Serializable {
     }
 
     public Year getYear() {
+        if(year == null)
+            year = new Year();
         return year;
     }
 

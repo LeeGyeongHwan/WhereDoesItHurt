@@ -23,10 +23,8 @@ import com.k1l3.wheredoesithurt.models.User;
 public class Fragment_time_spinner extends Fragment {
     private View viewGroup;
     private TimePicker timePicker;
-    private String hour, min, id, receiveTime;
+    private String hour, min, receiveTime;
     private int position;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
     private FragmentManager manager;
 
     @SuppressLint("NewApi")
@@ -36,10 +34,7 @@ public class Fragment_time_spinner extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_time_spinner, container, false);
         ((MainActivity) getActivity()).toolbar_edit_time();
-        id = ((MainActivity) getActivity()).getId();
         timePicker = viewGroup.findViewById(R.id.time_picker);
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
         manager = getFragmentManager();
 
         ImageButton cancelbtn = viewGroup.findViewById(R.id.cancel);
@@ -51,26 +46,13 @@ public class Fragment_time_spinner extends Fragment {
             position = getArguments().getInt("position");
             timePicker.setHour(Integer.valueOf(receiveTime.substring(0, 2)));
             timePicker.setMinute(Integer.valueOf(receiveTime.substring(2, 4)));
+
             cancelbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    databaseReference = database.getReference("users").child(id);
-                    ValueEventListener databaseListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Times time = new Times();
-                            User info = dataSnapshot.getValue(User.class);
-                            time = info.getUserInfo().getDefaultTimes();
-                            time.getTimes().remove(position);
-                            info.getUserInfo().setDefaultTimes(time);
-                            databaseReference.setValue(info);
-                        }
+                    User.getInstance().getUserInfo().getDefaultTimes().getTimes().remove(position);
+                    User.getInstance().syncWithDatabase();
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    };
-                    databaseReference.addListenerForSingleValueEvent(databaseListener);
                     manager.popBackStack();
                 }
             });

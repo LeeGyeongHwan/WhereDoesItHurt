@@ -16,8 +16,4 @@ public class Year implements Serializable {
     public ArrayList<Month> getMonths() {
         return months;
     }
-
-    public void setMonths(ArrayList<Month> months) {
-        this.months = months;
-    }
 }

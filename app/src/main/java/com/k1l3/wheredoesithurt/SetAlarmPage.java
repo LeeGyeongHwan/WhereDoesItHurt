@@ -80,7 +80,7 @@ public class SetAlarmPage extends AppCompatActivity {
             final TimePicker picker = findViewById(R.id.timepicker);
             final ImageView pickerBtn = findViewById(R.id.pickerBtn);
             final LinearLayout picker_linear = findViewById(R.id.pickerlinear);
-            Button confirmBtn = findViewById(R.id.confirm_timeBtn);
+            final Button confirmBtn = findViewById(R.id.confirm_timeBtn);
 
             if (i < time.length) {
                 textView.setText(time[i]);

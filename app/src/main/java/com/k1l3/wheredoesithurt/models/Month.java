@@ -16,8 +16,4 @@ public class Month implements Serializable {
     public ArrayList<Day> getDays() {
         return days;
     }
-
-    public void setDays(ArrayList<Day> days) {
-        this.days = days;
-    }
 }
