@@ -57,7 +57,6 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
-import com.google.firebase.database.FirebaseDatabase;
 import com.k1l3.wheredoesithurt.models.User;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
@@ -87,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int GALLERY_IMAGE_REQUEST = 1;
     private final static int ACT_ALARM = 99;
     private static final User user = User.getInstance();
-    private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private static final String CHANNEL_ID = "noti";
     static int medicine_count;
     private Uri uri;
     Toolbar toolbar;
@@ -100,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager manager;
     FragmentTransaction transaction;
     Button mypagebtn, myCalendar;
-
+    private byte[] b;
     private Bitmap bitmap2;
+
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
@@ -504,7 +502,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Cloud vision function
     public void startGalleryChooser() {
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            Log.d("success", "Gallery");
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -852,7 +849,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GregorianCalendar currentCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
         int currentHourOfDay = currentCalendar.get(GregorianCalendar.HOUR_OF_DAY);
         int currentMinute = currentCalendar.get(GregorianCalendar.MINUTE);
-        Log.d("what", "MakeAlarmService: gregorian hour : "+currentHourOfDay+", minute : "+ currentMinute);
+        Log.d("what", "MakeAlarmService: gregorian hour : " + currentHourOfDay + ", minute : " + currentMinute);
 
         int index=0;
         boolean visit=false;
@@ -861,12 +858,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int hour = Integer.parseInt(temp.substring(0,2));
             int min = Integer.parseInt(temp.substring(2,4));
 
-            if ( currentHourOfDay < hour || ( currentHourOfDay == hour && currentMinute < min ) ){
-                if(visit)
+            if (currentHourOfDay < hour || (currentHourOfDay == hour && currentMinute < min)) {
+                if (visit)
                     continue;
-                index=i;
-                visit=true;
-                Log.d("what", "MakeAlarmService: first index : "+index+", hour : "+hour+",min : "+min);
+                index = i;
+                visit = true;
+                Log.d("what", "MakeAlarmService: first index : " + index + ", hour : " + hour + ",min : " + min);
                 //처음에 한해서 하는데 나머지 시간은 넘김
             }
         }
@@ -888,29 +885,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d("what", "MakeAlarmService: makealarm pending info : "+makeAlarm.toString());
         String time=alarmTime.get(index);
 
-        setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
+        //setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
 
     }
 
-    public void setOnceAlarm(int hourOfDay, int minute, PendingIntent alarmPendingIntent,boolean tomorrow) {
-        Log.d("what", "setOnceAlarm: alarmpending intent"+alarmPendingIntent.toString());
+    public void setOnceAlarm(int hourOfDay, int minute, PendingIntent alarmPendingIntent, boolean tomorrow) {
+        Log.d("what", "setOnceAlarm: alarmpending intent" + alarmPendingIntent.toString());
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow, hourOfDay, minute), alarmPendingIntent);
-        else if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow,hourOfDay, minute), alarmPendingIntent);
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow, hourOfDay, minute), alarmPendingIntent);
         else
-            alarmManager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow,hourOfDay, minute), alarmPendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(tomorrow, hourOfDay, minute), alarmPendingIntent);
     }
 
 
     private long getTimeInMillis(boolean tomorrow, int hourOfDay, int minute) {
-        Log.d("what", "getTimeInMillis: tomorrow "+ tomorrow+", hour : "+hourOfDay+", minute : "+minute);
+        Log.d("what", "getTimeInMillis: tomorrow " + tomorrow + ", hour : " + hourOfDay + ", minute : " + minute);
 
         GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
 
-        if ( tomorrow )
+        if (tomorrow)
             calendar.add(GregorianCalendar.DAY_OF_YEAR, 1);
 
         calendar.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay);
@@ -974,7 +971,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("id", id.toString());
                 intent.putExtra("uri",uri.toString());
                 startActivityForResult(intent, ACT_ALARM);
-
             }
         }
     }

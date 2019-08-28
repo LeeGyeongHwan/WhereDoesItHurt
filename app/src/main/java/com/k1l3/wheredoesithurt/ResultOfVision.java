@@ -29,7 +29,7 @@ public class ResultOfVision extends AppCompatActivity {
     private final ArrayList<EditText> EditList2 = new ArrayList<>();
     private final ArrayList<EditText> EditList3 = new ArrayList<>();
     private final ArrayList<EditText> EditList4 = new ArrayList<>();
-    private Button  nextPage, addMedBtn;
+    private Button nextPage, addMedBtn;
     private ImageButton cancelBtn;
     private EditText title_pre;
     private Prescription prescription;
@@ -184,7 +184,6 @@ public class ResultOfVision extends AppCompatActivity {
     }
 
     private ArrayList<Pair> getXmlData(ArrayList<EditText> EditList) {
-
         StringBuffer buffer = new StringBuffer();
         String medicine_kind = null;
         String ee_doc_data = null;

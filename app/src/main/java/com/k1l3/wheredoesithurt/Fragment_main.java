@@ -97,7 +97,12 @@ public class Fragment_main extends Fragment {
                 return false;
             }
         });
-        if(User.getInstance().getPrescriptions().size()!=0) {
+        return viewGroup;
+    }
+
+    @Override
+    public void onStart() {
+        if (User.getInstance().getPrescriptions().size() != 0) {
             if (currentCount == -1) {
                 getRightCurrentCount();
             }
@@ -198,11 +203,8 @@ public class Fragment_main extends Fragment {
 
             currentImage();
         }
-        return viewGroup;
-    }
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        super.onStart();
     }
 
     private void replaceFragment(@NonNull Fragment fragment) {
@@ -476,7 +478,7 @@ public class Fragment_main extends Fragment {
     }
 
     private void setGraph() {
-        if(user.getPrescriptions().size()!=0) {
+        if (user.getPrescriptions().size() != 0) {
             currentClick = user.getPrescriptions().get(currentCount).getTotalClick();
             progressBar.setMax(100);
 
