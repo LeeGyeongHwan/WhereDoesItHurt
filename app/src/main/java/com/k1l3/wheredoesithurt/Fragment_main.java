@@ -51,7 +51,7 @@ public class Fragment_main extends Fragment {
     private int currentClick;
     private int availCounting = 0;
     private int currentAvail = 0;
-    private int currentCount = -1;
+    private int currentCount = 0;
     private float pressedX = 0;
     private int[] check = new int[3];
 
@@ -97,107 +97,107 @@ public class Fragment_main extends Fragment {
                 return false;
             }
         });
-
-        if (currentCount == -1) {
-            getRightCurrentCount();
-        }
-
-        getAvailable();
-
-        currentImage();
-
-        if (user.getPrescriptions() != null) {
-            setGraph();
-        }
-
-        //드래그시 화면이동
-        constraintLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float distance = 0;
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: // 손가락을 touch 했을 떄 x 좌표값 저장
-                        pressedX = event.getX();
-                        break;
-                    case MotionEvent.ACTION_UP: // 손가락을 떼었을 때 저장해놓은 x좌표와의 거리 비교
-                        distance = pressedX - event.getX();
-                        break;
-                } // 해당 거리가 100이 되지 않으면 이벤트 처리 하지 않는다.
-                if (Math.abs(distance) < 100 || distance == 0) {
-                }
-                if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
-                    getRightCurrentCount();
-                    if (currentAvail < availCounting - 1) {
-                        currentAvail++;
-                    }
-                    currentImage();
-
-                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-                    adapter = new Adapter();
-                    getMedicineName();
-
-                    //주의해야할 음식
-                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-                    foodAdapter = new foodAdapter();
-                    getCautionFood();
-
-                    //버튼
-                    setButton();
-
-                    //그래프
-                    setGraph();
-
-                } else if (distance < 0) {
-                    getLeftCurrentCount();
-                    if (availCounting >= currentAvail && currentAvail > 0) {
-                        currentAvail--;
-                    }
-                    currentImage();
-
-                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-                    adapter = new Adapter();
-                    getMedicineName();
-
-                    //주의해야할 음식
-                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-                    foodAdapter = new foodAdapter();
-                    getCautionFood();
-
-                    //버튼
-                    setButton();
-
-                    //그래프
-                    setGraph();
-                }
-                return true;
+        if(User.getInstance().getPrescriptions().size()!=0) {
+            if (currentCount == -1) {
+                getRightCurrentCount();
             }
-        });
+
+            getAvailable();
+
+            currentImage();
+
+            if (user.getPrescriptions() != null) {
+                setGraph();
+            }
+
+            //드래그시 화면이동
+            constraintLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    float distance = 0;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: // 손가락을 touch 했을 떄 x 좌표값 저장
+                            pressedX = event.getX();
+                            break;
+                        case MotionEvent.ACTION_UP: // 손가락을 떼었을 때 저장해놓은 x좌표와의 거리 비교
+                            distance = pressedX - event.getX();
+                            break;
+                    } // 해당 거리가 100이 되지 않으면 이벤트 처리 하지 않는다.
+                    if (Math.abs(distance) < 100 || distance == 0) {
+                    }
+                    if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
+                        getRightCurrentCount();
+                        if (currentAvail < availCounting - 1) {
+                            currentAvail++;
+                        }
+                        currentImage();
+
+                        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                        adapter = new Adapter();
+                        getMedicineName();
+
+                        //주의해야할 음식
+                        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                        foodAdapter = new foodAdapter();
+                        getCautionFood();
+
+                        //버튼
+                        setButton();
+
+                        //그래프
+                        setGraph();
+
+                    } else if (distance < 0) {
+                        getLeftCurrentCount();
+                        if (availCounting >= currentAvail && currentAvail > 0) {
+                            currentAvail--;
+                        }
+                        currentImage();
+
+                        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                        adapter = new Adapter();
+                        getMedicineName();
+
+                        //주의해야할 음식
+                        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                        foodAdapter = new foodAdapter();
+                        getCautionFood();
+
+                        //버튼
+                        setButton();
+
+                        //그래프
+                        setGraph();
+                    }
+                    return true;
+                }
+            });
 
 
-        buttonClick(btn1, 0);
-        buttonClick(btn2, 1);
-        buttonClick(btn3, 2);
+            buttonClick(btn1, 0);
+            buttonClick(btn2, 1);
+            buttonClick(btn3, 2);
 
-        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-        adapter = new Adapter();
-        getMedicineName();
+            my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+            adapter = new Adapter();
+            getMedicineName();
 
-        //주의해야할 음식
-        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-        foodAdapter = new foodAdapter();
-        getCautionFood();
+            //주의해야할 음식
+            my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+            foodAdapter = new foodAdapter();
+            getCautionFood();
 
-        //버튼
-        setButton();
-        setGraph();
+            //버튼
+            setButton();
+            setGraph();
 
-        //화면 이동 확인 이미지
-        counting_linear = viewGroup.findViewById(R.id.counting_layout);
+            //화면 이동 확인 이미지
+            counting_linear = viewGroup.findViewById(R.id.counting_layout);
 
-        getAvailable();
+            getAvailable();
 
-        currentImage();
-
+            currentImage();
+        }
         return viewGroup;
     }
 
@@ -476,13 +476,15 @@ public class Fragment_main extends Fragment {
     }
 
     private void setGraph() {
-        currentClick = user.getPrescriptions().get(currentCount).getTotalClick();
-        progressBar.setMax(100);
+        if(user.getPrescriptions().size()!=0) {
+            currentClick = user.getPrescriptions().get(currentCount).getTotalClick();
+            progressBar.setMax(100);
 
-        int currentProgress = (currentClick * 100) / (user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
-                user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
+            int currentProgress = (currentClick * 100) / (user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
+                    user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
 
-        progressBar.setProgress(currentProgress);
+            progressBar.setProgress(currentProgress);
+        }
     }
 
     private void getRightCurrentCount() {

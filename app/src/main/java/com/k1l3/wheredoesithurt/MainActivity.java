@@ -58,7 +58,6 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
 import com.google.firebase.database.FirebaseDatabase;
-import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
@@ -964,11 +963,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("id", id.toString());
                 //intent.putExtra("image",b);
 
-                Prescription prescription = new Prescription();
-                prescription.setPrescriptionImage(b);
-                User user = User.getInstance();
-                user.getPrescriptions().add(prescription);
-                user.syncWithDatabase();
                 startActivityForResult(intent, ACT_ALARM);
 
             }

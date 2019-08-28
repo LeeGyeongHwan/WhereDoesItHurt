@@ -50,7 +50,7 @@ public class ResultOfVision extends AppCompatActivity {
         addMedBtn = findViewById(R.id.addMedBtn);
         title_pre = findViewById(R.id.title_prescription);
 
-        //prescription = new Prescription();
+        prescription = new Prescription();
         Intent intent = getIntent();
         String getStr = intent.getStringExtra("result");
         id = intent.getStringExtra("id");
@@ -58,7 +58,7 @@ public class ResultOfVision extends AppCompatActivity {
         Log.d("check", "onCreate: " + getStr);
         //bitmap = intent.getByteArrayExtra("image");
         //prescription.setPrescriptionImage(bitmap);
-        prescription = (Prescription) intent.getSerializableExtra("prescription");
+        //prescription = (Prescription) intent.getSerializableExtra("prescription");
         medicines = new ArrayList<>();
 
         cancelBtn = findViewById(R.id.cancelvision);
@@ -177,7 +177,6 @@ public class ResultOfVision extends AppCompatActivity {
                 prescription.setMedicines(medicines);
                 prescription.setName(name);
                 prescription.setTotalClick(0);
-                //prescription.setPrescriptionImage(bitmap);
                 intent.putExtra("prescription", prescription);
                 intent.putExtra("id", id);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
