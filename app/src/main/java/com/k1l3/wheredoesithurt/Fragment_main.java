@@ -297,20 +297,20 @@ public class Fragment_main extends Fragment {
         if (user.getPrescriptions().size() != 0) {
             if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 2) { //알람시간 2개
                 btn3.setVisibility(View.INVISIBLE);
-                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
-                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
+                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(0, 2));
                 setButtonDate(get_0, when1, time1, 0);
                 setButtonDate(get_1, when2, time2, 1);
             } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 1) { //알람시간 1개
                 btn2.setVisibility(View.INVISIBLE);
                 btn3.setVisibility(View.INVISIBLE);
 
-                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
                 setButtonDate(get_0, when1, time1, 0);
             } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 3) { //알람시간 3개
-                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(3, 5));
-                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(3, 5));
-                int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(3, 5));
+                int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
+                int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(0, 2));
+                int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(0, 2));
                 setButtonDate(get_0, when1, time1, 0);
                 setButtonDate(get_1, when2, time2, 1);
                 setButtonDate(get_2, when3, time3, 2);
@@ -320,7 +320,16 @@ public class Fragment_main extends Fragment {
 
     //버튼 날짜,종류 설정
     private void setButtonDate(int get_0, TextView when, TextView time, int i) {
-        if (user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(0, 2).equals("AM")) {
+        String AMPM;
+        if (get_0 > 12) {
+            get_0 = get_0 - 12;
+            AMPM = "PM";
+        }else if(get_0==12){
+            AMPM = "PM";
+        }else{
+            AMPM = "AM";
+        }
+        if (AMPM=="AM") {
             if (get_0 >= 5 && get_0 <= 9) {
                 when.setText("아침");
             } else if (get_0 >= 10) {
@@ -335,7 +344,7 @@ public class Fragment_main extends Fragment {
                 when.setText("저녁");
             }
         }
-        time.setText(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(3, 8));
+        time.setText(get_0+":"+user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2,4));
 
         DayClick item = user.getPrescriptions().get(currentCount)
                 .getYear()
@@ -707,7 +716,7 @@ public class Fragment_main extends Fragment {
         }
     }
 
-    private void setPresccriptionName(){
+    private void setPresccriptionName() {
         presc_name.setText(user.getPrescriptions().get(currentCount).getName());
     }
 }
