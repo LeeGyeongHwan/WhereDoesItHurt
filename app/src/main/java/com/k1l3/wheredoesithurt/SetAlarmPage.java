@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.Times;
+import com.k1l3.wheredoesithurt.models.User;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class SetAlarmPage extends AppCompatActivity {
     private ImageView from_img, to_img;
     private DatePicker from_date, to_date;
     private String id;
+    private static final User user = User.getInstance();
     private Prescription prescription;
     private Times times;
 
@@ -64,6 +66,8 @@ public class SetAlarmPage extends AppCompatActivity {
         prescription = (Prescription) intent.getSerializableExtra("prescription");
         times = new Times();
 
+        ArrayList<String> defaultTime = user.getUserInfo().getDefaultTimes().getTimes();
+
         alarm_num.setText(alarmnum + "회씩");
 
         initiate_datepicker(Integer.parseInt(alarmday));
@@ -82,6 +86,67 @@ public class SetAlarmPage extends AppCompatActivity {
             final LinearLayout picker_linear = findViewById(R.id.pickerlinear);
             final Button confirmBtn = findViewById(R.id.confirm_timeBtn);
 
+
+            if( i<defaultTime.size()){
+                String deTime = defaultTime.get(i);
+                int hour = Integer.parseInt(deTime.substring(0,2));
+                int min = Integer.parseInt(deTime.substring(2,4));
+
+
+                String ampm = "AM";
+                if(hour>12){
+                    hour=hour-12;
+                    ampm = "PM";
+                }
+                else if(hour==0)
+                    hour = 12;
+                else if(hour==12)
+                    ampm ="PM";
+
+                if (ampm.equals("AM")) {
+                    picker.setHour(hour);
+                    picker.setMinute(min);
+                } else {
+                    picker.setHour(hour + 12);
+                    if (hour==12)
+                        picker.setHour(hour);
+                    picker.setMinute(min);
+                }
+
+
+                String shour = Integer.toString(hour);
+                String smin = Integer.toString(min);
+                if (hour < 10)
+                    shour = "0" + shour;
+                if (min < 10)
+                    smin = "0" + smin;
+                String timenow = ampm + " " + shour + ":" + smin;
+                textView.setText(timenow);
+
+            }else{
+                int hour = picker.getHour();
+                int min = picker.getMinute();
+                String ampm = "AM";
+                if(hour>12){
+                    hour=hour-12;
+                    ampm = "PM";
+                }
+                else if(hour==0)
+                    hour = 12;
+                else if(hour==12)
+                    ampm ="PM";
+
+                String shour = Integer.toString(hour);
+                String smin = Integer.toString(min);
+                if (hour < 10)
+                    shour = "0" + shour;
+                if (min < 10)
+                    smin = "0" + smin;
+                String timenow = ampm + " " + shour + ":" + smin;
+                textView.setText(timenow);
+
+            }
+            /*
             if (i < time.length) {
                 textView.setText(time[i]);
                 String ampm = time[i].substring(0, 2);
@@ -120,7 +185,7 @@ public class SetAlarmPage extends AppCompatActivity {
                 String timenow = ampm + " " + shour + ":" + smin;
                 textView.setText(timenow);
             }
-
+            */
 
             textView.setId(500 + i);
             picker.setId(600 + i);
@@ -146,18 +211,16 @@ public class SetAlarmPage extends AppCompatActivity {
                             Log.d("reamer", "onClick: getId" + picker.getId());
                             int hour = picker.getHour();
                             int min = picker.getMinute();
-                            String ampm;
-                            if (hour > 12) { // 0= am 12시 12는 pm 12시
+                            String ampm = "AM";
+                            if(hour>12){
+                                hour=hour-12;
                                 ampm = "PM";
-                                hour = hour - 12;
-                            } else if (hour == 12) {
-                                ampm = "PM";
-                            } else if (hour == 0) {
-                                ampm = "AM";
-                                hour = 12;
-                            } else {
-                                ampm = "AM";
                             }
+                            else if(hour==0)
+                                hour = 12;
+                            else if(hour==12)
+                                ampm ="PM";
+
                             String shour = Integer.toString(hour);
                             String smin = Integer.toString(min);
                             if (hour < 10)
@@ -332,7 +395,22 @@ public class SetAlarmPage extends AppCompatActivity {
 
     private void addTimes() {
         for (int i = 0; i < arrayText.size(); ++i) {
-            times.addTime(arrayText.get(i).getText().toString());
+            String time=arrayText.get(i).getText().toString();
+            String ampm = time.substring(0,2);
+            String shour = time.substring(3,5);
+            String smin = time.substring(6,8);
+            String newTime="";
+            if (ampm.equals("AM")){
+                if(shour.equals("12")){
+                    shour="00"+smin;
+                }
+                newTime=shour+smin;
+            }else{
+                shour= Integer.toString(Integer.parseInt(shour) + 12);
+                newTime=shour+smin;
+            }
+            Log.d("what", "addTimes: i : " + i +", newTime :"+newTime);
+            times.addTime(newTime);
         }
     }
 }

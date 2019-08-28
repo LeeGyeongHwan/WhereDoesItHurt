@@ -842,9 +842,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d("what", "MakeAlarmService: pretime get(i)"+ preTime.get(0));
 
 
-        ArrayList<String> alarmTime = user.getUserInfo().getDefaultTimes().getTimes();
-        Log.d("what", "MakeAlarmService: alarmtime get(i)"+ alarmTime.get(0));
-
         //시간 구해서 현재시간과 비교 가장 가까운 미래시간 부터 시간차
         GregorianCalendar currentCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
         int currentHourOfDay = currentCalendar.get(GregorianCalendar.HOUR_OF_DAY);
@@ -881,9 +878,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, requestCode, intent, 0);
 
-
-        Log.d("what", "MakeAlarmService: makealarm pending info : "+makeAlarm.toString());
-        String time=alarmTime.get(index);
+        String time=preTime.get(index);
 
         //setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
 
