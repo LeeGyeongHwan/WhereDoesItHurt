@@ -146,6 +146,7 @@ public class Fragment_main extends Fragment {
 
                     //그래프
                     setGraph();
+
                 } else if (distance < 0) {
                     getLeftCurrentCount();
                     if (availCounting >= currentAvail && currentAvail > 0) {
@@ -397,6 +398,7 @@ public class Fragment_main extends Fragment {
                         iseat1.setTextColor(Color.parseColor("#ffffff"));
                         check[i]--;
                         clicking--;
+                        currentClick--;
                     } else {
                         btn1.setBackgroundResource(R.drawable.flip_white);
                         iseat1.setText("먹었어요");
@@ -405,6 +407,7 @@ public class Fragment_main extends Fragment {
                         iseat1.setTextColor(Color.parseColor("#776DE0"));
                         check[i]++;
                         clicking++;
+                        currentClick++;
                     }
                 } else if (i == 1) {
                     if (check[i] % 2 == 1) {
@@ -415,6 +418,7 @@ public class Fragment_main extends Fragment {
                         iseat2.setTextColor(Color.parseColor("#ffffff"));
                         check[i]--;
                         clicking--;
+                        currentClick--;
                     } else {
                         btn2.setBackgroundResource(R.drawable.flip_white);
                         iseat2.setText("먹었어요");
@@ -423,6 +427,7 @@ public class Fragment_main extends Fragment {
                         iseat2.setTextColor(Color.parseColor("#776DE0"));
                         check[i]++;
                         clicking++;
+                        currentClick++;
                     }
                 } else if (i == 2) {
                     if (check[i] % 2 == 1) {
@@ -433,6 +438,7 @@ public class Fragment_main extends Fragment {
                         iseat3.setTextColor(Color.parseColor("#ffffff"));
                         check[i]--;
                         clicking--;
+                        currentClick--;
                     } else {
                         btn3.setBackgroundResource(R.drawable.flip_white);
                         iseat3.setText("먹었어요");
@@ -441,6 +447,7 @@ public class Fragment_main extends Fragment {
                         iseat3.setTextColor(Color.parseColor("#776DE0"));
                         check[i]++;
                         clicking++;
+                        currentClick++;
                     }
                 }
 

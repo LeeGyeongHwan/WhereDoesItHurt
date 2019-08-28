@@ -58,6 +58,7 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
 import com.google.firebase.database.FirebaseDatabase;
+import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
@@ -70,7 +71,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private static final String CHANNEL_ID = "noti";
     static int medicine_count;
+    private byte[] b;
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
     String image;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentTransaction transaction;
     Button mypagebtn, myCalendar;
 
+    private Bitmap bitmap2;
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
@@ -658,6 +660,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Do the real work in an async task, because we need to use the network anyway
         try {
+            bitmap2 = bitmap;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap2.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            b = stream.toByteArray();
+            Log.e(TAG,"변경완료");
             AsyncTask<Object, Void, String> labelDetectionTask = new LabelDetectionTask(this, prepareAnnotationRequest(bitmap));
             labelDetectionTask.execute();
         } catch (IOException e) {
@@ -955,6 +962,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("result", result);
                 intent.putExtra("numbermedicine", medicine_count);
                 intent.putExtra("id", id.toString());
+                //intent.putExtra("image",b);
+
+                Prescription prescription = new Prescription();
+                prescription.setPrescriptionImage(b);
+                User user = User.getInstance();
+                user.getPrescriptions().add(prescription);
+                user.syncWithDatabase();
                 startActivityForResult(intent, ACT_ALARM);
 
             }

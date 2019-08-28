@@ -18,10 +18,10 @@ public class Prescription implements Serializable {
     private Times times;
     private String memo;
     private int totalClick;
-
     private Year year;
     private boolean isVisible = false;
-
+    private byte[] prescriptionImage;
+    private byte[] medicineImage;
     public Prescription() {
     }
 
@@ -113,6 +113,22 @@ public class Prescription implements Serializable {
 
     public void setYear(Year year) {
         this.year = year;
+    }
+
+    public byte[] getPrescriptionImage() {
+        return prescriptionImage;
+    }
+
+    public void setPrescriptionImage(byte[] prescriptionImage) {
+        this.prescriptionImage = prescriptionImage;
+    }
+
+    public byte[] getMedicineImage() {
+        return medicineImage;
+    }
+
+    public void setMedicineImage(byte[] medicineImage) {
+        this.medicineImage = medicineImage;
     }
 
     public boolean isVisible() {
