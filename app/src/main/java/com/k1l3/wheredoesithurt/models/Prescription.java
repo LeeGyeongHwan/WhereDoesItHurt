@@ -20,8 +20,8 @@ public class Prescription implements Serializable {
     private int totalClick;
     private Year year;
     private boolean isVisible = false;
-    private byte[] prescriptionImage;
-    private byte[] medicineImage;
+    private String prescriptionImage;
+    private String medicineImage;
     public Prescription() {
     }
 
@@ -115,19 +115,19 @@ public class Prescription implements Serializable {
         this.year = year;
     }
 
-    public byte[] getPrescriptionImage() {
+    public String getPrescriptionImage() {
         return prescriptionImage;
     }
 
-    public void setPrescriptionImage(byte[] prescriptionImage) {
+    public void setPrescriptionImage(String prescriptionImage) {
         this.prescriptionImage = prescriptionImage;
     }
 
-    public byte[] getMedicineImage() {
+    public String getMedicineImage() {
         return medicineImage;
     }
 
-    public void setMedicineImage(byte[] medicineImage) {
+    public void setMedicineImage(String medicineImage) {
         this.medicineImage = medicineImage;
     }
 

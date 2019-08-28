@@ -2,6 +2,7 @@ package com.k1l3.wheredoesithurt;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -88,8 +89,8 @@ public class History_itemView extends LinearLayout {
         return history_medicine_image;
     }
 
-    public void setHistory_medicine_image(ImageView history_medicine_image) {
-        this.history_medicine_image = history_medicine_image;
+    public void setHistory_medicine_image(Bitmap history_medicine_image) {
+        this.history_medicine_image.setImageBitmap(history_medicine_image);
     }
 
     public ImageView getHistory_medicine_image2() {

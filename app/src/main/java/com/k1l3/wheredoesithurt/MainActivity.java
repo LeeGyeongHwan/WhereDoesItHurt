@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private static final String CHANNEL_ID = "noti";
     static int medicine_count;
-    private byte[] b;
+    private Uri uri;
     Toolbar toolbar;
     Fragment fragment_main, fragment_search;
     String image;
@@ -573,6 +573,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                 MAX_DIMENSION);
+                this.uri=uri;
 
                 callCloudVision(bitmap);
 
@@ -659,11 +660,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Do the real work in an async task, because we need to use the network anyway
         try {
-            bitmap2 = bitmap;
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap2.compress(Bitmap.CompressFormat.JPEG,100,stream);
-            b = stream.toByteArray();
-            Log.e(TAG,"변경완료");
             AsyncTask<Object, Void, String> labelDetectionTask = new LabelDetectionTask(this, prepareAnnotationRequest(bitmap));
             labelDetectionTask.execute();
         } catch (IOException e) {
@@ -976,8 +972,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("result", result);
                 intent.putExtra("numbermedicine", medicine_count);
                 intent.putExtra("id", id.toString());
-                //intent.putExtra("image",b);
-
+                intent.putExtra("uri",uri.toString());
                 startActivityForResult(intent, ACT_ALARM);
 
             }

@@ -37,7 +37,7 @@ public class ResultOfVision extends AppCompatActivity {
     private int index = 0;
     private String id;
     private String name;
-    private byte[] bitmap;
+    private String uri;
     private ArrayList<Pair> medicine_kind;
 
     @Override
@@ -56,11 +56,8 @@ public class ResultOfVision extends AppCompatActivity {
         id = intent.getStringExtra("id");
         int getCount = intent.getIntExtra("numbermedicine", 1);
         Log.d("check", "onCreate: " + getStr);
-        //bitmap = intent.getByteArrayExtra("image");
-        //prescription.setPrescriptionImage(bitmap);
-        //prescription = (Prescription) intent.getSerializableExtra("prescription");
         medicines = new ArrayList<>();
-
+        uri = intent.getStringExtra("uri");
         cancelBtn = findViewById(R.id.cancelvision);
         nextPage = findViewById(R.id.nextpage);
         title_pre = findViewById(R.id.title_prescription);
@@ -177,6 +174,7 @@ public class ResultOfVision extends AppCompatActivity {
                 prescription.setMedicines(medicines);
                 prescription.setName(name);
                 prescription.setTotalClick(0);
+                prescription.setPrescriptionImage(uri);
                 intent.putExtra("prescription", prescription);
                 intent.putExtra("id", id);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
