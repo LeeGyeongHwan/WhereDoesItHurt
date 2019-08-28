@@ -188,6 +188,7 @@ public class ResultOfVision extends AppCompatActivity {
         String medicine_kind = null;
         String ee_doc_data = null;
         String kind = null;
+        int itemCount=-1;
         int caution = 0;
         ArrayList<Pair> item = new ArrayList<>();
         int stopping = 0;
@@ -200,7 +201,7 @@ public class ResultOfVision extends AppCompatActivity {
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 XmlPullParser xpp = factory.newPullParser();
                 xpp.setInput(new InputStreamReader(is, "UTF-8"));
-
+                itemCount = -1;
                 String tag;
                 stop = true;
                 xpp.next();
@@ -233,6 +234,9 @@ public class ResultOfVision extends AppCompatActivity {
                                 ee_doc_data = ee_doc_data + xpp.getAttributeValue(0) + "\n";
                             } else if (tag.equals("UD_DOC_DATA")) {
                                 stopping = 0;
+                            } else if (tag.equals("totalCount")) {
+                                xpp.next();
+                                itemCount = Integer.valueOf(xpp.getText());
                             }
                             break;
 
@@ -277,20 +281,26 @@ public class ResultOfVision extends AppCompatActivity {
                                 }
                                 Pair pair = new Pair(kind, caution);
                                 item.add(pair);
+                                Log.e("TEST", kind + " " + caution + " " + item.size());
                                 kind = "";
                                 ee_doc_data = "";
                                 caution = 0;
                                 stop = false;
                             }
+                            if(tag.equals("items")){
+                                stop = false;
+                            }
                             break;
                     }
-
+                    if(itemCount==0){
+                        item.add(new Pair("알약",caution));
+                        break;
+                    }
                     eventType = xpp.next();
                 }
             } catch (Exception e) {
             }
         }
-
         return item;
 
     }
