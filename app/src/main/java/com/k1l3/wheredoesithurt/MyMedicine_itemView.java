@@ -25,13 +25,13 @@ public class MyMedicine_itemView extends LinearLayout {
     public void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.my_medicine, this, true);
-        name = (TextView) findViewById(R.id.medicine_name);
-        name2 = (TextView) findViewById(R.id.medicine_name2);
-        date = (TextView) findViewById(R.id.my_medicine_date);
-        alarm = (TextView) findViewById(R.id.my_medicine_alarm);
-        medicine_info = (TextView) findViewById(R.id.my_medicine_info);
-        my_medicine_layout = (LinearLayout) findViewById(R.id.my_medicine_layout);
-        delete = (ImageButton) findViewById(R.id.delete);
+        name = findViewById(R.id.medicine_name);
+        name2 = findViewById(R.id.medicine_name2);
+        date = findViewById(R.id.my_medicine_date);
+        alarm = findViewById(R.id.my_medicine_alarm);
+        medicine_info = findViewById(R.id.my_medicine_info);
+        my_medicine_layout = findViewById(R.id.my_medicine_layout);
+        delete = findViewById(R.id.delete);
     }
 
     public TextView getName() {

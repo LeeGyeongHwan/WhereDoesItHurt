@@ -62,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if(dataSnapshot.hasChild("userInfo")) {
             user.setUserInfo(dataSnapshot.child("userInfo").getValue(UserInfo.class));
+        }else{
+            user.setUserInfo(new UserInfo());
         }
 
         if(user.getUserInfo().getDefaultTimes() == null) {
