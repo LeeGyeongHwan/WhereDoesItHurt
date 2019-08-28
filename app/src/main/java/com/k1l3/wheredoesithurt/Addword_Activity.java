@@ -189,9 +189,8 @@ public class Addword_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 savePrescription();
-
                 Intent outIntent = getIntent();
-                outIntent.addFlags(outIntent.FLAG_ACTIVITY_FORWARD_RESULT);
+
                 outIntent.putExtra("titlePre", prescription.getName());
                 setResult(RESULT_OK, outIntent);
                 finish();

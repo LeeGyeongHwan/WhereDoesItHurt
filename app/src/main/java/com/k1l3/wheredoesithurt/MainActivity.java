@@ -839,7 +839,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(MainActivity.this, Handle_Alarm.class);
         intent.putExtra("title", title);
 
+
+        int codeIndex = user.getPrescriptions().size();
+        int requestCode =(int)(long) id %10000000;
+        requestCode=requestCode*100+codeIndex;
+        Log.d("what", "MakeAlarmService: id : "+ id + " ,codeIndex : "+codeIndex+", request code : " + requestCode);
+
+        ArrayList<String> preTime = user. getPrescriptions().get(codeIndex-1).getTimes().getTimes();
+        Log.d("what", "MakeAlarmService: pretime get(i)"+ preTime.get(0));
+
+
         ArrayList<String> alarmTime = user.getUserInfo().getDefaultTimes().getTimes();
+        Log.d("what", "MakeAlarmService: alarmtime get(i)"+ alarmTime.get(0));
+
         //시간 구해서 현재시간과 비교 가장 가까운 미래시간 부터 시간차
         GregorianCalendar currentCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
         int currentHourOfDay = currentCalendar.get(GregorianCalendar.HOUR_OF_DAY);
@@ -848,8 +860,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int index=0;
         boolean visit=false;
-        for(int i=0; i<alarmTime.size();i++){
-            String temp = alarmTime.get(i);
+        for(int i=0; i<preTime.size();i++){
+            String temp = preTime.get(i);
             int hour = Integer.parseInt(temp.substring(0,2));
             int min = Integer.parseInt(temp.substring(2,4));
 
@@ -864,14 +876,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         intent.putExtra("startIndex",index);
         intent.putExtra("visited",visit);
-        intent.putStringArrayListExtra("alarmTime",alarmTime);
+        intent.putStringArrayListExtra("alarmTime",preTime);
 
 
         //visit==false -> 내일 처음시간
         //visit == true -> 인덱스 부터 알람시작
 
         //리퀘스트 코드 -> 개인 id *100 + index 으로 차이주기
-        PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+
+
+        PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, requestCode, intent, 0);
 
 
         Log.d("what", "MakeAlarmService: makealarm pending info : "+makeAlarm.toString());
