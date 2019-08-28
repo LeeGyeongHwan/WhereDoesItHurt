@@ -3,30 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
+
     android:orientation="vertical">
 
     <TextView
+        android:background="@drawable/medicine_info"
         android:id="@+id/medicine_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/historybox"
-        android:text="약 이름"
         android:fontFamily="@font/applesdgothicneor"
-        android:textColor="#ADA5FD" />
+        android:paddingTop="8dp"
+        android:paddingLeft="15dp"
+        android:paddingBottom="8dp"
+        android:text="약 이름"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
     <LinearLayout
         android:id="@+id/my_medicine_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/historybox"
+        android:layout_marginTop="-30dp"
+        android:background="@drawable/medicine_info_box"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:paddingLeft="15dp"
+        android:visibility="gone"
+        android:paddingTop="40dp">
 
         <TextView
             android:id="@+id/medicine_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="약 이름"
             android:fontFamily="@font/applesdgothicneob"
+            android:text="약 이름"
             android:textSize="20dp"
             android:textStyle="bold" />
 
@@ -55,8 +64,9 @@
         <TextView
             android:id="@+id/my_medicine_date"
             android:layout_width="wrap_content"
-            android:fontFamily="@font/applesdgothicneor"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/applesdgothicneor" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,11 +91,11 @@
 
         <TextView
             android:id="@+id/my_medicine_alarm"
-            android:text="9:00 12:00 20:00"
-            android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/applesdgothicneor"
+            android:text="9:00 12:00 20:00" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -103,27 +113,33 @@
                 android:src="@drawable/mypage_info_icon3" />
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
-                android:fontFamily="@font/applesdgothicneoeb"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/applesdgothicneoeb" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/my_medicine_info"
-            android:fontFamily="@font/applesdgothicneor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:fontFamily="@font/applesdgothicneor"
             android:text="파티엠 정 다이엔캡슐 카푸리엔스 정" />
 
         <ImageButton
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="8dp"
             android:layout_gravity="right"
             android:adjustViewBounds="true"
             android:background="@drawable/default_save"
+            android:elevation="5dp"
             android:maxWidth="30dp"
             android:maxHeight="30dp"
             android:scaleType="fitCenter"

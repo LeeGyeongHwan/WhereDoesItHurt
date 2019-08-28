@@ -36,6 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="취소"
+            android:background="@drawable/flip_white"
+            android:textSize="18sp"
+            android:layout_margin="5dp"
             android:textAllCaps="false" />
 
         <Button
@@ -44,6 +47,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="확인"
+            android:background="@drawable/flip_white"
+            android:textSize="18sp"
+            android:layout_margin="5dp"
             android:textAllCaps="false" />
 
     </LinearLayout>
