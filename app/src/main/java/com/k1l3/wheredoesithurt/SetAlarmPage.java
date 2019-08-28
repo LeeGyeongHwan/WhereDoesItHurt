@@ -406,8 +406,12 @@ public class SetAlarmPage extends AppCompatActivity {
                 }
                 newTime=shour+smin;
             }else{
-                shour= Integer.toString(Integer.parseInt(shour) + 12);
-                newTime=shour+smin;
+                if(shour.equals("12")){
+                    newTime=shour+smin;
+                }else {
+                    shour = Integer.toString(Integer.parseInt(shour) + 12);
+                    newTime = shour + smin;
+                }
             }
             Log.d("what", "addTimes: i : " + i +", newTime :"+newTime);
             times.addTime(newTime);

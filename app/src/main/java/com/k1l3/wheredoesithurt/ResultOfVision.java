@@ -57,7 +57,7 @@ public class ResultOfVision extends AppCompatActivity {
         int getCount = intent.getIntExtra("numbermedicine", 1);
         Log.d("check", "onCreate: " + getStr);
         medicines = new ArrayList<>();
-        uri = intent.getStringExtra("uri");
+        uri = intent.getStringExtra("bitmap_name");
         cancelBtn = findViewById(R.id.cancelvision);
         nextPage = findViewById(R.id.nextpage);
         title_pre = findViewById(R.id.title_prescription);

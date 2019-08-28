@@ -42,6 +42,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -57,6 +59,9 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.api.services.vision.v1.model.Page;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.k1l3.wheredoesithurt.models.User;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.ApiErrorCode;
@@ -570,8 +575,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                 MAX_DIMENSION);
-                this.uri=uri;
-
+                bitmap2 =bitmap;
+                this.uri = uri;
                 callCloudVision(bitmap);
 
             } catch (IOException e) {
@@ -964,7 +969,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("result", result);
                 intent.putExtra("numbermedicine", medicine_count);
                 intent.putExtra("id", id.toString());
-                intent.putExtra("uri",uri.toString());
+                intent.putExtra("bitmap_name",bitmap2.toString());
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                String filename = getId();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("presc/")
+                        .child(String.valueOf(User.getInstance().getPrescriptions().size()));
+                storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
                 startActivityForResult(intent, ACT_ALARM);
             }
         }

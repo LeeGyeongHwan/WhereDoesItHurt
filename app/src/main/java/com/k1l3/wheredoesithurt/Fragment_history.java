@@ -1,12 +1,9 @@
 package com.k1l3.wheredoesithurt;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,7 +24,6 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Fragment_history extends Fragment {
@@ -204,17 +200,6 @@ public class Fragment_history extends Fragment {
             });
 
             //히스토리 사진 처방전있을시 추가
-            if(User.getInstance().getPrescriptions().get(position).getPrescriptionImage()!=null){
-                Bitmap bitmap = null;
-                String uriString = User.getInstance().getPrescriptions().get(position).getPrescriptionImage();
-                Uri uri = Uri.parse(uriString);
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                    view.setHistory_medicine_image(bitmap);
-                } catch (IOException e) {
-                }
-
-            }
             return view;
         }
 

@@ -136,15 +136,7 @@ public class Fragment_mymedicine extends Fragment {
                     + " - " + item.getEnd().substring(0, 4) + "." + item.getEnd().substring(5, 7) + "." + item.getEnd().substring(8, 10));
             StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < item.getAlarm().getTimes().size(); i++) {
-                if (item.getAlarm().getTimes().get(i).substring(0, 2).equals("AM")) {
-                    buffer.append(item.getAlarm().getTimes().get(i).substring(3, 8) + " ");
-                } else {
-                    if (item.getAlarm().getTimes().get(i).substring(3, 5).equals("12")) {
-                        buffer.append(item.getAlarm().getTimes().get(i).substring(3, 8) + " ");
-                    } else {
-                        buffer.append(Integer.valueOf(item.getAlarm().getTimes().get(i).substring(3, 5)) + 12 + item.getAlarm().getTimes().get(i).substring(5, 8) + " ");
-                    }
-                }
+                buffer.append(item.getAlarm().getTimes().get(i).substring(0,2)+":"+item.getAlarm().getTimes().get(i).substring(2,4)+" ");
             }
             view.setAlarm(buffer.toString());
             StringBuffer buffer2 = new StringBuffer();
