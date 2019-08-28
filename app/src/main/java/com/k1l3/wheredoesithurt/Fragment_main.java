@@ -121,19 +121,7 @@ public class Fragment_main extends Fragment {
                     getRightcurrenCount();
                 }
                 if (info.getPrescriptions() != null) {
-                    my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-                    adapter = new Adapter();
-                    getMedicineName();
-
-                    //주의해야할 음식
-                    my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-                    foodAdapter = new foodAdapter();
-                    getCautionFood();
-
-                    //버튼
-                    setButton();
-
-                    //그래프
+                    //그래프*/
                     setGraph();
                 }
             }
@@ -165,7 +153,7 @@ public class Fragment_main extends Fragment {
                 if (distance > 0) {// 손가락을 왼쪽으로 움직였으면 오른쪽 화면이 나타나야 한다.
                     //Log.e(TAG, "오른쪽");
                     getRightcurrenCount();
-                    if(currentAvail<availCounting) {
+                    if(currentAvail<availCounting-1) {
                         currentAvail++;
                     }
                     currentImage();
@@ -210,7 +198,24 @@ public class Fragment_main extends Fragment {
                 return true;
             }
         });
+        if (currentCount == -1) {
+            getRightcurrenCount();
+        }
+        buttonClick(btn1, 0);
+        buttonClick(btn2, 1);
+        buttonClick(btn3, 2);
+        my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+        adapter = new Adapter();
+        getMedicineName();
 
+        //주의해야할 음식
+        my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+        foodAdapter = new foodAdapter();
+        getCautionFood();
+
+        //버튼
+        setButton();
+        setGraph();
         //화면 이동 확인 이미지
         counting_linear = viewGroup.findViewById(R.id.counting_layout);
         getAvailable();
@@ -333,9 +338,9 @@ public class Fragment_main extends Fragment {
                 setButtonDate(user, get_1, when2, time2, 1);
                 setButtonDate(user, get_2, when3, time3, 2);
             }
-            buttonClick(btn1, 0);
+            /*buttonClick(btn1, 0);
             buttonClick(btn2, 1);
-            buttonClick(btn3, 2);
+            buttonClick(btn3, 2);*/
         }
     }
 
@@ -357,10 +362,6 @@ public class Fragment_main extends Fragment {
             }
         }
         time.setText(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(3, 8));
-    }
-
-    //Button click이벤트
-    public void buttonClick(View fliptbtn1, final int i) {
         databaseReference = database.getReference("users").child(id);
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -429,6 +430,10 @@ public class Fragment_main extends Fragment {
 
             }
         });
+    }
+
+    //Button click이벤트
+    public void buttonClick(View fliptbtn1, final int i) {
         fliptbtn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -503,8 +508,13 @@ public class Fragment_main extends Fragment {
                 DayClick dayClick = new DayClick(check[0], check[1], check[2]);
                 info.getPrescriptions().get(currentCount).getYear().getMonths().get(cal.get(Calendar.MONTH)).getDays().get(cal.get(Calendar.DATE) - 1)
                         .setDayClick(dayClick);
+                currentClick = info.getPrescriptions().get(currentCount).getTotalClick();
                 databaseReference.setValue(info);
-                buttonTotalDB(clicking);
+
+                Map<String, Object> taskMap = new HashMap<String, Object>();
+                taskMap.put("totalClick", clicking + currentClick);
+                database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount)).updateChildren(taskMap);
+                //buttonTotalDB(clicking);
             }
 
             @Override
@@ -512,25 +522,6 @@ public class Fragment_main extends Fragment {
             }
         };
         databaseReference.addListenerForSingleValueEvent(databaseListener);
-    }
-
-    //총클릭횟수 DB업데이트
-    private void buttonTotalDB(final int clicking) {
-        databaseReference = database.getReference("users").child(id);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User info = dataSnapshot.getValue(User.class);
-                currentClick = info.getPrescriptions().get(currentCount).getTotalClick();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-        Map<String, Object> taskMap = new HashMap<String, Object>();
-        taskMap.put("totalClick", clicking + currentClick);
-        database.getReference("users").child(id).child("prescriptions").child(String.valueOf(currentCount)).updateChildren(taskMap);
     }
 
     private void setGraph() {
