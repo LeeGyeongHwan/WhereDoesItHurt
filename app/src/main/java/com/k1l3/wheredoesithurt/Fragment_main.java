@@ -44,7 +44,7 @@ public class Fragment_main extends Fragment {
     private ListView my_medicine_info, my_caution_food;
     private Adapter adapter;
     private foodAdapter foodAdapter;
-    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3;
+    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3, presc_name;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private LinearLayout counting_linear;
@@ -76,6 +76,7 @@ public class Fragment_main extends Fragment {
         btn1 = viewGroup.findViewById(R.id.flipbtn1);
         btn2 = viewGroup.findViewById(R.id.flipbtn2);
         btn3 = viewGroup.findViewById(R.id.flipbtn3);
+        presc_name = viewGroup.findViewById(R.id.presc_name);
         counting_linear = viewGroup.findViewById(R.id.counting_layout);
         progressBar = viewGroup.findViewById(R.id.progress_bar);
         manager = getActivity().getSupportFragmentManager();
@@ -113,6 +114,7 @@ public class Fragment_main extends Fragment {
 
             if (user.getPrescriptions() != null) {
                 setGraph();
+                setPresccriptionName();
             }
 
             //드래그시 화면이동
@@ -152,6 +154,9 @@ public class Fragment_main extends Fragment {
                         //그래프
                         setGraph();
 
+                        //이름
+                        setPresccriptionName();
+
                     } else if (distance < 0) {
                         getLeftCurrentCount();
                         if (availCounting >= currentAvail && currentAvail > 0) {
@@ -173,6 +178,9 @@ public class Fragment_main extends Fragment {
 
                         //그래프
                         setGraph();
+
+                        //이름
+                        setPresccriptionName();
                     }
                     return true;
                 }
@@ -697,5 +705,9 @@ public class Fragment_main extends Fragment {
 
             return view;
         }
+    }
+
+    private void setPresccriptionName(){
+        presc_name.setText(user.getPrescriptions().get(currentCount).getName());
     }
 }
