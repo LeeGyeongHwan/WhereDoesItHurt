@@ -35,7 +35,6 @@ public class ResultOfVision extends AppCompatActivity {
     private Prescription prescription;
     private ArrayList<Medicine> medicines;
     private int index = 0;
-    private String id;
     private String name;
     private String uri;
     private ArrayList<Pair> medicine_kind;
@@ -53,7 +52,6 @@ public class ResultOfVision extends AppCompatActivity {
         prescription = new Prescription();
         Intent intent = getIntent();
         String getStr = intent.getStringExtra("result");
-        id = intent.getStringExtra("id");
         int getCount = intent.getIntExtra("numbermedicine", 1);
         Log.d("check", "onCreate: " + getStr);
         medicines = new ArrayList<>();
@@ -176,7 +174,6 @@ public class ResultOfVision extends AppCompatActivity {
                 prescription.setTotalClick(0);
                 prescription.setPrescriptionImage(uri);
                 intent.putExtra("prescription", prescription);
-                intent.putExtra("id", id);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(intent);
             }
@@ -188,7 +185,7 @@ public class ResultOfVision extends AppCompatActivity {
         String medicine_kind = null;
         String ee_doc_data = null;
         String kind = null;
-        int itemCount=-1;
+        int itemCount;
         int caution = 0;
         ArrayList<Pair> item = new ArrayList<>();
         int stopping = 0;
@@ -211,7 +208,6 @@ public class ResultOfVision extends AppCompatActivity {
                     switch (eventType) {
                         case XmlPullParser.START_DOCUMENT:
                             break;
-
                         case XmlPullParser.START_TAG:
                             tag = xpp.getName();
 
@@ -287,13 +283,13 @@ public class ResultOfVision extends AppCompatActivity {
                                 caution = 0;
                                 stop = false;
                             }
-                            if(tag.equals("items")){
+                            if (tag.equals("items")) {
                                 stop = false;
                             }
                             break;
                     }
-                    if(itemCount==0){
-                        item.add(new Pair("알약",caution));
+                    if (itemCount == 0) {
+                        item.add(new Pair("알약", caution));
                         break;
                     }
                     eventType = xpp.next();

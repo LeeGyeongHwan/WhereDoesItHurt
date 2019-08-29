@@ -568,7 +568,7 @@ public class Fragment_main extends Fragment {
     private void getRightCurrentCount() {
         if (currentCount < user.getPrescriptions().size() - 1) {
             if (user.getPrescriptions() != null) {
-                for (int i = currentCount; i < user.getPrescriptions().size(); i++) {
+                for (int i = currentCount + 1; i < user.getPrescriptions().size(); i++) {
                     String startDay = user.getPrescriptions().get(i).getBegin();
                     String endDay = user.getPrescriptions().get(i).getEnd();
 

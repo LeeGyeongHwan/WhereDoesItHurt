@@ -71,6 +71,7 @@ public class Fragment_time_spinner extends Fragment {
                 } else {
                     hour = String.valueOf(timePicker.getHour());
                 }
+
                 if (timePicker.getMinute() < 10) {
                     min = "0" + timePicker.getMinute();
                 } else {

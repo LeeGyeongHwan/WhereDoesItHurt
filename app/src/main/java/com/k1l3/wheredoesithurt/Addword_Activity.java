@@ -42,18 +42,17 @@ public class Addword_Activity extends AppCompatActivity {
     private ArrayList<String> hashtags;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_word);
 
-        textView = (TextView) findViewById(R.id.textView);
-        flexboxLayout = (FlexboxLayout) findViewById(R.id.add_flexboxlayout);
-        word_flexboxlayout = (FlexboxLayout) findViewById(R.id.word_flexboxlayout);
-        saveButton = (Button) findViewById(R.id.save_button);
-        add_text_hash = (EditText) findViewById(R.id.add_text_hash);
+        textView = findViewById(R.id.textView);
+        flexboxLayout =  findViewById(R.id.add_flexboxlayout);
+        word_flexboxlayout =  findViewById(R.id.word_flexboxlayout);
+        saveButton =  findViewById(R.id.save_button);
+        add_text_hash =  findViewById(R.id.add_text_hash);
         cancelBtn = findViewById(R.id.canceladdword);
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
@@ -61,8 +60,6 @@ public class Addword_Activity extends AppCompatActivity {
         hashtags = new ArrayList<>();
 
         Intent intent = getIntent();
-        id = intent.getStringExtra("id");
-        Log.e(TAG, "id : " + id);
         prescription = (Prescription) intent.getSerializableExtra("prescription");
 
         Custom_text("처방전");

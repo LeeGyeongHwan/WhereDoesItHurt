@@ -22,19 +22,18 @@ import com.k1l3.wheredoesithurt.models.User;
 import java.util.ArrayList;
 
 public class SetAlarmPage extends AppCompatActivity {
-    final private ArrayList<TextView> arrayText = new ArrayList<>();
-    final private ArrayList<TimePicker> arrayPicker = new ArrayList<>();
-    final private ArrayList<ImageView> arrayImg = new ArrayList<>();
-    final private ArrayList<LinearLayout> arrayLinear = new ArrayList<>();
-    final private ArrayList<Button> arrayBtn = new ArrayList<>();
+    private static final User user = User.getInstance();
+    private final ArrayList<TextView> arrayText = new ArrayList<>();
+    private final ArrayList<TimePicker> arrayPicker = new ArrayList<>();
+    private final ArrayList<ImageView> arrayImg = new ArrayList<>();
+    private final ArrayList<LinearLayout> arrayLinear = new ArrayList<>();
+    private final ArrayList<Button> arrayBtn = new ArrayList<>();
     public LinearLayout from_linear, to_linear, from_contain, to_contain;
     private Button nextBtn;
     private ImageButton cancelBtn;
     private TextView title, alarm_num, from_dateText, to_dateText;
     private ImageView from_img, to_img;
     private DatePicker from_date, to_date;
-    private String id;
-    private static final User user = User.getInstance();
     private Prescription prescription;
     private Times times;
 
@@ -62,7 +61,6 @@ public class SetAlarmPage extends AppCompatActivity {
         String title_pre = intent.getStringExtra("title");
         String alarmnum = intent.getStringExtra("alarmcount");
         String alarmday = intent.getStringExtra("alarmday");
-        id = intent.getStringExtra("id");
         prescription = (Prescription) intent.getSerializableExtra("prescription");
         times = new Times();
 
@@ -87,28 +85,28 @@ public class SetAlarmPage extends AppCompatActivity {
             final Button confirmBtn = findViewById(R.id.confirm_timeBtn);
 
 
-            if( i<defaultTime.size()){
+            if (i < defaultTime.size()) {
                 String deTime = defaultTime.get(i);
-                int hour = Integer.parseInt(deTime.substring(0,2));
-                int min = Integer.parseInt(deTime.substring(2,4));
+
+                int hour = Integer.parseInt(deTime.substring(0, 2));
+                int min = Integer.parseInt(deTime.substring(2, 4));
 
 
                 String ampm = "AM";
-                if(hour>12){
-                    hour=hour-12;
+                if (hour > 12) {
+                    hour = hour - 12;
                     ampm = "PM";
-                }
-                else if(hour==0)
+                } else if (hour == 0)
                     hour = 12;
-                else if(hour==12)
-                    ampm ="PM";
+                else if (hour == 12)
+                    ampm = "PM";
 
                 if (ampm.equals("AM")) {
                     picker.setHour(hour);
                     picker.setMinute(min);
                 } else {
                     picker.setHour(hour + 12);
-                    if (hour==12)
+                    if (hour == 12)
                         picker.setHour(hour);
                     picker.setMinute(min);
                 }
@@ -123,18 +121,17 @@ public class SetAlarmPage extends AppCompatActivity {
                 String timenow = ampm + " " + shour + ":" + smin;
                 textView.setText(timenow);
 
-            }else{
+            } else {
                 int hour = picker.getHour();
                 int min = picker.getMinute();
                 String ampm = "AM";
-                if(hour>12){
-                    hour=hour-12;
+                if (hour > 12) {
+                    hour = hour - 12;
                     ampm = "PM";
-                }
-                else if(hour==0)
+                } else if (hour == 0)
                     hour = 12;
-                else if(hour==12)
-                    ampm ="PM";
+                else if (hour == 12)
+                    ampm = "PM";
 
                 String shour = Integer.toString(hour);
                 String smin = Integer.toString(min);
@@ -159,6 +156,7 @@ public class SetAlarmPage extends AppCompatActivity {
             arrayBtn.add(confirmBtn);
 
             final int finalI = i;
+
             picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
                 @Override
                 public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -167,27 +165,29 @@ public class SetAlarmPage extends AppCompatActivity {
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.d("reamer", "onClick: getHour" + picker.getHour());
-                            Log.d("reamer", "onClick: getId" + picker.getId());
                             int hour = picker.getHour();
                             int min = picker.getMinute();
+
                             String ampm = "AM";
-                            if(hour>12){
-                                hour=hour-12;
+
+                            if (hour > 12) {
+                                hour = hour - 12;
                                 ampm = "PM";
-                            }
-                            else if(hour==0)
+                            } else if (hour == 0)
                                 hour = 12;
-                            else if(hour==12)
-                                ampm ="PM";
+                            else if (hour == 12)
+                                ampm = "PM";
 
                             String shour = Integer.toString(hour);
                             String smin = Integer.toString(min);
+
                             if (hour < 10)
                                 shour = "0" + shour;
                             if (min < 10)
                                 smin = "0" + smin;
+
                             String timenow = ampm + " " + shour + ":" + smin;
+
                             textView.setText(timenow);
 
                             picker_linear.setVisibility(View.GONE);
@@ -244,7 +244,6 @@ public class SetAlarmPage extends AppCompatActivity {
 
                 Intent moveintent = new Intent(SetAlarmPage.this, Addword_Activity.class);
                 moveintent.putExtra("prescription", prescription);
-                moveintent.putExtra("id", id);
                 moveintent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(moveintent);
                 finish();
@@ -355,25 +354,25 @@ public class SetAlarmPage extends AppCompatActivity {
 
     private void addTimes() {
         for (int i = 0; i < arrayText.size(); ++i) {
-            String time=arrayText.get(i).getText().toString();
-            String ampm = time.substring(0,2);
-            String shour = time.substring(3,5);
-            String smin = time.substring(6,8);
-            String newTime="";
-            if (ampm.equals("AM")){
-                if(shour.equals("12")){
-                    shour="00"+smin;
+            String time = arrayText.get(i).getText().toString();
+            String ampm = time.substring(0, 2);
+            String shour = time.substring(3, 5);
+            String smin = time.substring(6, 8);
+            String newTime = "";
+            if (ampm.equals("AM")) {
+                if (shour.equals("12")) {
+                    shour = "00" + smin;
                 }
-                newTime=shour+smin;
-            }else{
-                if(shour.equals("12")){
-                    newTime=shour+smin;
-                }else {
+                newTime = shour + smin;
+            } else {
+                if (shour.equals("12")) {
+                    newTime = shour + smin;
+                } else {
                     shour = Integer.toString(Integer.parseInt(shour) + 12);
                     newTime = shour + smin;
                 }
             }
-            Log.d("what", "addTimes: i : " + i +", newTime :"+newTime);
+            Log.d("what", "addTimes: i : " + i + ", newTime :" + newTime);
             times.addTime(newTime);
         }
     }
