@@ -87,12 +87,11 @@ public class Fragment_calendar extends Fragment {
                 int month = Integer.parseInt(time[1]);
                 int day = Integer.parseInt(time[2]);
 
-                calendar.set(year, month-1, day);
+                calendar.set(year, month - 1, day);
 
                 calendar.add(Calendar.DATE, 1);
 
                 date = dateFormat.format(calendar.getTime());
-                Log.d(TAG, "extractDate: "+date);
             }
         }
     }

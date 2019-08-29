@@ -49,7 +49,7 @@ public class Fragment_mypage extends Fragment {
         profileImage.setBackground(new ShapeDrawable(new OvalShape()));
         profileImage.setClipToOutline(true);
 
-        Button logout_button = (Button) viewGroup.findViewById(R.id.logout_button);
+        Button logout_button =  viewGroup.findViewById(R.id.logout_button);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class Fragment_mypage extends Fragment {
             }
         });
         //기본 알람시간 페이지로 가기
-        my_default_time = (LinearLayout) viewGroup.findViewById(R.id.my_default_time);
+        my_default_time =  viewGroup.findViewById(R.id.my_default_time);
         my_default_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +65,7 @@ public class Fragment_mypage extends Fragment {
             }
         });
         //나의 정보 페이지로 가기
-        my_info = (LinearLayout) viewGroup.findViewById(R.id.my_info);
+        my_info =  viewGroup.findViewById(R.id.my_info);
         my_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +74,7 @@ public class Fragment_mypage extends Fragment {
         });
 
         //복용약 페이지 들어가기
-        my_medicine = (LinearLayout) viewGroup.findViewById(R.id.my_medicine);
+        my_medicine =  viewGroup.findViewById(R.id.my_medicine);
         my_medicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
