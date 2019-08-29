@@ -30,12 +30,20 @@ import com.k1l3.wheredoesithurt.models.DayClick;
 import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Fragment_main extends Fragment {
-    private final Calendar cal = Calendar.getInstance();
+    private final Calendar calendar = Calendar.getInstance();
     private final User user = User.getInstance();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+    private final String today = dateFormat.format(new Date());
+    private final int todayYear = calendar.get(Calendar.YEAR);
+    private final int todayMonth = calendar.get(Calendar.MONTH) + 1;
+    private final int todayDay = calendar.get(Calendar.DATE);
+
     private View viewGroup;
     private View btn1, btn2, btn3;
     private EditText medicine_search;
@@ -114,7 +122,7 @@ public class Fragment_main extends Fragment {
 
             if (user.getPrescriptions() != null) {
                 setGraph();
-                setPresccriptionName();
+                setPrescriptionName();
             }
 
             //드래그시 화면이동
@@ -155,7 +163,7 @@ public class Fragment_main extends Fragment {
                         setGraph();
 
                         //이름
-                        setPresccriptionName();
+                        setPrescriptionName();
 
                     } else if (distance < 0) {
                         getLeftCurrentCount();
@@ -180,7 +188,7 @@ public class Fragment_main extends Fragment {
                         setGraph();
 
                         //이름
-                        setPresccriptionName();
+                        setPrescriptionName();
                     }
                     return true;
                 }
@@ -223,68 +231,44 @@ public class Fragment_main extends Fragment {
     }
 
     private void getMedicineName() {
-        User user = User.getInstance();
-        StringBuffer buffer = new StringBuffer();
-        StringBuffer buffer2 = new StringBuffer();
         if (user.getPrescriptions().size() != 0) {
             while (true) {
-                int startYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(0, 4));
-                int startMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(5, 7));
-                int startDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(8, 10));
-                int endYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(0, 4));
-                int endMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(5, 7));
-                int endDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(8, 10));
-                Calendar cal = Calendar.getInstance();
-                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                            for (int i = 0; i < user.getPrescriptions().get(currentCount).getMedicines().size(); i++) {
-                                adapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
-                            }
-                            my_medicine_info.setAdapter(adapter);
-                            break;
-                        } else {
-                            currentCount++;
-                        }
-                    } else {
-                        currentCount++;
+                String startDay = user.getPrescriptions().get(currentCount).getBegin();
+                String endDay = user.getPrescriptions().get(currentCount).getEnd();
+
+                boolean todayInRange = today.compareTo(startDay) >= 0 && today.compareTo(endDay) <= 0;
+
+                if (todayInRange) {
+                    for (int i = 0; i < user.getPrescriptions().get(currentCount).getMedicines().size(); i++) {
+                        adapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
                     }
+                    my_medicine_info.setAdapter(adapter);
+                    break;
                 } else {
                     currentCount++;
                 }
+
             }
         }
     }
 
     //주의해야할 음식
     private void getCautionFood() {
-        User user = User.getInstance();
-        StringBuffer buffer = new StringBuffer();
-        StringBuffer buffer2 = new StringBuffer();
         if (user.getPrescriptions().size() != 0) {
             while (true) {
-                int startYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(0, 4));
-                int startMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(5, 7));
-                int startDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getBegin().substring(8, 10));
-                int endYear = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(0, 4));
-                int endMonth = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(5, 7));
-                int endDay = Integer.valueOf(user.getPrescriptions().get(currentCount).getEnd().substring(8, 10));
-                Calendar cal = Calendar.getInstance();
-                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                            for (int i = 0; i < user.getPrescriptions().get(currentCount).getMedicines().size(); i++) {
+                String startDay = user.getPrescriptions().get(currentCount).getBegin();
+                String endDay = user.getPrescriptions().get(currentCount).getEnd();
 
-                                foodAdapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
-                            }
-                            my_caution_food.setAdapter(foodAdapter);
-                            break;
-                        } else {
-                            currentCount++;
-                        }
-                    } else {
-                        currentCount++;
+                boolean todayInRange = today.compareTo(startDay) >= 0 && today.compareTo(endDay) <= 0;
+
+                if (todayInRange) {
+                    for (int i = 0; i < user.getPrescriptions().get(currentCount).getMedicines().size(); i++) {
+                        foodAdapter.addItem(user.getPrescriptions().get(currentCount).getMedicines().get(i));
                     }
+
+                    my_caution_food.setAdapter(foodAdapter);
+
+                    break;
                 } else {
                     currentCount++;
                 }
@@ -324,12 +308,12 @@ public class Fragment_main extends Fragment {
         if (get_0 > 12) {
             get_0 = get_0 - 12;
             AMPM = "PM";
-        }else if(get_0==12){
+        } else if (get_0 == 12) {
             AMPM = "PM";
-        }else{
+        } else {
             AMPM = "AM";
         }
-        if (AMPM=="AM") {
+        if (AMPM.equals("AM")) {
             if (get_0 >= 5 && get_0 <= 9) {
                 when.setText("아침");
             } else if (get_0 >= 10) {
@@ -344,12 +328,12 @@ public class Fragment_main extends Fragment {
                 when.setText("저녁");
             }
         }
-        time.setText(get_0+":"+user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2,4));
+        time.setText(get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
 
         DayClick item = user.getPrescriptions().get(currentCount)
                 .getYear()
-                .getMonths().get(cal.get(Calendar.MONTH) - 1)
-                .getDays().get(cal.get(Calendar.DATE) - 1)
+                .getMonths().get(calendar.get(Calendar.MONTH) - 1)
+                .getDays().get(calendar.get(Calendar.DATE) - 1)
                 .getDayClick();
 
         for (int index = 0; index < 3; index++) {
@@ -481,8 +465,8 @@ public class Fragment_main extends Fragment {
 
         user.getPrescriptions().get(currentCount)
                 .getYear()
-                .getMonths().get(cal.get(Calendar.MONTH) - 1)
-                .getDays().get(cal.get(Calendar.DATE) - 1)
+                .getMonths().get(calendar.get(Calendar.MONTH) - 1)
+                .getDays().get(calendar.get(Calendar.DATE) - 1)
                 .setDayClick(dayClick);
 
         currentClick = user.getPrescriptions().get(currentCount).getTotalClick();
@@ -499,8 +483,9 @@ public class Fragment_main extends Fragment {
             currentClick = user.getPrescriptions().get(currentCount).getTotalClick();
             progressBar.setMax(100);
 
-            int currentProgress = (currentClick * 100) / (user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
-                    user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
+            int currentProgress = (currentClick * 100) /
+                    (user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDay() *
+                            user.getPrescriptions().get(currentCount).getMedicines().get(0).getNumberOfDoses());
 
             progressBar.setProgress(currentProgress);
         }
@@ -508,24 +493,16 @@ public class Fragment_main extends Fragment {
 
     private void getRightCurrentCount() {
         if (currentCount < user.getPrescriptions().size() - 1) {
-            currentCount = currentCount + 1;
             if (user.getPrescriptions() != null) {
                 for (int i = currentCount; i < user.getPrescriptions().size(); i++) {
-                    int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
-                    int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
-                    int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
-                    int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
-                    int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
-                    int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
-                    Calendar cal = Calendar.getInstance();
+                    String startDay = user.getPrescriptions().get(i).getBegin();
+                    String endDay = user.getPrescriptions().get(i).getEnd();
 
-                    if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                        if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                            if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                                currentCount = i;
-                                break;
-                            }
-                        }
+                    boolean todayInRange = today.compareTo(startDay) >= 0 && today.compareTo(endDay) <= 0;
+
+                    if (todayInRange) {
+                        currentCount = i;
+                        break;
                     }
                 }
             }
@@ -538,21 +515,14 @@ public class Fragment_main extends Fragment {
 
             if (user.getPrescriptions() != null) {
                 for (int i = currentCount; i >= 0; i--) {
-                    int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
-                    int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
-                    int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
-                    int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
-                    int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
-                    int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
-                    Calendar cal = Calendar.getInstance();
+                    String startDay = user.getPrescriptions().get(i).getBegin();
+                    String endDay = user.getPrescriptions().get(i).getEnd();
 
-                    if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                        if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                            if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                                currentCount = i;
-                                break;
-                            }
-                        }
+                    boolean todayInRange = today.compareTo(startDay) >= 0 && today.compareTo(endDay) <= 0;
+
+                    if (todayInRange) {
+                        currentCount = i;
+                        break;
                     }
                 }
             }
@@ -564,21 +534,13 @@ public class Fragment_main extends Fragment {
 
         if (user.getPrescriptions() != null) {
             for (int i = 0; i < user.getPrescriptions().size(); i++) {
-                int startYear = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(0, 4));
-                int startMonth = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(5, 7));
-                int startDay = Integer.valueOf(user.getPrescriptions().get(i).getBegin().substring(8, 10));
-                int endYear = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(0, 4));
-                int endMonth = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(5, 7));
-                int endDay = Integer.valueOf(user.getPrescriptions().get(i).getEnd().substring(8, 10));
+                String startDay = user.getPrescriptions().get(i).getBegin();
+                String endDay = user.getPrescriptions().get(i).getEnd();
 
-                Calendar cal = Calendar.getInstance();
+                boolean todayInRange = today.compareTo(startDay) >= 0 && today.compareTo(endDay) <= 0;
 
-                if (cal.get(Calendar.YEAR) >= startYear && cal.get(Calendar.YEAR) <= endYear) {
-                    if (cal.get(Calendar.MONTH) + 1 >= startMonth && cal.get(Calendar.MONTH) + 1 <= endMonth) {
-                        if (cal.get(Calendar.DATE) >= startDay && cal.get(Calendar.DATE) <= endDay) {
-                            availCounting++;
-                        }
-                    }
+                if (todayInRange) {
+                    availCounting++;
                 }
             }
         }
@@ -606,6 +568,10 @@ public class Fragment_main extends Fragment {
                 counting_linear.addView(image);
             }
         }
+    }
+
+    private void setPrescriptionName() {
+        presc_name.setText(user.getPrescriptions().get(currentCount).getName());
     }
 
     //나의 약 정보 Adapter
@@ -714,9 +680,5 @@ public class Fragment_main extends Fragment {
 
             return view;
         }
-    }
-
-    private void setPresccriptionName() {
-        presc_name.setText(user.getPrescriptions().get(currentCount).getName());
     }
 }
