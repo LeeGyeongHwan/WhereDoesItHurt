@@ -10,7 +10,7 @@ public class CalendarItem {
     private String endDay;
     private Prescription prescription;
     private int index;
-
+    private boolean isVisible = false;
     public CalendarItem(Prescription prescription){
         this.prescription = prescription;
         this.hashtag = prescription.getHashTag();
@@ -39,5 +39,13 @@ public class CalendarItem {
     }
     public Prescription getPrescription(){
         return prescription;
+    }
+
+    public boolean getisVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 }

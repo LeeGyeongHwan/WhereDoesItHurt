@@ -222,32 +222,44 @@ public class Fragment_calendar extends Fragment {
             view.setWholeDayCount(calculateDayCount(item.getStartDay(), item.getEndDay()) + 1);
             view.setCalendarCircle(item.getIndex());
 
-//            view.getLinearLayout().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (calendarShow) {
+            view.getLinearLayout().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(calendarShow){
+                        materialCalendarView.setVisibility(View.GONE);
+                        if(item.getisVisible()){
+                            view.getDetailLinearLayout().setVisibility(View.GONE);
+                            item.setVisible(false);
+                        }else{
+                            view.getDetailLinearLayout().setVisibility(View.VISIBLE);
+                            item.setVisible(true);
+                        }
+                    }
+//                    if (item.getisVisible()) {
 //                        materialCalendarView.setVisibility(View.GONE);
 //
-//                        toVisible(view.getDetailLinearLayout());
-//
+//                        //toVisible(view.getDetailLinearLayout());
+//                        view.getDetailLinearLayout().setVisibility(View.VISIBLE);
 //                        Log.d(TAG, "onClick: " +view);
-//                        calendarShow = false;
+//                        //calendarShow = false;
+//                        item.setVisible(false);
 //                    } else {
-//                        materialCalendarView.setVisibility(View.VISIBLE);
-//
+//                        //materialCalendarView.setVisibility(View.VISIBLE);
+//                        view.getDetailLinearLayout().setVisibility(View.GONE);
 //                        toGone(view.getDetailLinearLayout());
-//                        calendarShow = true;
+//                        //calendarShow = true;
+//                        item.setVisible(true);
 //                    }
-//                }
-//            });
-//
-//            final Adapter adapter = new Adapter();
-//
-//            for (int i = 0; i < items.get(position).getPrescription().getMedicines().size(); i++) {
-//                adapter.addItem(items.get(position).getPrescription().getMedicines().get(i));
-//            }
-//
-//            view.getMy_medicine_info().setAdapter(adapter);
+                }
+            });
+
+            final Adapter adapter = new Adapter();
+
+            for (int i = 0; i < items.get(position).getPrescription().getMedicines().size(); i++) {
+                adapter.addItem(items.get(position).getPrescription().getMedicines().get(i));
+            }
+
+            view.getMy_medicine_info().setAdapter(adapter);
 
             return view;
         }
