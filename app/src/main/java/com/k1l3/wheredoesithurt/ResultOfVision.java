@@ -179,8 +179,10 @@ public class ResultOfVision extends AppCompatActivity {
             public void run() {
                 medicine_kind = getXmlData(EditList1);
                 Log.d("what", "run: thread 들옴");
-
-                int isDefaultPregnant = user.getUserInfo().getLifeStyles().getLifeStyles().get(2);
+                int isDefaultPregnant = 0;
+                if(user.getUserInfo().getLifeStyles()!=null) {
+                    isDefaultPregnant = user.getUserInfo().getLifeStyles().getLifeStyles().get(2);
+                }
                 if(isPregnant && (isDefaultPregnant == 1)){
                     Looper.prepare();
                     Toast.makeText(getApplicationContext(),dangerForPregnant+ " 은/는 임산부에게 위험한 약입니다.\n의사나 약사와 다시 상의해보세요",Toast.LENGTH_LONG).show();

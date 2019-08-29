@@ -59,7 +59,6 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.google.api.services.vision.v1.model.Page;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -93,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
+    private static final int GALLERY_IMAGE_REQUEST2 = 6;
+    private static final int GALLERY_IMAGE_REQUEST3 = 7;
     private final static int ACT_ALARM = 99;
     private static final User user = User.getInstance();
     static int medicine_count;
@@ -565,65 +566,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             MakeInexactAlarm(titlePre,isDrinking,isSmoking);
             MakeAlarmService(titlePre);
         }  else if (requestCode == CAMERA_IMAGE_REQUEST2 && resultCode == RESULT_OK) {
-            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
-            Bitmap bitmap=null;
-            try {
-                bitmap = MediaStore.Images.Media
-                        .getBitmap(getContentResolver(), photoUri);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bitmap = rotateImage(bitmap,90);
-            byte[] bytes = bitmaptoByte(bitmap);
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            String filename = getId();
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("presc/")
-                    .child(String.valueOf(position));
-            storageRef.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.main_container, new Fragment_history())
-                            .commit();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                }
-            });
-
+            setCameraStorage("presc/");
         }else if (requestCode == CAMERA_IMAGE_REQUEST3 && resultCode == RESULT_OK) {
-            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
-            Bitmap bitmap=null;
-            try {
-                bitmap = MediaStore.Images.Media
-                        .getBitmap(getContentResolver(), photoUri);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bitmap = rotateImage(bitmap,90);
-            byte[] bytes = bitmaptoByte(bitmap);
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            String filename = getId();
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("medicine/")
-                    .child(String.valueOf(position));
-            storageRef.putBytes(bitmap.getNinePatchChunk()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.main_container, new Fragment_history())
-                            .commit();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                }
-            });
-
+            setCameraStorage("medicine/");
+        }else if(requestCode == GALLERY_IMAGE_REQUEST2 && resultCode == RESULT_OK && data != null) {
+            setGalleryStorage("presc/",data.getData());
+        }else if(requestCode == GALLERY_IMAGE_REQUEST3 && resultCode == RESULT_OK && data != null) {
+            setGalleryStorage("medicine/",data.getData());
         }
     }
 
@@ -922,41 +871,74 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         requestCode=requestCode*100+codeIndex*10;
         Log.d("what", "MakeAlarmService: id : "+ id + " ,codeIndex : "+codeIndex+", request code : " + requestCode);
-        ArrayList<Integer> lifeStyle = user.getUserInfo().getLifeStyles().getLifeStyles();
+        if(user.getUserInfo().getLifeStyles()!=null) {
+            ArrayList<Integer> lifeStyle = user.getUserInfo().getLifeStyles().getLifeStyles();
+            if(isSmoking && (lifeStyle.get(0)==1)){//담배
+                requestCode++;
+                inExactIntent.putExtra("smokeOrDrink",true);
+                Calendar calendar = Calendar.getInstance();
 
+                Log.d("what", "MakeInexactAlarm: 담배!");
 
-        if(isSmoking && (lifeStyle.get(0)==1)){//담배
-            requestCode++;
-            inExactIntent.putExtra("smokeOrDrink",true);
-            Calendar calendar = Calendar.getInstance();
+                PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
 
-            Log.d("what", "MakeInexactAlarm: 담배!");
+                AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
 
-            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+            }
 
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+            if(isDrinking && (lifeStyle.get(1)==1)){//술
+                requestCode+=2;
+                inExactIntent.putExtra("smokeOrDrink",false);
+                Calendar calendar = Calendar.getInstance();
 
+                Log.d("what", "MakeInexactAlarm: 술!");
+
+                PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+
+                AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+            }
         }
 
-        if(isDrinking && (lifeStyle.get(1)==1)){//술
-            requestCode+=2;
-            inExactIntent.putExtra("smokeOrDrink",false);
-            Calendar calendar = Calendar.getInstance();
-
-            Log.d("what", "MakeInexactAlarm: 술!");
-
-            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
-
-            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
-        }
+//        if(isSmoking && (lifeStyle.get(0)==1)){//담배
+//            requestCode++;
+//            inExactIntent.putExtra("smokeOrDrink",true);
+//            Calendar calendar = Calendar.getInstance();
+//
+//            Log.d("what", "MakeInexactAlarm: 담배!");
+//
+//            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+//
+//            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+//
+//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//                    calendar.getTimeInMillis(),
+//                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+//
+//        }
+//
+//        if(isDrinking && (lifeStyle.get(1)==1)){//술
+//            requestCode+=2;
+//            inExactIntent.putExtra("smokeOrDrink",false);
+//            Calendar calendar = Calendar.getInstance();
+//
+//            Log.d("what", "MakeInexactAlarm: 술!");
+//
+//            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+//
+//            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+//
+//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//                    calendar.getTimeInMillis(),
+//                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+//        }
 
 
     }
@@ -1174,5 +1156,80 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    public void startGalleryChooser(int a, int position) {
+        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            if(a==0) {
+                startActivityForResult(Intent.createChooser(intent, "Select a photo"),
+                        GALLERY_IMAGE_REQUEST2);
+            }else{
+                startActivityForResult(Intent.createChooser(intent, "Select a photo"),
+                        GALLERY_IMAGE_REQUEST3);
+            }
+        }
+    }
+
+    private void setCameraStorage(String path){
+        Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+        Bitmap bitmap=null;
+        try {
+            bitmap = MediaStore.Images.Media
+                    .getBitmap(getContentResolver(), photoUri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bitmap = rotateImage(bitmap,90);
+        byte[] bytes = bitmaptoByte(bitmap);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String filename = getId();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child(path)
+                .child(String.valueOf(position));
+        storageRef.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_container, new Fragment_history())
+                        .commit();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
+    private void setGalleryStorage(String path,Uri photoUri){
+        Bitmap bitmap=null;
+        try {
+            bitmap = MediaStore.Images.Media
+                    .getBitmap(getContentResolver(), photoUri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] bytes = bitmaptoByte(bitmap);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String filename = getId();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child(path)
+                .child(String.valueOf(position));
+        storageRef.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_container, new Fragment_history())
+                        .commit();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
     }
 }

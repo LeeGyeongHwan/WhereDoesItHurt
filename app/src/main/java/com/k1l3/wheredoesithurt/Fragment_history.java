@@ -1,6 +1,7 @@
 package com.k1l3.wheredoesithurt;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -253,7 +254,22 @@ public class Fragment_history extends Fragment {
                     view.getHistory_medicine_image().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((MainActivity)getActivity()).startCamera(0,position);
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                            builder
+                                    .setMessage("처방전을 추가하세요")
+                                    .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((MainActivity)getActivity()).startGalleryChooser(0,position);
+                                        }
+                                    })
+                                    .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((MainActivity)getActivity()).startCamera(0,position);
+                                        }
+                                    });
+                            builder.create().show();
                         }
                     });
                 }
@@ -305,7 +321,22 @@ public class Fragment_history extends Fragment {
                     view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((MainActivity)getActivity()).startCamera(1,position);
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                            builder
+                                    .setMessage("처방전을 추가하세요")
+                                    .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((MainActivity)getActivity()).startGalleryChooser(1,position);
+                                        }
+                                    })
+                                    .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ((MainActivity)getActivity()).startCamera(1,position);
+                                        }
+                                    });
+                            builder.create().show();
                         }
                     });
                 }
