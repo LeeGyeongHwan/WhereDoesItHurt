@@ -180,18 +180,21 @@ public class SetAlarmPage extends AppCompatActivity {
                             if (hour > 12) {
                                 hour = hour - 12;
                                 ampm = "PM";
-                            } else if (hour == 0)
+                            } else if (hour == 0) {
                                 hour = 12;
-                            else if (hour == 12)
+                            } else if (hour == 12) {
                                 ampm = "PM";
+                            }
 
                             String shour = Integer.toString(hour);
                             String smin = Integer.toString(min);
 
-                            if (hour < 10)
+                            if (hour < 10) {
                                 shour = "0" + shour;
-                            if (min < 10)
+                            }
+                            if (min < 10) {
                                 smin = "0" + smin;
+                            }
 
                             String timenow = ampm + " " + shour + ":" + smin;
 
@@ -275,7 +278,7 @@ public class SetAlarmPage extends AppCompatActivity {
                 }
                 break;
             case 2:
-                if ((to_linear.getVisibility() == View.GONE) && !isFromPickerSelected){
+                if ((to_linear.getVisibility() == View.GONE) && !isFromPickerSelected) {
                     to_img.setImageResource(R.drawable.up);
                     to_linear.setVisibility(View.VISIBLE);
                     isToPickerSelected = true;
@@ -297,7 +300,7 @@ public class SetAlarmPage extends AppCompatActivity {
         }
 
         if (from_date.getDayOfMonth() < 10) {
-            fromdate += "." + from_date.getDayOfMonth();
+            fromdate += "0" + from_date.getDayOfMonth();
         } else {
             fromdate += from_date.getDayOfMonth();
         }
@@ -345,7 +348,7 @@ public class SetAlarmPage extends AppCompatActivity {
         }
 
         if (to_date.getDayOfMonth() < 10) {
-            todate += "." + to_date.getDayOfMonth();
+            todate += "0" + to_date.getDayOfMonth();
         } else {
             todate += to_date.getDayOfMonth();
         }
@@ -371,7 +374,7 @@ public class SetAlarmPage extends AppCompatActivity {
             String ampm = time.substring(0, 2);
             String shour = time.substring(3, 5);
             String smin = time.substring(6, 8);
-            String newTime = "";
+            String newTime;
             if (ampm.equals("AM")) {
                 if (shour.equals("12")) {
                     shour = "00" + smin;
