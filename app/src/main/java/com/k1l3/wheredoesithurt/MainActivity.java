@@ -160,11 +160,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     third = false;
                 }
             }
+            /*
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 2; j++) {
                     Log.d("gallery", "vertix[" + i + "][" + j + "] : " + vertixArray[i][j]);
                 }
-            }
+            }*/
 
             //두번째 9자리 번호 찾고 숫자 확인 -> 옆옆에 약이름 가져오기
 
@@ -213,30 +214,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("gallery", "Y_eachmedicine[" + i + "]" + Y_eachmedicine[i]);
                 Log.d("gallery", "medicin[" + i + "] " + medicine[i]);
             }
+            try{
+                for (EntityAnnotation label : labels) {
+                    int labelX = label.getBoundingPoly().getVertices().get(0).getX();
+                    int labelX2 = label.getBoundingPoly().getVertices().get(1).getX();
+                    int labelY = label.getBoundingPoly().getVertices().get(0).getY();
+                    for (int i = 0; i < arrcount; i++) {
+                        if ((Y_eachmedicine[i] - 20 < labelY) && (Y_eachmedicine[i] + 20 > labelY)) {
+                            Log.d(TAG, "convertResponseToString: labely" + labelY);
+                            for (int j = 0; j < arrcount; j++) {
+                                if ((vertixArray[j][0] - 40 < labelX) && (vertixArray[j][1] + 40 > labelX2)) {
+                                    Log.d("gallery", "convertResponseToString: labelx" + labelX);
+                                    try {
+                                        info_med[i][j] = Integer.parseInt(label.getDescription());
+                                        Log.d("gallery", "convertResponseToString: [" + i + "][" + j + "]: " + info_med[i][j]);
+                                    } catch (NumberFormatException e) {
 
-            for (EntityAnnotation label : labels) {
-                int labelX = label.getBoundingPoly().getVertices().get(0).getX();
-                int labelX2 = label.getBoundingPoly().getVertices().get(1).getX();
-                int labelY = label.getBoundingPoly().getVertices().get(0).getY();
-                for (int i = 0; i < arrcount; i++) {
-                    if ((Y_eachmedicine[i] - 20 < labelY) && (Y_eachmedicine[i] + 20 > labelY)) {
-                        Log.d(TAG, "convertResponseToString: labely" + labelY);
-                        for (int j = 0; j < arrcount; j++) {
-                            if ((vertixArray[j][0] - 40 < labelX) && (vertixArray[j][1] + 40 > labelX2)) {
-                                Log.d("gallery", "convertResponseToString: labelx" + labelX);
-                                try {
-                                    info_med[i][j] = Integer.parseInt(label.getDescription());
-                                    Log.d("gallery", "convertResponseToString: [" + i + "][" + j + "]: " + info_med[i][j]);
-                                } catch (NumberFormatException e) {
-
+                                    }
                                 }
                             }
+
                         }
-
                     }
-                }
 
+                }
+            }catch (NullPointerException e){
+                Log.d("what", "convertResponseToString: "+e+"vertice찾을수없음");
             }
+
         }else{
             return null;
         }
@@ -244,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String returnstr = "";
         for (int i = 0; i < arrcount; i++) {
             returnstr = returnstr.concat(medicine[i] + " ");
-            for (int j = 0; j < arrcount; j++) {
+            for (int j = 0; j < 3; j++) {
                 returnstr = returnstr.concat(info_med[i][j] + " ");
             }
         }
@@ -988,7 +993,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             asyncDialog.dismiss();
             if(result == null){
                 Toast.makeText(MainActivity.this,"텍스트를 찾을 수 없습니다.\n다시 시도해 주세요.",Toast.LENGTH_LONG).show();
-
+            }else if(result.equals("")){
+                Toast.makeText(MainActivity.this,"정보를 추출 할 수 없습니다.\n다시 시도해 주세요.",Toast.LENGTH_LONG).show();
             }else if (activity != null && !activity.isFinishing()) {
                 Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
                 intent.putExtra("result", result);
