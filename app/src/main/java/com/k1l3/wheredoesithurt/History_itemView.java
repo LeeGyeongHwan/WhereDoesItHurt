@@ -73,17 +73,11 @@ public class History_itemView extends LinearLayout {
         }
     }
 
-    public TextView getPresc_date() {
-        return presc_date;
-    }
 
     public void setPresc_date(String presc_date) {
         this.presc_date.setText(presc_date);
     }
 
-    public void setPresc_date(TextView presc_date) {
-        this.presc_date = presc_date;
-    }
 
     public ImageView getHistory_medicine_image() {
         return history_medicine_image;
@@ -105,20 +99,8 @@ public class History_itemView extends LinearLayout {
         return linearLayout;
     }
 
-    public void setLinearLayout(LinearLayout linearLayout) {
-        this.linearLayout = linearLayout;
-    }
-
     public FlexboxLayout getFlexboxlayout() {
         return flexboxlayout;
-    }
-
-    public void setFlexboxlayout(FlexboxLayout flexboxlayout) {
-        this.flexboxlayout = flexboxlayout;
-    }
-
-    public TextView getPresc_medicine() {
-        return presc_medicine;
     }
 
     public void setPresc_medicine(String presc_medicine) {
@@ -139,10 +121,6 @@ public class History_itemView extends LinearLayout {
 
     public TextView getSeperator() {
         return seperator;
-    }
-
-    public TextView getMedicine_name() {
-        return medicine_name;
     }
 
     public void setMedicine_name(String medicine_name) {

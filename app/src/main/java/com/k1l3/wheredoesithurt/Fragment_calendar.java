@@ -17,6 +17,7 @@ import com.k1l3.wheredoesithurt.calendar.CalendarItemView;
 import com.k1l3.wheredoesithurt.calendarDecorator.EventDecorator;
 import com.k1l3.wheredoesithurt.calendarDecorator.SaturdayDecorator;
 import com.k1l3.wheredoesithurt.calendarDecorator.SundayDecorator;
+import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -43,6 +44,7 @@ public class Fragment_calendar extends Fragment {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
     private ListView listView;
     private Adaptor adaptor;
+    private boolean calendarShow = true;
 
     @Nullable
     @Override
@@ -50,7 +52,7 @@ public class Fragment_calendar extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_calendar, container, false);
         ((MainActivity) getActivity()).toolbar_calendar();
-        listView = viewGroup.findViewById(R.id.calendar_item);
+        listView = viewGroup.findViewById(R.id.calendar_item_list);
 
         extractDate();
 
@@ -71,6 +73,12 @@ public class Fragment_calendar extends Fragment {
 
         materialCalendarView.setDateSelected(new Date(), true);
 
+        adaptor = new Adaptor(dateFormat.format(new Date().getDate()));
+
+        addPrescriptionToAdaptor(adaptor, dateFormat.format(new Date().getDate()));
+
+        listView.setAdapter(adaptor);
+
         return viewGroup;
     }
 
@@ -85,7 +93,7 @@ public class Fragment_calendar extends Fragment {
                 boolean todayInRange = selectedDate.compareTo(startDate) >= 0 && selectedDate.compareTo(endDate) <= 0;
 
                 if (todayInRange) {
-                    adaptor.addItem(new CalendarItem(prescription));
+                    adaptor.addItem(new CalendarItem(prescription, i % 3));
                 }
             }
         }
@@ -212,6 +220,34 @@ public class Fragment_calendar extends Fragment {
             view.setHashtags(extractHashtags(item));
             view.setDayCount(calculateDayCount(item.getStartDay(), selectedDate) + 1);
             view.setWholeDayCount(calculateDayCount(item.getStartDay(), item.getEndDay()) + 1);
+            view.setCalendarCircle(item.getIndex());
+
+//            view.getLinearLayout().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (calendarShow) {
+//                        materialCalendarView.setVisibility(View.GONE);
+//
+//                        toVisible(view.getDetailLinearLayout());
+//
+//                        Log.d(TAG, "onClick: " +view);
+//                        calendarShow = false;
+//                    } else {
+//                        materialCalendarView.setVisibility(View.VISIBLE);
+//
+//                        toGone(view.getDetailLinearLayout());
+//                        calendarShow = true;
+//                    }
+//                }
+//            });
+//
+//            final Adapter adapter = new Adapter();
+//
+//            for (int i = 0; i < items.get(position).getPrescription().getMedicines().size(); i++) {
+//                adapter.addItem(items.get(position).getPrescription().getMedicines().get(i));
+//            }
+//
+//            view.getMy_medicine_info().setAdapter(adapter);
 
             return view;
         }
@@ -251,6 +287,67 @@ public class Fragment_calendar extends Fragment {
             }
 
             return (end.getTime() - begin.getTime()) / (24 * 60 * 60 * 1000);
+        }
+
+        private void toVisible(ViewGroup layout) {
+            layout.setVisibility(View.VISIBLE);
+
+            for (int i = 0; i < layout.getChildCount(); i++) {
+                View child = layout.getChildAt(i);
+
+                child.setVisibility(View.VISIBLE);
+
+                if (child instanceof ViewGroup) {
+                    toVisible((ViewGroup) child);
+                }
+            }
+        }
+
+        private void toGone(ViewGroup layout) {
+            layout.setVisibility(View.GONE);
+
+            for (int i = 0; i < layout.getChildCount(); i++) {
+                View child = layout.getChildAt(i);
+                if (child instanceof ViewGroup) {
+                    toGone((ViewGroup) child);
+                } else {
+                    child.setVisibility(View.GONE);
+                }
+            }
+        }
+
+    }
+
+    private class Adapter extends BaseAdapter {
+        ArrayList<Medicine> items = new ArrayList<Medicine>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public void addItem(Medicine item) {
+            items.add(item);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Medicine_infoView view = new Medicine_infoView(viewGroup.getContext());
+            Medicine item = items.get(position);
+            view.setMedicine_name(item.getName());
+            view.setMedicine_kind(item.getKind());
+
+            return view;
         }
     }
 

@@ -46,6 +46,7 @@ public class Fragment_history extends Fragment {
     private Dialog dialog;
     private EditText history_search;
     private History_itemView historyItemView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -116,6 +117,7 @@ public class Fragment_history extends Fragment {
     class Adapter extends BaseAdapter {
         ArrayList<Prescription> items = new ArrayList<>();
         private RequestManager requestManager;
+
         public int getCount() {
             return items.size();
         }
@@ -133,6 +135,7 @@ public class Fragment_history extends Fragment {
         private void addItem(Prescription item) {
             items.add(item);
         }
+
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -179,14 +182,6 @@ public class Fragment_history extends Fragment {
                     }
                 }
             });
-//
-//            //History 이미지 클릭시 사진크게하기
-//            view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ImageClick(view.getHistory_medicine_image2());
-//                }
-//            });
 
             view.setHistory_memo(item.getMemo());
             view.getHistory_memo().setHorizontallyScrolling(false);
@@ -205,8 +200,8 @@ public class Fragment_history extends Fragment {
             historyItemView = view;
             //히스토리 사진 처방전있을시 추가
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            String filename = ((MainActivity)getActivity()).getId();
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("presc/")
+            String filename = ((MainActivity) getActivity()).getId();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename + "/").child("presc/")
                     .child(String.valueOf(position));
             storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -260,13 +255,13 @@ public class Fragment_history extends Fragment {
                                     .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity)getActivity()).startGalleryChooser(0,position);
+                                            ((MainActivity) getActivity()).startGalleryChooser(0, position);
                                         }
                                     })
                                     .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity)getActivity()).startCamera(0,position);
+                                            ((MainActivity) getActivity()).startCamera(0, position);
                                         }
                                     });
                             builder.create().show();
@@ -275,7 +270,7 @@ public class Fragment_history extends Fragment {
                 }
             });
             //약사진
-            StorageReference storageRef2 = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("medicine/")
+            StorageReference storageRef2 = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename + "/").child("medicine/")
                     .child(String.valueOf(position));
             storageRef2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -327,13 +322,13 @@ public class Fragment_history extends Fragment {
                                     .setPositiveButton("앨범에서 가져오기", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity)getActivity()).startGalleryChooser(1,position);
+                                            ((MainActivity) getActivity()).startGalleryChooser(1, position);
                                         }
                                     })
                                     .setNegativeButton("사진찍기", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ((MainActivity)getActivity()).startCamera(1,position);
+                                            ((MainActivity) getActivity()).startCamera(1, position);
                                         }
                                     });
                             builder.create().show();
