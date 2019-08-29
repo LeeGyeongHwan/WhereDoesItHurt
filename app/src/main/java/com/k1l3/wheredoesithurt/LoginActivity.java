@@ -1,5 +1,6 @@
 package com.k1l3.wheredoesithurt;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -85,18 +86,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private void existDatabase(final String id, final String name, final Intent intent) { //TODO (@nono5546) : Rename
         final DatabaseReference userDatabaseReference = firebaseDatabase.getReference("users");
-
+        final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
+        dialog.setCancelable(false);
+        dialog.setMessage("로그인 중입니다");
+        dialog.show();
         ValueEventListener databaseListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
                 if (!dataSnapshot.hasChild(id)) {
                     createDatabase(id, name);
                 } else {
                     loadDatabase(dataSnapshot.child(id), id);
                 }
-
                 startActivity(intent);
-
+                dialog.dismiss();
                 finish();
             }
 
@@ -164,4 +169,13 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "로그인 도중 오류가 발생했습니다. 인터넷 연결을 확인해주세요: " + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void DialogProgress() {
+        ProgressDialog dialog =
+                ProgressDialog.show(LoginActivity.this, "", "잠시만 기다려 주세요 ...", true);
+
+        // 창을 내린다.
+        // dialog.dismiss();
+    }
+
 }

@@ -770,7 +770,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.findViewById(R.id.toolbar_my_info).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_my_medicine).setVisibility(View.GONE);
         toolbar.setBackgroundColor(Color.rgb(173, 165, 253));
-        setup_nav(R.drawable.ic_menu);
+        setup_nav(R.drawable.ic_menu2);
     }
 
     public void toolbar_calendar() {
@@ -815,6 +815,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayShowCustomEnabled(false); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼, 디폴트로 true만 해도 백버튼이 생김
+        actionBar.setHomeAsUpIndicator(R.drawable.back3);
     }
 
     public void toolbar_myinfo() {
