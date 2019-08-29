@@ -433,8 +433,11 @@ public class Fragment_main extends Fragment {
                 when.setText("저녁");
             }
         }
-        time.setText(get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
-
+        if(get_0>=10) {
+            time.setText(get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
+        }else{
+            time.setText("0"+get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
+        }
         DayClick item = user.getPrescriptions().get(currentCount)
                 .getYear()
                 .getMonths().get(calendar.get(Calendar.MONTH) - 1)
