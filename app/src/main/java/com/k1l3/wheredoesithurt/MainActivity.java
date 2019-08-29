@@ -926,9 +926,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int codeIndex = user.getPrescriptions().size();
         int requestCode =(int)(long) id %10000000;
-        requestCode=requestCode*100+codeIndex;
+        requestCode=requestCode*100+codeIndex*10;
         Log.d("what", "MakeAlarmService: id : "+ id + " ,codeIndex : "+codeIndex+", request code : " + requestCode);
-
+        intent.putExtra("codeIndex",codeIndex);
         intent.putExtra("requestCode",requestCode);
 
         ArrayList<String> preTime = user. getPrescriptions().get(codeIndex-1).getTimes().getTimes();
