@@ -54,7 +54,7 @@ public class Handle_Alarm extends BroadcastReceiver {
                 builder.setContentTitle("음주를 자제하세요");
             }
             //흠연, 음주에 따른 로고변경
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.noti_logo));
+
             builder.setSmallIcon(R.drawable.small_icon);
             builder.setTicker("알람");
             builder.setContentText(title + " 복용중입니다.");

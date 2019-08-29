@@ -561,8 +561,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String titlePre = data.getStringExtra("titlePre");
             Boolean isDrinking = data.getBooleanExtra("isDrinking",false);
             Boolean isSmoking = data.getBooleanExtra("isSmoking",false);
+
+            MakeInexactAlarm(titlePre,isDrinking,isSmoking);
             MakeAlarmService(titlePre);
-            MakeInexactAlarm(isDrinking,isSmoking);
         }  else if (requestCode == CAMERA_IMAGE_REQUEST2 && resultCode == RESULT_OK) {
             Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
             Bitmap bitmap=null;
@@ -910,9 +911,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeAsUpIndicator(menuImage);
     }
 
-    public void MakeInexactAlarm(Boolean isDrinking,Boolean isSmoking){
+    public void MakeInexactAlarm(String title,Boolean isDrinking,Boolean isSmoking){
         Intent inExactIntent = new Intent(MainActivity.this, Handle_Alarm.class);
         inExactIntent.putExtra("inExactNotification",true);
+        inExactIntent.putExtra("title", title);
 
         Log.d("what", "MakeInexactAlarm: isDrinking: "+isDrinking+", idSmoking : "+isSmoking);
         int codeIndex = user.getPrescriptions().size();
