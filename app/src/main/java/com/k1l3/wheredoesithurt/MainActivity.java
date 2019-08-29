@@ -110,9 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
-        //List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
-        //Log.d("gallery", "convertResponseToString: " + pages.size());
-
         List<EntityAnnotation> labels;
         try{
             labels = response.getResponses().get(0).getTextAnnotations();
@@ -262,8 +259,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         toolbar = findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
@@ -431,12 +426,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             withdrawal();
         } else if (id == R.id.nav_history) {
             replaceFragment(new Fragment_history());
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

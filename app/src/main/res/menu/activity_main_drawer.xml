@@ -5,28 +5,14 @@
 
     <group android:checkableBehavior="none">
         <item
+            android:id="@+id/nav_history"
+            android:title="히스토리" />
+        <item
             android:id="@+id/nav_home"
             android:title="로그아웃" />
         <item
             android:id="@+id/nav_gallery"
             android:title="회원탈퇴" />
-        <item
-            android:id="@+id/nav_history"
-            android:title="History" />
-        <item
-            android:id="@+id/nav_tools"
-            android:title="d" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:title="a" />
-            <item
-                android:id="@+id/nav_send"
-                android:title="s" />
-        </menu>
-    </item>
 
 </menu>

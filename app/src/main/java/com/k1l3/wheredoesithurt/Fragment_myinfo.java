@@ -28,9 +28,6 @@ import java.util.Arrays;
 
 public class Fragment_myinfo extends Fragment {
     private View viewGroup;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
-    private String id;
     private EditText name;
     private Button year, month, day, savebtn;
     private RadioButton female, male;
@@ -43,9 +40,6 @@ public class Fragment_myinfo extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         viewGroup = inflater.inflate(R.layout.fragment_myinfo, container, false);
         ((MainActivity) getActivity()).toolbar_myinfo();
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
-        id = ((MainActivity) getActivity()).getId();
         name = viewGroup.findViewById(R.id.name);
         year = viewGroup.findViewById(R.id.year);
         month = viewGroup.findViewById(R.id.month);

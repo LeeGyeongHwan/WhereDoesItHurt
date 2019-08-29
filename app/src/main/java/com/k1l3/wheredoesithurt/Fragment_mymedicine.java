@@ -79,7 +79,7 @@ public class Fragment_mymedicine extends Fragment {
     }
 
     class Adapter extends BaseAdapter {
-        ArrayList<MyMedicine_item> items = new ArrayList<MyMedicine_item>();
+        ArrayList<MyMedicine_item> items = new ArrayList<>();
 
         @Override
         public int getCount() {
