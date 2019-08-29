@@ -900,60 +900,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
 
+
             if(isDrinking && (lifeStyle.get(1)==1)){//술
                 requestCode+=2;
                 inExactIntent.putExtra("smokeOrDrink",false);
                 inExactIntent.putExtra("requestCode",requestCode);
                 Calendar calendar = Calendar.getInstance();
 
-        if(isDrinking && (lifeStyle.get(1)==1)){//술
-            requestCode+=2;
-            inExactIntent.putExtra("smokeOrDrink",false);
-            Calendar calendar = Calendar.getInstance();
-
                 PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
                 AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-
+                Log.d("what", "MakeInexactAlarm: 술!");
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                         calendar.getTimeInMillis(),
                         2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+                }
             }
-        }
-
-//        if(isSmoking && (lifeStyle.get(0)==1)){//담배
-//            requestCode++;
-//            inExactIntent.putExtra("smokeOrDrink",true);
-//            Calendar calendar = Calendar.getInstance();
-//
-//            Log.d("what", "MakeInexactAlarm: 담배!");
-//
-//            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
-//
-//            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
-//
-//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//                    calendar.getTimeInMillis(),
-//                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
-//
-//        }
-//
-//        if(isDrinking && (lifeStyle.get(1)==1)){//술
-//            requestCode+=2;
-//            inExactIntent.putExtra("smokeOrDrink",false);
-//            Calendar calendar = Calendar.getInstance();
-//
-//            Log.d("what", "MakeInexactAlarm: 술!");
-//
-//            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
-//
-//            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
-//
-//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//                    calendar.getTimeInMillis(),
-//                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
-//        }
-
 
     }
 
@@ -1048,8 +1010,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public int getFragment(){
         return checkFragment;
     }
+    public void clearFragment(){
+        checkFragment=-1;
+    }
     public int getMedNum(){
         return checkMed;
+    }
+    public void clearMedNum(){
+        checkMed=-1;
     }
 
     private class LabelDetectionTask extends AsyncTask<Object, Void, String> {

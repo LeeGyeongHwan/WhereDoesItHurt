@@ -97,76 +97,6 @@ public class Fragment_main extends Fragment {
         scrollView = viewGroup.findViewById(R.id.scrollView2);
         scrollView2 = viewGroup.findViewById(R.id.scrollView3);
 
-        int NotiCheck = (((MainActivity) getActivity()).getFragment());
-        int NotiMed = (((MainActivity) getActivity()).getMedNum());
-
-        if ((NotiCheck != -1) && (NotiMed != -1)) {
-            for (int i = 0; i < NotiMed; i++) {
-                getRightCurrentCount();
-                if (currentAvail < availCounting - 1) {
-                    currentAvail++;
-                }
-                currentImage();
-
-                my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
-                adapter = new Adapter();
-                getMedicineName();
-
-                //주의해야할 음식
-                my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
-                foodAdapter = new foodAdapter();
-                getCautionFood();
-
-                setButton();
-
-                setGraph();
-
-                setPrescriptionName();
-
-            }
-            currentAvail = NotiMed;
-            currentImage();
-            setButton();
-            Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : " + NotiMed + ", noticheck : " + NotiCheck);
-            int clicking = 0;
-
-            switch (NotiCheck) {
-                case 0:
-                    btn1.setBackgroundResource(R.drawable.flip_white);
-                    iseat1.setText("먹었어요");
-                    when1.setTextColor(Color.parseColor("#776DE0"));
-                    time1.setTextColor(Color.parseColor("#776DE0"));
-                    iseat1.setTextColor(Color.parseColor("#776DE0"));
-                    check[0]++;
-                    clicking++;
-                    currentClick++;
-                    break;
-                case 1:
-                    btn2.setBackgroundResource(R.drawable.flip_white);
-                    iseat2.setText("먹었어요");
-                    when2.setTextColor(Color.parseColor("#776DE0"));
-                    time2.setTextColor(Color.parseColor("#776DE0"));
-                    iseat2.setTextColor(Color.parseColor("#776DE0"));
-                    check[1]++;
-                    clicking++;
-                    currentClick++;
-                    break;
-                case 2:
-                    btn3.setBackgroundResource(R.drawable.flip_white);
-                    iseat3.setText("먹었어요");
-                    when3.setTextColor(Color.parseColor("#776DE0"));
-                    time3.setTextColor(Color.parseColor("#776DE0"));
-                    iseat3.setTextColor(Color.parseColor("#776DE0"));
-                    check[2]++;
-                    clicking++;
-                    currentClick++;
-                    break;
-            }
-            buttonDatabase(check, clicking);
-            Log.d("what", "onClick: buttondatabase");
-        }
-
-
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -188,6 +118,8 @@ public class Fragment_main extends Fragment {
     @Override
     public void onStart() {
         Log.d("what", "Fragment main onStart: ");
+
+
 
         if (User.getInstance().getPrescriptions().size() != 0) {
 //            if (currentCount == -1) {
@@ -299,6 +231,77 @@ public class Fragment_main extends Fragment {
             currentImage();
         } else {
             progressBar.setProgress(0);
+        }
+        int NotiCheck=(((MainActivity) getActivity()).getFragment());
+        int NotiMed=(((MainActivity) getActivity()).getMedNum());
+
+        if((NotiCheck!=-1)&&(NotiMed!=-1)){
+            for(int i=0;i<NotiMed;i++){
+                getRightCurrentCount();
+                if (currentAvail < availCounting - 1) {
+                    currentAvail++;
+                }
+                currentImage();
+
+                my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                adapter = new Adapter();
+                getMedicineName();
+
+                //주의해야할 음식
+                my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                foodAdapter = new foodAdapter();
+                getCautionFood();
+
+                setButton();
+
+                setGraph();
+
+                setPrescriptionName();
+
+            }
+            currentAvail=NotiMed;
+            currentImage();
+            setButton();
+            Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : "+NotiMed+", noticheck : "+NotiCheck);
+            int clicking=0;
+
+            switch (NotiCheck) {
+                case 0:
+                    btn1.setBackgroundResource(R.drawable.flip_white);
+                    iseat1.setText("먹었어요");
+                    when1.setTextColor(Color.parseColor("#776DE0"));
+                    time1.setTextColor(Color.parseColor("#776DE0"));
+                    iseat1.setTextColor(Color.parseColor("#776DE0"));
+                    check[0]++;
+                    clicking++;
+                    currentClick++;
+                    break;
+                case 1:
+                    btn2.setBackgroundResource(R.drawable.flip_white);
+                    iseat2.setText("먹었어요");
+                    when2.setTextColor(Color.parseColor("#776DE0"));
+                    time2.setTextColor(Color.parseColor("#776DE0"));
+                    iseat2.setTextColor(Color.parseColor("#776DE0"));
+                    check[1]++;
+                    clicking++;
+                    currentClick++;
+                    break;
+                case 2:
+                    btn3.setBackgroundResource(R.drawable.flip_white);
+                    iseat3.setText("먹었어요");
+                    when3.setTextColor(Color.parseColor("#776DE0"));
+                    time3.setTextColor(Color.parseColor("#776DE0"));
+                    iseat3.setTextColor(Color.parseColor("#776DE0"));
+                    check[2]++;
+                    clicking++;
+                    currentClick++;
+                    break;
+            }
+            buttonDatabase(check, clicking);
+
+            Log.d("what", "onClick: buttondatabase");
+            ((MainActivity)getActivity()).clearFragment();
+            ((MainActivity)getActivity()).clearMedNum();
         }
 
         super.onStart();
