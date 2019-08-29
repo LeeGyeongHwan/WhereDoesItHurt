@@ -41,9 +41,6 @@ public class Fragment_main extends Fragment {
     private final User user = User.getInstance();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
     private final String today = dateFormat.format(new Date());
-    private final int todayYear = calendar.get(Calendar.YEAR);
-    private final int todayMonth = calendar.get(Calendar.MONTH) + 1;
-    private final int todayDay = calendar.get(Calendar.DATE);
 
     private View viewGroup;
     private View btn1, btn2, btn3;
@@ -91,7 +88,6 @@ public class Fragment_main extends Fragment {
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
         constraintLayout = viewGroup.findViewById(R.id.constraint_layout);
-
 
         int NotiCheck=(((MainActivity) getActivity()).getFragment());
         int NotiMed=(((MainActivity) getActivity()).getMedNum());

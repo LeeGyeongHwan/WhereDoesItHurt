@@ -17,14 +17,18 @@ import com.k1l3.wheredoesithurt.calendarDecorator.EventDecorator;
 import com.k1l3.wheredoesithurt.calendarDecorator.OneDayDecorator;
 import com.k1l3.wheredoesithurt.calendarDecorator.SaturdayDecorator;
 import com.k1l3.wheredoesithurt.calendarDecorator.SundayDecorator;
+import com.k1l3.wheredoesithurt.models.User;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_calendar extends Fragment {
     private View viewGroup;
@@ -32,6 +36,9 @@ public class Fragment_calendar extends Fragment {
     private FragmentTransaction transaction;
     private MaterialCalendarView materialCalendarView;
     private OneDayDecorator selectedDayDecorator = new OneDayDecorator();
+    private User user = User.getInstance();
+    private ArrayList<String> result = new ArrayList<>();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
     @Nullable
     @Override
@@ -41,33 +48,14 @@ public class Fragment_calendar extends Fragment {
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
         ((MainActivity) getActivity()).toolbar_calendar();
-        initCalendar();
+
+        extractDate();
 
         materialCalendarView = viewGroup.findViewById(R.id.calendarView);
 
         materialCalendarView.addDecorators(new SundayDecorator(), new SaturdayDecorator(), selectedDayDecorator);
 
-        String[] result = {"2017,03,18", "2017,04,18", "2019,08,25", "2019,08,28"};
-
         new ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor());
-
-        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                int Year = date.getYear();
-                int Month = date.getMonth() + 1;
-                int Day = date.getDay();
-
-                Log.i("Year test", Year + "");
-                Log.i("Month test", Month + "");
-                Log.i("Day test", Day + "");
-
-                String shot_Day = Year + "," + Month + "," + Day;
-
-                Log.i("shot_Day test", shot_Day + "");
-                materialCalendarView.clearSelection();
-            }
-        });
 
         materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -79,14 +67,40 @@ public class Fragment_calendar extends Fragment {
         return viewGroup;
     }
 
-    private void initCalendar() {
+    private void extractDate() {
+        for (int i = 0; i < user.getPrescriptions().size(); ++i) {
+            Calendar calendar = Calendar.getInstance();
 
+            String startDay = user.getPrescriptions().get(i).getBegin();
+            String endDay = user.getPrescriptions().get(i).getEnd();
+
+            String date = startDay;
+
+            while (date.compareTo(endDay) <= 0) {
+                Log.d(TAG, "extractDate: " + endDay);
+
+                result.add(date);
+
+                String[] time = date.split("\\.");
+
+                int year = Integer.parseInt(time[0]);
+                int month = Integer.parseInt(time[1]);
+                int day = Integer.parseInt(time[2]);
+
+                calendar.set(year, month-1, day);
+
+                calendar.add(Calendar.DATE, 1);
+
+                date = dateFormat.format(calendar.getTime());
+                Log.d(TAG, "extractDate: "+date);
+            }
+        }
     }
 
     private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
-        String[] Time_Result;
+        ArrayList<String> Time_Result;
 
-        ApiSimulator(String[] Time_Result) {
+        ApiSimulator(ArrayList<String> Time_Result) {
             this.Time_Result = Time_Result;
         }
 
@@ -98,22 +112,18 @@ public class Fragment_calendar extends Fragment {
                 e.printStackTrace();
             }
 
-            Calendar calendar = Calendar.getInstance();
             ArrayList<CalendarDay> dates = new ArrayList<>();
 
-            /*특정날짜 달력에 점표시해주는곳*/
-            /*월은 0이 1월 년,일은 그대로*/
-            //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
-            for (int i = 0; i < Time_Result.length; i++) {
-                CalendarDay day = CalendarDay.from(calendar);
+            for (int i = 0; i < Time_Result.size(); i++) {
+                String[] time = Time_Result.get(i).split("\\.");
 
-                String[] time = Time_Result[i].split(",");
                 int year = Integer.parseInt(time[0]);
                 int month = Integer.parseInt(time[1]);
-                int dayy = Integer.parseInt(time[2]);
+                int day = Integer.parseInt(time[2]);
 
-                dates.add(day);
-                calendar.set(year, month - 1, dayy);
+                CalendarDay date = CalendarDay.from(year, month - 1, day);
+
+                dates.add(date);
             }
 
             return dates;
