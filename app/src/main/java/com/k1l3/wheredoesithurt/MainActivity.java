@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String image;
     String name;
     Long id;
+    int checkFragment;
+    int checkMed;
     String email;
     FragmentManager manager;
     FragmentTransaction transaction;
@@ -247,6 +249,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         toolbar = findViewById(R.id.toolbar);
         fragment_main = new Fragment_main();
         fragment_search = new Fragment_search();
@@ -256,6 +260,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         myCalendar = findViewById(R.id.myCalendar);
 
         Intent intent = getIntent();
+        checkFragment = intent.getIntExtra("Fragment",-1);
+        checkMed = intent.getIntExtra("FragmentMed",-1);
+        Log.d("what", "Main onCreate checkfragement: "+checkFragment+", checkmed : "+checkMed);
 
         image = intent.getStringExtra("profile");
         name = intent.getStringExtra("name");
@@ -869,6 +876,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //처음에 한해서 하는데 나머지 시간은 넘김
             }
         }
+        intent.putExtra("codeIndex",codeIndex);
         intent.putExtra("startIndex",index);
         intent.putExtra("visited",visit);
         intent.putStringArrayListExtra("alarmTime",preTime);
@@ -885,7 +893,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String time=preTime.get(index);
 
-        //setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
+        setOnceAlarm(Integer.parseInt(time.substring(0,2)),Integer.parseInt(time.substring(2,4)),makeAlarm,!visit);
 
     }
 
@@ -922,6 +930,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public String getId() {
         return id.toString();
+    }
+    public int getFragment(){
+        return checkFragment;
+    }
+    public int getMedNum(){
+        return checkMed;
     }
 
     private class LabelDetectionTask extends AsyncTask<Object, Void, String> {

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -91,6 +92,76 @@ public class Fragment_main extends Fragment {
         transaction = manager.beginTransaction();
         constraintLayout = viewGroup.findViewById(R.id.constraint_layout);
 
+
+        int NotiCheck=(((MainActivity) getActivity()).getFragment());
+        int NotiMed=(((MainActivity) getActivity()).getMedNum());
+
+        if((NotiCheck!=-1)&&(NotiMed!=-1)){
+            for(int i=0;i<NotiMed;i++){
+                getRightCurrentCount();
+                if (currentAvail < availCounting - 1) {
+                    currentAvail++;
+                }
+                currentImage();
+
+                my_medicine_info = viewGroup.findViewById(R.id.my_medicine_info);
+                adapter = new Adapter();
+                getMedicineName();
+
+                //주의해야할 음식
+                my_caution_food = viewGroup.findViewById(R.id.my_catuion_food);
+                foodAdapter = new foodAdapter();
+                getCautionFood();
+
+                setButton();
+
+                setGraph();
+
+                setPresccriptionName();
+            }
+            currentAvail=NotiMed;
+            currentImage();
+            Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : "+NotiMed+", noticheck : "+NotiCheck);
+            int clicking=0;
+            switch (NotiCheck) {
+                case 0:
+                    btn1.setBackgroundResource(R.drawable.flip_white);
+                    iseat1.setText("먹었어요");
+                    when1.setTextColor(Color.parseColor("#776DE0"));
+                    time1.setTextColor(Color.parseColor("#776DE0"));
+                    iseat1.setTextColor(Color.parseColor("#776DE0"));
+                    check[0]++;
+                    clicking++;
+                    currentClick++;
+                    break;
+                case 1:
+                    btn2.setBackgroundResource(R.drawable.flip_white);
+                    iseat2.setText("먹었어요");
+                    when2.setTextColor(Color.parseColor("#776DE0"));
+                    time2.setTextColor(Color.parseColor("#776DE0"));
+                    iseat2.setTextColor(Color.parseColor("#776DE0"));
+                    check[1]++;
+                    clicking++;
+                    currentClick++;
+                    break;
+                case 2:
+                    btn3.setBackgroundResource(R.drawable.flip_white);
+                    iseat3.setText("먹었어요");
+                    when3.setTextColor(Color.parseColor("#776DE0"));
+                    time3.setTextColor(Color.parseColor("#776DE0"));
+                    iseat3.setTextColor(Color.parseColor("#776DE0"));
+                    check[2]++;
+                    clicking++;
+                    currentClick++;
+            }
+
+            buttonDatabase(check, clicking);
+            Log.d("what", "onClick: buttondatabase");
+        }
+
+
+
+
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -111,6 +182,8 @@ public class Fragment_main extends Fragment {
 
     @Override
     public void onStart() {
+        Log.d("what", "Fragment main onStart: ");
+
         if (User.getInstance().getPrescriptions().size() != 0) {
             if (currentCount == -1) {
                 getRightCurrentCount();
@@ -455,6 +528,7 @@ public class Fragment_main extends Fragment {
                 }
 
                 buttonDatabase(check, clicking);
+
             }
         });
     }

@@ -146,46 +146,6 @@ public class SetAlarmPage extends AppCompatActivity {
                 textView.setText(timenow);
 
             }
-            /*
-            if (i < time.length) {
-                textView.setText(time[i]);
-                String ampm = time[i].substring(0, 2);
-                String hour = time[i].substring(3, 5);
-                String min = time[i].substring(6, 8);
-                if (ampm.equals("AM")) {
-                    picker.setHour(Integer.parseInt(hour));
-                    picker.setMinute(Integer.parseInt(min));
-                } else {
-                    picker.setHour(Integer.parseInt(hour) + 12);
-                    if (hour.equals("12"))
-                        picker.setHour(Integer.parseInt(hour));
-                    picker.setMinute(Integer.parseInt(min));
-                }
-            } else {
-                int hour = picker.getHour();
-                int min = picker.getMinute();
-                String ampm;
-                if (hour > 12) { // 0= am 12시 12는 pm 12시
-                    ampm = "PM";
-                    hour = hour - 12;
-                } else if (hour == 12) {
-                    ampm = "PM";
-                } else if (hour == 0) {
-                    ampm = "AM";
-                    hour = 12;
-                } else {
-                    ampm = "AM";
-                }
-                String shour = Integer.toString(hour);
-                String smin = Integer.toString(min);
-                if (hour < 10)
-                    shour = "0" + shour;
-                if (min < 10)
-                    smin = "0" + smin;
-                String timenow = ampm + " " + shour + ":" + smin;
-                textView.setText(timenow);
-            }
-            */
 
             textView.setId(500 + i);
             picker.setId(600 + i);
@@ -242,7 +202,7 @@ public class SetAlarmPage extends AppCompatActivity {
                 public void onClick(View v) {
                     if (picker_linear.getVisibility() == View.GONE) {
                         picker_linear.setVisibility(View.VISIBLE);
-                        pickerBtn.setImageResource(R.drawable.up);
+                        pickerBtn.setImageResource(R.drawable.alarm_up);
                     } else {
                         picker_linear.setVisibility(View.GONE);
                         pickerBtn.setImageResource(R.drawable.alarm_down);
