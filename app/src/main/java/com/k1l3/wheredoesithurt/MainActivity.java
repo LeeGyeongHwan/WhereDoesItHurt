@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -276,6 +277,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         checkFragment = intent.getIntExtra("Fragment",-1);
         checkMed = intent.getIntExtra("FragmentMed",-1);
+        int requestCode = intent.getIntExtra("requestCode",0);
+        if(requestCode!=0){
+            NotificationManager notificationManager =
+                    (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(requestCode);
+        }
         Log.d("what", "Main onCreate checkfragement: "+checkFragment+", checkmed : "+checkMed);
 
         image = intent.getStringExtra("profile");
@@ -899,7 +906,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 inExactIntent.putExtra("requestCode",requestCode);
                 Calendar calendar = Calendar.getInstance();
 
-                Log.d("what", "MakeInexactAlarm: 술!");
+        if(isDrinking && (lifeStyle.get(1)==1)){//술
+            requestCode+=2;
+            inExactIntent.putExtra("smokeOrDrink",false);
+            Calendar calendar = Calendar.getInstance();
 
                 PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
                 AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);

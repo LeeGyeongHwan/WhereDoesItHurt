@@ -55,6 +55,10 @@
             android:name=".Handle_Alarm"
             android:enabled="true"
             android:exported="true"></receiver>
+        <receiver
+            android:name=".cancelNotification"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

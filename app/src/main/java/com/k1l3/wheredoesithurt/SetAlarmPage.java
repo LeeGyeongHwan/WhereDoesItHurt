@@ -316,6 +316,7 @@ public class SetAlarmPage extends AppCompatActivity {
                         setAgain(1, year, monthOfYear + 1, dayOfMonth);
                         from_img.setImageResource(R.drawable.down);
                         from_linear.setVisibility(View.GONE);
+                        isFromPickerSelected = false;
                     }
                 });
             }
@@ -332,6 +333,7 @@ public class SetAlarmPage extends AppCompatActivity {
                         setAgain(2, year, monthOfYear + 1, dayOfMonth);
                         to_img.setImageResource(R.drawable.down);
                         to_linear.setVisibility(View.GONE);
+                        isToPickerSelected = false;
                     }
                 });
             }
