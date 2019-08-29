@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +14,16 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_mymedicine extends Fragment {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -101,7 +96,7 @@ public class Fragment_mymedicine extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             final MyMedicine_itemView view = new MyMedicine_itemView(viewGroup.getContext());
             final MyMedicine_item item = items.get(position);
             view.setName(item.getName());
@@ -156,6 +151,41 @@ public class Fragment_mymedicine extends Fragment {
                     items.remove(item);
 
                     notifyDataSetChanged();
+
+                    //Storage에서 이미지 파일 삭제
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    String filename = ((MainActivity)getActivity()).getId();
+                    String path = "presc/";
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child(path)
+                            .child(String.valueOf(position));
+
+                    storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+                    String path2 = "medicine/";
+                    StorageReference storageRef2 = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child(path2)
+                            .child(String.valueOf(position));
+                    storageRef2.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
                 }
             });
 
