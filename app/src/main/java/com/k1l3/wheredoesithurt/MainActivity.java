@@ -110,14 +110,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
-        List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
-        Log.d("gallery", "convertResponseToString: " + pages.size());
+        //List<Page> pages = response.getResponses().get(0).getFullTextAnnotation().getPages();
+        //Log.d("gallery", "convertResponseToString: " + pages.size());
 
-        List<EntityAnnotation> labels = response.getResponses().get(0).getTextAnnotations();
-        Log.d("gallery", "get0" + response.getResponses().get(0).toString());
-        Log.d("gallery", "label" + labels);
-        Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
-        Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+        List<EntityAnnotation> labels;
+        try{
+            labels = response.getResponses().get(0).getTextAnnotations();
+            Log.d("gallery", "get0" + response.getResponses().get(0).toString());
+            Log.d("gallery", "label" + labels);
+            Log.d("gallery", "get0 getpage" + response.getResponses().get(0).getFullTextAnnotation());
+            Log.d("gallery", "get0 getpage size" + response.getResponses().get(0).getFullTextAnnotation().getPages());
+        }catch (NullPointerException e){
+            Log.d("what", "convertResponseToString: nullpointer exception "+e);
+            return null;
+        }
+
 
         int vertixArray[][] = new int[3][2];
         int Y_eachmedicine[] = new int[5];
@@ -230,6 +237,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
             }
+        }else{
+            return null;
         }
 
         String returnstr = "";
@@ -965,7 +974,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "created Cloud Vision request object, sending request");
                 BatchAnnotateImagesResponse response = mRequest.execute();
                 return convertResponseToString(response);
-
             } catch (GoogleJsonResponseException e) {
                 Log.d(TAG, "failed to make API request because " + e.getContent());
             } catch (IOException e) {
@@ -978,7 +986,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected void onPostExecute(String result) {
             MainActivity activity = mActivityWeakReference.get();
             asyncDialog.dismiss();
-            if (activity != null && !activity.isFinishing()) {
+            if(result == null){
+                Toast.makeText(MainActivity.this,"텍스트를 찾을 수 없습니다.\n다시 시도해 주세요.",Toast.LENGTH_LONG).show();
+
+            }else if (activity != null && !activity.isFinishing()) {
                 Intent intent = new Intent(MainActivity.this, ResultOfVision.class);
                 intent.putExtra("result", result);
                 intent.putExtra("numbermedicine", medicine_count);

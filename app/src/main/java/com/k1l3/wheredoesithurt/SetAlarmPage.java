@@ -36,6 +36,8 @@ public class SetAlarmPage extends AppCompatActivity {
     private DatePicker from_date, to_date;
     private Prescription prescription;
     private Times times;
+    private Boolean isFromPickerSelected = false;
+    private Boolean isToPickerSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,21 +257,25 @@ public class SetAlarmPage extends AppCompatActivity {
     public void imglistener(int i) {
         switch (i) {
             case 1:
-                if (from_linear.getVisibility() == View.GONE) {
+                if ((from_linear.getVisibility() == View.GONE) && !isToPickerSelected) {
                     from_img.setImageResource(R.drawable.up);
                     from_linear.setVisibility(View.VISIBLE);
+                    isFromPickerSelected = true;
                 } else {
                     from_img.setImageResource(R.drawable.down);
                     from_linear.setVisibility(View.GONE);
+                    isFromPickerSelected = false;
                 }
                 break;
             case 2:
-                if (to_linear.getVisibility() == View.GONE) {
+                if ((to_linear.getVisibility() == View.GONE) && !isFromPickerSelected){
                     to_img.setImageResource(R.drawable.up);
                     to_linear.setVisibility(View.VISIBLE);
+                    isToPickerSelected = true;
                 } else {
                     to_img.setImageResource(R.drawable.down);
                     to_linear.setVisibility(View.GONE);
+                    isToPickerSelected = false;
                 }
                 break;
         }

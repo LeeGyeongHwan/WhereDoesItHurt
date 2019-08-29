@@ -118,11 +118,14 @@ public class Fragment_main extends Fragment {
                 setGraph();
 
                 setPrescriptionName();
+
             }
             currentAvail=NotiMed;
             currentImage();
+            setButton();
             Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : "+NotiMed+", noticheck : "+NotiCheck);
             int clicking=0;
+
             switch (NotiCheck) {
                 case 0:
                     btn1.setBackgroundResource(R.drawable.flip_white);
@@ -153,8 +156,8 @@ public class Fragment_main extends Fragment {
                     check[2]++;
                     clicking++;
                     currentClick++;
+                    break;
             }
-
             buttonDatabase(check, clicking);
             Log.d("what", "onClick: buttondatabase");
         }

@@ -44,7 +44,7 @@ public class Handle_Alarm extends BroadcastReceiver {
         if(min<10)
             smin="0"+min;
 
-        String time= hour+":"+min+" "+ampm;
+        String time= shour+":"+smin+" "+ampm;
 
         Log.d("what", "onReceive: " + intent.toString());
 
