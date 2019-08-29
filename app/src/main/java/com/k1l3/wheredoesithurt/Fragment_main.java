@@ -184,9 +184,10 @@ public class Fragment_main extends Fragment {
         Log.d("what", "Fragment main onStart: ");
 
         if (User.getInstance().getPrescriptions().size() != 0) {
-            if (currentCount == -1) {
-                getRightCurrentCount();
-            }
+//            if (currentCount == -1) {
+//                getRightCurrentCount();
+//            }
+            currentCount=0;
 
             getAvailable();
 
@@ -290,6 +291,8 @@ public class Fragment_main extends Fragment {
             getAvailable();
 
             currentImage();
+        }else{
+            progressBar.setProgress(0);
         }
 
         super.onStart();

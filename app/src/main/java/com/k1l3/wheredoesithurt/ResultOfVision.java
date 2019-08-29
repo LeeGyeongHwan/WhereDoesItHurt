@@ -46,7 +46,7 @@ public class ResultOfVision extends AppCompatActivity {
     private Boolean isSmoking = false;
     private String dangerForPregnant="약";
     private static final User user = User.getInstance();
-
+    private boolean nextPaging = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,14 +126,23 @@ public class ResultOfVision extends AppCompatActivity {
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ResultOfVision.this, SetAlarmPage.class);
-                intent.putExtra("index", index);
-                intent.putExtra("alarmcount", EditList3.get(0).getText().toString());
-                intent.putExtra("alarmday", EditList4.get(0).getText().toString());
+                nextPaging=true;
+                for(int i=0;i<EditList1.size();i++){
+                    if(EditList1.get(i).getText().toString().equals("")){
+                        Toast.makeText(getApplicationContext(),"약이름을 입력해주세요",Toast.LENGTH_LONG).show();
+                        nextPaging=false;
+                    }
+                }
+                if(nextPaging) {
+                    Intent intent = new Intent(ResultOfVision.this, SetAlarmPage.class);
+                    intent.putExtra("index", index);
+                    intent.putExtra("alarmcount", EditList3.get(0).getText().toString());
+                    intent.putExtra("alarmday", EditList4.get(0).getText().toString());
 
-                name = title_pre.getText().toString();
+                    name = title_pre.getText().toString();
 
-                addMedicines(intent);
+                    addMedicines(intent);
+                }
             }
         });
 
