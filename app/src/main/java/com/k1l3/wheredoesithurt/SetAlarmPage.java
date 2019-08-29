@@ -39,6 +39,7 @@ public class SetAlarmPage extends AppCompatActivity {
     private Boolean isFromPickerSelected = false;
     private Boolean isToPickerSelected = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +60,14 @@ public class SetAlarmPage extends AppCompatActivity {
         from_contain = findViewById(R.id.from_linear);
         to_contain = findViewById(R.id.to_linear);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         String title_pre = intent.getStringExtra("title");
         String alarmnum = intent.getStringExtra("alarmcount");
         String alarmday = intent.getStringExtra("alarmday");
+        final Boolean isDrinking = intent.getBooleanExtra("isDrinking",false);
+        final Boolean isSmoking = intent.getBooleanExtra("isSmoking",false);
+
+        title.setText(title_pre);
         prescription = (Prescription) intent.getSerializableExtra("prescription");
         times = new Times();
 
@@ -213,7 +218,7 @@ public class SetAlarmPage extends AppCompatActivity {
             });
         }
 
-        title.setText(title_pre);
+
 
         from_contain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +252,8 @@ public class SetAlarmPage extends AppCompatActivity {
                 Intent moveintent = new Intent(SetAlarmPage.this, Addword_Activity.class);
                 moveintent.putExtra("prescription", prescription);
                 moveintent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                moveintent.putExtra("isDrinking",isDrinking);
+                moveintent.putExtra("isSmoking",isSmoking);
                 startActivity(moveintent);
                 finish();
             }

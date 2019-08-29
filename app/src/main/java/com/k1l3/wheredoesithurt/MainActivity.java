@@ -555,7 +555,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             uploadImage(photoUri);
         } else if (requestCode == ACT_ALARM && resultCode == RESULT_OK) {
             String titlePre = data.getStringExtra("titlePre");
+            Boolean isDrinking = data.getBooleanExtra("isDrinking",false);
+            Boolean isSmoking = data.getBooleanExtra("isSmoking",false);
             MakeAlarmService(titlePre);
+            MakeInexactAlarm(isDrinking,isSmoking);
         }
     }
 
@@ -843,6 +846,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeAsUpIndicator(menuImage);
     }
 
+    public void MakeInexactAlarm(Boolean isDrinking,Boolean isSmoking){
+        Intent inExactIntent = new Intent(MainActivity.this, Handle_Alarm.class);
+        inExactIntent.putExtra("inExactNotification",true);
+
+
+        int codeIndex = user.getPrescriptions().size();
+        int requestCode =(int)(long) id /1000;
+        requestCode=requestCode*100+codeIndex*10;
+
+        //흡연 음주 임신 비만
+        ArrayList<Integer> lifeStyle = user.getUserInfo().getLifeStyles().getLifeStyles();
+
+        PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+        //default time
+        //술 : 저녁
+        //담배 : 밥
+        //임신 : 매번 or 약등록시
+
+        boolean tomorrow=false;
+        int hour=12;
+        int min=50;
+
+
+        AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                getTimeInMillis(tomorrow,hour,min),
+                2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
+        for(int i=0;i<lifeStyle.size();i++){//lifestyle.get(i)가 1일시에 하는데 i =1 ,i= 2i= 3 i=4
+
+
+
+
+        }
+
+
+    }
+
     public void MakeAlarmService(String title) {
         Intent intent = new Intent(MainActivity.this, Handle_Alarm.class);
         intent.putExtra("title", title);
@@ -884,13 +925,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intent.putExtra("visited",visit);
         intent.putStringArrayListExtra("alarmTime",preTime);
 
-
         //visit==false -> 내일 처음시간
         //visit == true -> 인덱스 부터 알람시작
-
-        //리퀘스트 코드 -> 개인 id *100 + index 으로 차이주기
-
-
 
         PendingIntent makeAlarm = PendingIntent.getBroadcast(MainActivity.this, requestCode, intent, 0);
 

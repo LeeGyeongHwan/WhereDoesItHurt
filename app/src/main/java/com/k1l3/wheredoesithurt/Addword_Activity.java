@@ -57,6 +57,8 @@ public class Addword_Activity extends AppCompatActivity {
 
         Intent intent = getIntent();
         prescription = (Prescription) intent.getSerializableExtra("prescription");
+        final Boolean isDrinking = intent.getBooleanExtra("isDrinking",false);
+        final Boolean isSmoking = intent.getBooleanExtra("isSmoking",false);
 
         Custom_text("처방전");
         Custom_text("단어");
@@ -179,6 +181,8 @@ public class Addword_Activity extends AppCompatActivity {
                 Intent outIntent = getIntent();
 
                 outIntent.putExtra("titlePre", prescription.getName());
+                outIntent.putExtra("isDrinking",isDrinking);
+                outIntent.putExtra("isSmoking",isSmoking);
                 setResult(RESULT_OK, outIntent);
                 finish();
             }

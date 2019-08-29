@@ -3,6 +3,7 @@ package com.k1l3.wheredoesithurt;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +13,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.k1l3.wheredoesithurt.models.Medicine;
 import com.k1l3.wheredoesithurt.models.Prescription;
+import com.k1l3.wheredoesithurt.models.User;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -38,6 +41,11 @@ public class ResultOfVision extends AppCompatActivity {
     private String name;
     private String uri;
     private ArrayList<Pair> medicine_kind;
+    private Boolean isPregnant = false;
+    private Boolean isDrinking = false;
+    private Boolean isSmoking = false;
+    private String dangerForPregnant="약";
+    private static final User user = User.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,21 +169,31 @@ public class ResultOfVision extends AppCompatActivity {
             @Override
             public void run() {
                 medicine_kind = getXmlData(EditList1);
+                Log.d("what", "run: thread 들옴");
 
-                for (int i = 0; i < EditList1.size(); ++i) {
-                    medicines.add(new Medicine(EditList1.get(i).getText().toString(),
-                            Integer.parseInt(EditList2.get(i).getText().toString()),
-                            Integer.parseInt(EditList3.get(i).getText().toString()),
-                            Integer.parseInt(EditList4.get(i).getText().toString()),
-                            medicine_kind.get(i).getKind(), medicine_kind.get(i).getCaution()));
+                int isDefaultPregnant = user.getUserInfo().getLifeStyles().getLifeStyles().get(2);
+                if(isPregnant && (isDefaultPregnant == 1)){
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(),dangerForPregnant+ " 은/는 임산부에게 위험한 약입니다.\n의사나 약사와 다시 상의해보세요",Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }else{
+                    for (int i = 0; i < EditList1.size(); ++i) {
+                        medicines.add(new Medicine(EditList1.get(i).getText().toString(),
+                                Integer.parseInt(EditList2.get(i).getText().toString()),
+                                Integer.parseInt(EditList3.get(i).getText().toString()),
+                                Integer.parseInt(EditList4.get(i).getText().toString()),
+                                medicine_kind.get(i).getKind(), medicine_kind.get(i).getCaution()));
+                    }
+                    prescription.setMedicines(medicines);
+                    prescription.setName(name);
+                    prescription.setTotalClick(0);
+                    prescription.setPrescriptionImage(uri);
+                    intent.putExtra("prescription", prescription);
+                    intent.putExtra("isDrinking",isDrinking);
+                    intent.putExtra("isSmoking",isSmoking);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(intent);
                 }
-                prescription.setMedicines(medicines);
-                prescription.setName(name);
-                prescription.setTotalClick(0);
-                prescription.setPrescriptionImage(uri);
-                intent.putExtra("prescription", prescription);
-                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                startActivity(intent);
             }
         }).start();
     }
@@ -233,6 +251,25 @@ public class ResultOfVision extends AppCompatActivity {
                             } else if (tag.equals("totalCount")) {
                                 xpp.next();
                                 itemCount = Integer.valueOf(xpp.getText());
+                            }  else if(tag.equals("NB_DOC_DATA")){
+                                stopping=3;
+                            } else if(tag.equals("PN_DOC_DATA")){
+                                stopping=0;
+                            } else if(stopping==3){
+                                xpp.next();
+                                String warning = xpp.getText();
+                                Log.d("what", "getXmlData: warning :"+warning);
+                                //임부, 임산부, 임신   흡연,담배   알코올 음주
+                                if(warning.contains("임부") || warning.contains("임산부") || warning.contains("임신")){
+                                    isPregnant=true;
+                                    dangerForPregnant=EditList.get(i).getText().toString();
+
+                                    Log.d("what", "getXmlData: dangerForPregnant"+dangerForPregnant);
+                                }else if(warning.contains("흡연") || warning.contains("담배")){
+                                    isSmoking = true;
+                                }else if(warning.contains("알코올")||warning.contains("음주")){
+                                    isDrinking = true;
+                                }
                             }
                             break;
 
