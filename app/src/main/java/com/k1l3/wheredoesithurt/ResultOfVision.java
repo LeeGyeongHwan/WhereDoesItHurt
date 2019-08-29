@@ -1,11 +1,13 @@
 package com.k1l3.wheredoesithurt;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -44,9 +46,12 @@ public class ResultOfVision extends AppCompatActivity {
     private Boolean isPregnant = false;
     private Boolean isDrinking = false;
     private Boolean isSmoking = false;
-    private String dangerForPregnant="약";
+    private String dangerForPregnant = "약";
     private static final User user = User.getInstance();
     private boolean nextPaging = true;
+    private Handler handler;
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +61,16 @@ public class ResultOfVision extends AppCompatActivity {
         nextPage = findViewById(R.id.nextpage);
         addMedBtn = findViewById(R.id.addMedBtn);
         title_pre = findViewById(R.id.title_prescription);
-
+        dialog = new ProgressDialog(ResultOfVision.this);
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                dialog.dismiss();
+            }
+        };
         prescription = new Prescription();
         Intent intent = getIntent();
         String getStr = intent.getStringExtra("result");
         int getCount = intent.getIntExtra("numbermedicine", 1);
-        Log.d("check", "onCreate: " + getStr);
         medicines = new ArrayList<>();
         uri = intent.getStringExtra("bitmap_name");
         cancelBtn = findViewById(R.id.cancelvision);
@@ -125,21 +134,25 @@ public class ResultOfVision extends AppCompatActivity {
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextPaging=true;
-                for(int i=0;i<EditList1.size();i++){
-                    if(EditList1.get(i).getText().toString().equals("")){
-                        Toast.makeText(getApplicationContext(),"약이름을 입력해주세요",Toast.LENGTH_LONG).show();
-                        nextPaging=false;
+                ProgressDialog dialog = new ProgressDialog(ResultOfVision.this);
+                dialog.setCancelable(false);
+                dialog.setMessage("정보를 저장중입니다.");
+                dialog.show();
+                nextPaging = true;
+                for (int i = 0; i < EditList1.size(); i++) {
+                    if (EditList1.get(i).getText().toString().equals("")) {
+                        Toast.makeText(getApplicationContext(), "약이름을 입력해주세요", Toast.LENGTH_LONG).show();
+                        nextPaging = false;
                     }
                 }
-                if(nextPaging) {
+                if (nextPaging) {
                     Intent intent = new Intent(ResultOfVision.this, SetAlarmPage.class);
                     intent.putExtra("index", index);
                     intent.putExtra("alarmcount", EditList3.get(0).getText().toString());
                     intent.putExtra("alarmday", EditList4.get(0).getText().toString());
 
-                name = title_pre.getText().toString();
-                intent.putExtra("title",name);
+                    name = title_pre.getText().toString();
+                    intent.putExtra("title", name);
 
                     addMedicines(intent);
                 }
@@ -177,17 +190,25 @@ public class ResultOfVision extends AppCompatActivity {
 
             @Override
             public void run() {
-                medicine_kind = getXmlData(EditList1);
-                Log.d("what", "run: thread 들옴");
                 int isDefaultPregnant = 0;
-                if(user.getUserInfo().getLifeStyles()!=null) {
+                if (user.getUserInfo().getLifeStyles() != null) {
                     isDefaultPregnant = user.getUserInfo().getLifeStyles().getLifeStyles().get(2);
                 }
-                if(isPregnant && (isDefaultPregnant == 1)){
+                if (isPregnant && (isDefaultPregnant == 1)) {
                     Looper.prepare();
-                    Toast.makeText(getApplicationContext(),dangerForPregnant+ " 은/는 임산부에게 위험한 약입니다.\n의사나 약사와 다시 상의해보세요",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), dangerForPregnant + " 은/는 임산부에게 위험한 약입니다.\n의사나 약사와 다시 상의해보세요", Toast.LENGTH_LONG).show();
                     Looper.loop();
-                }else{
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            dialog.setCancelable(false);
+                            dialog.setMessage("정보를 저장중입니다.");
+                            dialog.show();
+                        }
+                    });
+                    medicine_kind = getXmlData(EditList1);
                     for (int i = 0; i < EditList1.size(); ++i) {
                         medicines.add(new Medicine(EditList1.get(i).getText().toString(),
                                 Integer.parseInt(EditList2.get(i).getText().toString()),
@@ -200,11 +221,12 @@ public class ResultOfVision extends AppCompatActivity {
                     prescription.setTotalClick(0);
                     prescription.setPrescriptionImage(uri);
                     intent.putExtra("prescription", prescription);
-                    intent.putExtra("isDrinking",isDrinking);
-                    intent.putExtra("isSmoking",isSmoking);
+                    intent.putExtra("isDrinking", isDrinking);
+                    intent.putExtra("isSmoking", isSmoking);
                     intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                     startActivity(intent);
                 }
+                handler.sendEmptyMessage(0);
             }
         }).start();
     }
@@ -262,20 +284,18 @@ public class ResultOfVision extends AppCompatActivity {
                             } else if (tag.equals("totalCount")) {
                                 xpp.next();
                                 itemCount = Integer.valueOf(xpp.getText());
-                            }  else if(tag.equals("NB_DOC_DATA")){
-                                stopping=3;
-                            } else if(tag.equals("PN_DOC_DATA")){
-                                stopping=0;
-                            } else if(stopping==3){
+                            } else if (tag.equals("NB_DOC_DATA")) {
+                                stopping = 3;
+                            } else if (tag.equals("PN_DOC_DATA")) {
+                                stopping = 0;
+                            } else if (stopping == 3) {
                                 xpp.next();
                                 String warning = xpp.getText();
-                                Log.d("what", "getXmlData: warning :"+warning);
                                 //임부, 임산부, 임신   흡연,담배   알코올 음주
-                                if(warning.contains("임부") || warning.contains("임산부") || warning.contains("임신")){
-                                    isPregnant=true;
-                                    dangerForPregnant=EditList.get(i).getText().toString();
+                                if (warning.contains("임부") || warning.contains("임산부") || warning.contains("임신")) {
+                                    isPregnant = true;
+                                    dangerForPregnant = EditList.get(i).getText().toString();
 
-                                    Log.d("what", "getXmlData: dangerForPregnant"+dangerForPregnant);
                                 }
                                 if(warning.contains("흡연") || warning.contains("담배")){
                                     isSmoking = true;
@@ -327,7 +347,6 @@ public class ResultOfVision extends AppCompatActivity {
                                 }
                                 Pair pair = new Pair(kind, caution);
                                 item.add(pair);
-                                Log.e("TEST", kind + " " + caution + " " + item.size());
                                 kind = "";
                                 ee_doc_data = "";
                                 caution = 0;
@@ -344,6 +363,7 @@ public class ResultOfVision extends AppCompatActivity {
                     }
                     eventType = xpp.next();
                 }
+
             } catch (Exception e) {
             }
         }
