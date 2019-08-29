@@ -117,7 +117,7 @@ public class Fragment_main extends Fragment {
 
                 setGraph();
 
-                setPresccriptionName();
+                setPrescriptionName();
             }
             currentAvail=NotiMed;
             currentImage();
