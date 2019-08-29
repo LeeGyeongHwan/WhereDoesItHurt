@@ -22,6 +22,7 @@ public class Handle_Alarm extends BroadcastReceiver {
         Log.d("what", "onReceive extras: "+intent.getExtras().toString());
         boolean isInexactAlarm = intent.getBooleanExtra("inExactNotification",false);
         boolean smokeOrDrink = intent.getBooleanExtra("smokeOrDrink",false);
+        int reqeustCode = intent.getIntExtra("requestCode",0);
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -38,13 +39,12 @@ public class Handle_Alarm extends BroadcastReceiver {
         //알람 종류에 따라
         Log.d("what", "onReceive: inexactAlarm : "+isInexactAlarm);
         if(isInexactAlarm){ //notify 아이콘과 제목 바꾸기 시간은 현재시간?
-            Log.d("what", "onReceive: if문 들어옴");
             String title = intent.getStringExtra("title");
 
 
             Intent main = new Intent(context, MainActivity.class);
             PendingIntent mainPending =
-                    PendingIntent.getActivity(context, 0, main, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent.getActivity(context,reqeustCode , main, PendingIntent.FLAG_UPDATE_CURRENT);
 
             if(smokeOrDrink){
                 builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.no_smoking));
@@ -109,7 +109,7 @@ public class Handle_Alarm extends BroadcastReceiver {
             stackBuilder.addParentStack(MainActivity.class);
             stackBuilder.addNextIntent(main);
 
-            PendingIntent mainPending = stackBuilder.getPendingIntent(0,  PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent mainPending = stackBuilder.getPendingIntent(reqeustCode,  PendingIntent.FLAG_UPDATE_CURRENT);
 
             Intent snoozeIntent = new Intent(context, MainActivity.class);
             snoozeIntent.setAction("nananan");
@@ -131,6 +131,8 @@ public class Handle_Alarm extends BroadcastReceiver {
             builder.setAutoCancel(true);
             builder.setNumber(999);
         }
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(reqeustCode, builder.build());
+
+
     }
 }

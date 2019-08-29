@@ -276,9 +276,11 @@ public class ResultOfVision extends AppCompatActivity {
                                     dangerForPregnant=EditList.get(i).getText().toString();
 
                                     Log.d("what", "getXmlData: dangerForPregnant"+dangerForPregnant);
-                                }else if(warning.contains("흡연") || warning.contains("담배")){
+                                }
+                                if(warning.contains("흡연") || warning.contains("담배")){
                                     isSmoking = true;
-                                }else if(warning.contains("알코올")||warning.contains("음주")){
+                                }
+                                if(warning.contains("알코올")||warning.contains("음주")){
                                     isDrinking = true;
                                 }
                             }

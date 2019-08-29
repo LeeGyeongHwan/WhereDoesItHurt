@@ -877,11 +877,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(isSmoking && (lifeStyle.get(0)==1)){//담배
                 requestCode++;
                 inExactIntent.putExtra("smokeOrDrink",true);
+                inExactIntent.putExtra("requestCode",requestCode);
                 Calendar calendar = Calendar.getInstance();
 
                 Log.d("what", "MakeInexactAlarm: 담배!");
 
                 PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+
 
                 AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
 
@@ -894,13 +896,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(isDrinking && (lifeStyle.get(1)==1)){//술
                 requestCode+=2;
                 inExactIntent.putExtra("smokeOrDrink",false);
+                inExactIntent.putExtra("requestCode",requestCode);
                 Calendar calendar = Calendar.getInstance();
 
                 Log.d("what", "MakeInexactAlarm: 술!");
 
                 PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
-
                 AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+
 
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                         calendar.getTimeInMillis(),
@@ -953,6 +956,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int requestCode =(int)(long) id %10000000;
         requestCode=requestCode*100+codeIndex;
         Log.d("what", "MakeAlarmService: id : "+ id + " ,codeIndex : "+codeIndex+", request code : " + requestCode);
+
+        intent.putExtra("requestCode",requestCode);
 
         ArrayList<String> preTime = user. getPrescriptions().get(codeIndex-1).getTimes().getTimes();
         Log.d("what", "MakeAlarmService: pretime get(i)"+ preTime.get(0));
