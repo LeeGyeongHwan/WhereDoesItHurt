@@ -117,9 +117,7 @@ public class Fragment_main extends Fragment {
 
     @Override
     public void onStart() {
-        Log.d("what", "Fragment main onStart: ");
-
-
+        Log.d("what", "Fragment main onStart: " + User.getInstance().getPrescriptions().size());
 
         if (User.getInstance().getPrescriptions().size() != 0) {
 //            if (currentCount == -1) {
@@ -576,7 +574,7 @@ public class Fragment_main extends Fragment {
 
         user.getPrescriptions().get(currentCount)
                 .getYear()
-                .getMonths().get(calendar.get(Calendar.MONTH) - 1)
+                .getMonths().get(calendar.get(Calendar.MONTH))
                 .getDays().get(calendar.get(Calendar.DATE) - 1)
                 .setDayClick(dayClick);
 
