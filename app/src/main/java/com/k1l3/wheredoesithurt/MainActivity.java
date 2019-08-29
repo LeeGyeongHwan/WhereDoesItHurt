@@ -75,6 +75,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -913,35 +914,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent inExactIntent = new Intent(MainActivity.this, Handle_Alarm.class);
         inExactIntent.putExtra("inExactNotification",true);
 
-
+        Log.d("what", "MakeInexactAlarm: isDrinking: "+isDrinking+", idSmoking : "+isSmoking);
         int codeIndex = user.getPrescriptions().size();
         int requestCode =(int)(long) id /1000;
-        requestCode=requestCode*100+codeIndex*10;
 
-        //흡연 음주 임신 비만
+        requestCode=requestCode*100+codeIndex*10;
+        Log.d("what", "MakeAlarmService: id : "+ id + " ,codeIndex : "+codeIndex+", request code : " + requestCode);
         ArrayList<Integer> lifeStyle = user.getUserInfo().getLifeStyles().getLifeStyles();
 
-        PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
-        //default time
-        //술 : 저녁
-        //담배 : 밥
-        //임신 : 매번 or 약등록시
 
-        boolean tomorrow=false;
-        int hour=12;
-        int min=50;
+        if(isSmoking && (lifeStyle.get(0)==1)){//담배
+            requestCode++;
+            inExactIntent.putExtra("smokeOrDrink",true);
+            Calendar calendar = Calendar.getInstance();
 
+            Log.d("what", "MakeInexactAlarm: 담배!");
 
-        AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
 
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                getTimeInMillis(tomorrow,hour,min),
-                2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
-        for(int i=0;i<lifeStyle.size();i++){//lifestyle.get(i)가 1일시에 하는데 i =1 ,i= 2i= 3 i=4
+            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
 
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
 
+        }
 
+        if(isDrinking && (lifeStyle.get(1)==1)){//술
+            requestCode+=2;
+            inExactIntent.putExtra("smokeOrDrink",false);
+            Calendar calendar = Calendar.getInstance();
 
+            Log.d("what", "MakeInexactAlarm: 술!");
+
+            PendingIntent inExactPending = PendingIntent.getBroadcast(MainActivity.this, requestCode, inExactIntent, 0);
+
+            AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    2*AlarmManager.INTERVAL_HALF_DAY, inExactPending);
         }
 
 

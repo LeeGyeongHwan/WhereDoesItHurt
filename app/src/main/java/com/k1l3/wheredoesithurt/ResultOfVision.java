@@ -66,7 +66,6 @@ public class ResultOfVision extends AppCompatActivity {
         uri = intent.getStringExtra("bitmap_name");
         cancelBtn = findViewById(R.id.cancelvision);
         nextPage = findViewById(R.id.nextpage);
-        title_pre = findViewById(R.id.title_prescription);
 
         for (int i = 0; i < getCount; i++) {
             LinearLayout linearLayout = findViewById(R.id.startinflatelinear);
@@ -139,7 +138,8 @@ public class ResultOfVision extends AppCompatActivity {
                     intent.putExtra("alarmcount", EditList3.get(0).getText().toString());
                     intent.putExtra("alarmday", EditList4.get(0).getText().toString());
 
-                    name = title_pre.getText().toString();
+                name = title_pre.getText().toString();
+                intent.putExtra("title",name);
 
                     addMedicines(intent);
                 }

@@ -21,6 +21,7 @@ public class Handle_Alarm extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("what", "onReceive extras: "+intent.getExtras().toString());
         boolean isInexactAlarm = intent.getBooleanExtra("inExactNotification",false);
+        boolean smokeOrDrink = intent.getBooleanExtra("smokeOrDrink",false);
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -35,9 +36,33 @@ public class Handle_Alarm extends BroadcastReceiver {
         }
 
         //알람 종류에 따라
-
+        Log.d("what", "onReceive: inexactAlarm : "+isInexactAlarm);
         if(isInexactAlarm){ //notify 아이콘과 제목 바꾸기 시간은 현재시간?
+            Log.d("what", "onReceive: if문 들어옴");
+            String title = intent.getStringExtra("title");
 
+
+            Intent main = new Intent(context, MainActivity.class);
+            PendingIntent mainPending =
+                    PendingIntent.getActivity(context, 0, main, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            if(smokeOrDrink){
+                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.no_smoking));
+                builder.setContentTitle("흡연을 자제하세요");
+            }else{
+                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.no_alcohole));
+                builder.setContentTitle("음주를 자제하세요");
+            }
+            //흠연, 음주에 따른 로고변경
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.noti_logo));
+            builder.setSmallIcon(R.drawable.small_icon);
+            builder.setTicker("알람");
+            builder.setContentText(title + " 복용중입니다.");
+            builder.setWhen(System.currentTimeMillis());
+            builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+            builder.setContentIntent(mainPending);
+            builder.setAutoCancel(false);
+            builder.setNumber(999);
 
         }else{
             ArrayList<String> alarmTime = intent.getStringArrayListExtra("alarmTime");
@@ -105,8 +130,6 @@ public class Handle_Alarm extends BroadcastReceiver {
             builder.addAction(R.drawable.btn_x, "미복용", snoozePending);
             builder.setAutoCancel(true);
             builder.setNumber(999);
-
-
         }
         notificationManager.notify(0, builder.build());
 
