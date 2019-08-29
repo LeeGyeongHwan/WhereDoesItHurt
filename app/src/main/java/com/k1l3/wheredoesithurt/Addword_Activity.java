@@ -40,8 +40,6 @@ public class Addword_Activity extends AppCompatActivity {
     private int[] check = new int[15];
     private Prescription prescription;
     private ArrayList<String> hashtags;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +47,11 @@ public class Addword_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_add_word);
 
         textView = findViewById(R.id.textView);
-        flexboxLayout =  findViewById(R.id.add_flexboxlayout);
-        word_flexboxlayout =  findViewById(R.id.word_flexboxlayout);
-        saveButton =  findViewById(R.id.save_button);
-        add_text_hash =  findViewById(R.id.add_text_hash);
+        flexboxLayout = findViewById(R.id.add_flexboxlayout);
+        word_flexboxlayout = findViewById(R.id.word_flexboxlayout);
+        saveButton = findViewById(R.id.save_button);
+        add_text_hash = findViewById(R.id.add_text_hash);
         cancelBtn = findViewById(R.id.canceladdword);
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
         spannableString = new SpannableString(textView.getText().toString());
         hashtags = new ArrayList<>();
 
@@ -74,7 +70,6 @@ public class Addword_Activity extends AppCompatActivity {
             button.setTextColor(Color.parseColor("#292929"));
             button.setText(word_in.get(counting));
             button.setBackgroundResource(R.drawable.alarm_btn);
-//            button.setBackgroundColor(Color.WHITE);
             button.setTextSize(18);
             button.setIncludeFontPadding(false);
 
@@ -88,7 +83,6 @@ public class Addword_Activity extends AppCompatActivity {
 
             final Button word_button = new Button(getApplicationContext());
             word_button.setTextColor(Color.BLACK);
-//            word_button.setBackgroundColor(Color.WHITE);
             button.setBackgroundResource(R.drawable.roundborder_grey);
             word_button.setText("#" + button.getText().toString());
             word_button.setTextSize(15);
@@ -106,14 +100,12 @@ public class Addword_Activity extends AppCompatActivity {
 
             word_button.setBackgroundColor(Color.parseColor("#ffffff"));
             word_button.setIncludeFontPadding(false);
-//            word_button.setPadding(20, 20, 20, 20);
 
             word_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     word_flexboxlayout.removeView(v);
                     button.setTextColor(Color.BLACK);
-//                    button.setBackgroundColor(Color.WHITE);
                     button.setBackgroundResource(R.drawable.roundborder_grey);
                     check[checking]++;
 
@@ -125,7 +117,6 @@ public class Addword_Activity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (check[checking] % 2 == 0) {
                         button.setTextColor(Color.parseColor("#7F74F2"));
-//                        button.setBackgroundColor(Color.BLACK);
                         button.setBackgroundResource(R.drawable.alarm_btn);
                         check[checking]++;
                         word_flexboxlayout.addView(word_button);
@@ -133,7 +124,6 @@ public class Addword_Activity extends AppCompatActivity {
                     } else {
                         button.setTextColor(Color.BLACK);
                         button.setBackgroundResource(R.drawable.roundborder_grey);
-//                        button.setBackgroundColor(Color.WHITE);
                         check[checking]++;
                         word_flexboxlayout.removeView(word_button);
                         hashtags.remove(button.getText().toString());
@@ -151,7 +141,6 @@ public class Addword_Activity extends AppCompatActivity {
                 final Button word_button = new Button(getApplicationContext());
                 word_button.setTextColor(Color.parseColor("#292929"));
                 word_button.setBackgroundColor(Color.WHITE);
-//                word_button.setBackgroundResource(R.drawable.white);
                 word_button.setText("#" + add_text_hash.getText().toString());
                 word_button.setTextSize(15);
                 word_button.setIncludeFontPadding(false);
@@ -160,7 +149,6 @@ public class Addword_Activity extends AppCompatActivity {
                 parms3.setMargins(25, 25, 0, 0);
                 word_button.setLayoutParams(parms3);
                 word_button.setLayoutParams(parms3);
-//                word_button.setPadding(20, 20, 20, 20);
                 word_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -169,9 +157,11 @@ public class Addword_Activity extends AppCompatActivity {
                     }
                 });
                 word_flexboxlayout.addView(word_button);
-                add_text_hash.setText("");
 
                 hashtags.add(add_text_hash.getText().toString());
+
+                add_text_hash.setText("");
+
                 return false;
             }
         });
@@ -196,10 +186,9 @@ public class Addword_Activity extends AppCompatActivity {
     }
 
     private void savePrescription() {
-        Log.i(TAG, "savePrescription");
-
         prescription.setHashTag(hashtags);
         prescription.setYear(new Year());
+
         User.getInstance().getPrescriptions().add(prescription);
 
         User.getInstance().syncWithDatabase();
