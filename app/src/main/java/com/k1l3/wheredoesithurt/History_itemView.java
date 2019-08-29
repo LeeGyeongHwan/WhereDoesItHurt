@@ -97,8 +97,8 @@ public class History_itemView extends LinearLayout {
         return history_medicine_image2;
     }
 
-    public void setHistory_medicine_image2(ImageView history_medicine_image2) {
-        this.history_medicine_image2 = history_medicine_image2;
+    public void setHistory_medicine_image2(Bitmap history_medicine_image2) {
+        this.history_medicine_image2.setImageBitmap(history_medicine_image2);
     }
 
     public LinearLayout getLinearLayout() {

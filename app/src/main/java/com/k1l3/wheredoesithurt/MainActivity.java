@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String FILE_NAME = "temp.jpg";
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    public static final int CAMERA_IMAGE_REQUEST2 = 4;
+    public static final int CAMERA_IMAGE_REQUEST3 = 5;
     private static final String CLOUD_VISION_API_KEY = "AIzaSyBqCdIPxM7wHztVVPtXP4a_KFULRH3mPm0";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button mypagebtn, myCalendar;
     private byte[] b;
     private Bitmap bitmap2;
-
+    private int position;
     private static String convertResponseToString(BatchAnnotateImagesResponse response) {
         Log.d("gallery", "getresponse " + response.getResponses().toString());
 
@@ -559,6 +562,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Boolean isSmoking = data.getBooleanExtra("isSmoking",false);
             MakeAlarmService(titlePre);
             MakeInexactAlarm(isDrinking,isSmoking);
+        }  else if (requestCode == CAMERA_IMAGE_REQUEST2 && resultCode == RESULT_OK) {
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            Bitmap bitmap=null;
+            try {
+                bitmap = MediaStore.Images.Media
+                        .getBitmap(getContentResolver(), photoUri);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bitmap = rotateImage(bitmap,90);
+            byte[] bytes = bitmaptoByte(bitmap);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            String filename = getId();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("presc/")
+                    .child(String.valueOf(position));
+            storageRef.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_container, new Fragment_history())
+                            .commit();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+
+        }else if (requestCode == CAMERA_IMAGE_REQUEST3 && resultCode == RESULT_OK) {
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            Bitmap bitmap=null;
+            try {
+                bitmap = MediaStore.Images.Media
+                        .getBitmap(getContentResolver(), photoUri);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bitmap = rotateImage(bitmap,90);
+            byte[] bytes = bitmaptoByte(bitmap);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            String filename = getId();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("medicine/")
+                    .child(String.valueOf(position));
+            storageRef.putBytes(bitmap.getNinePatchChunk()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.main_container, new Fragment_history())
+                            .commit();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+
         }
     }
 
@@ -1033,6 +1096,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 storageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -1042,5 +1106,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(intent, ACT_ALARM);
             }
         }
+    }
+
+    public void uploadImage(Uri uri,History_itemView view) {
+        Bitmap bitmap3 = null;
+        if (uri != null) {
+            try {
+                // scale the image to save on bandwidth
+                Bitmap bitmap =
+                        scaleBitmapDown(
+                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
+                                MAX_DIMENSION);
+                bitmap3 = bitmap;
+                view.setHistory_medicine_image(bitmap3);
+            } catch (IOException e) {
+                Log.d(TAG, "Image picking failed because " + e.getMessage());
+                Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d(TAG, "Image picker gave us a null image.");
+            Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void startCamera(int a, int position) {
+        this.position = position;
+        if (PermissionUtils.requestPermission(
+                this,
+                CAMERA_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Uri photoUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getCameraFile());
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            if(a==0) {
+                startActivityForResult(intent, CAMERA_IMAGE_REQUEST2);
+            }else{
+                startActivityForResult(intent, CAMERA_IMAGE_REQUEST3);
+            }
+        }
+    }
+
+    private static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    private byte[] bitmaptoByte(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 }

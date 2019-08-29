@@ -26,6 +26,13 @@
             android:paddingRight="17dp"
             android:textSize="15dp"
             app:layout_constraintVertical_bias="0.057" />
+        <ImageView
+            android:id="@+id/loading"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#ffffff"
+            android:visibility="gone" />
 
         <ScrollView
             android:id="@+id/scrollView"

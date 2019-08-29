@@ -1,8 +1,11 @@
 package com.k1l3.wheredoesithurt;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,19 +23,28 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestManager;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.k1l3.wheredoesithurt.models.Prescription;
 import com.k1l3.wheredoesithurt.models.User;
 
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class Fragment_history extends Fragment {
+    public static final int CAMERA_IMAGE_REQUEST2 = 4;
     private View viewGroup;
     private ListView listView;
     private Adapter adapter;
     private Dialog dialog;
     private EditText history_search;
-
+    private History_itemView historyItemView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,7 +70,6 @@ public class Fragment_history extends Fragment {
 
     private void getPrescriptions() {
         User user = User.getInstance();
-
         for (Prescription prescription : user.getPrescriptions()) {
             adapter.addItem(prescription);
         }
@@ -83,7 +94,6 @@ public class Fragment_history extends Fragment {
 
         listView.setAdapter(adapter);
 
-        listView.setAdapter(adapter);
     }
 
     void ImageClick(ImageView imageView) {
@@ -104,14 +114,13 @@ public class Fragment_history extends Fragment {
 
     class Adapter extends BaseAdapter {
         ArrayList<Prescription> items = new ArrayList<>();
-
-        @Override
+        private RequestManager requestManager;
         public int getCount() {
             return items.size();
         }
 
         @Override
-        public Object getItem(int position) {
+        public Prescription getItem(int position) {
             return items.get(position);
         }
 
@@ -123,9 +132,9 @@ public class Fragment_history extends Fragment {
         private void addItem(Prescription item) {
             items.add(item);
         }
-
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+
             final History_itemView view = new History_itemView(viewGroup.getContext());
             final Prescription item = items.get(position);
             StringBuilder medicine = new StringBuilder(item.getMedicines().get(0).getName());
@@ -169,20 +178,14 @@ public class Fragment_history extends Fragment {
                     }
                 }
             });
-
-            //History 이미지 클릭시 사진크게하기
-            view.getHistory_medicine_image().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ImageClick(view.getHistory_medicine_image());
-                }
-            });
-            view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ImageClick(view.getHistory_medicine_image2());
-                }
-            });
+//
+//            //History 이미지 클릭시 사진크게하기
+//            view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    ImageClick(view.getHistory_medicine_image2());
+//                }
+//            });
 
             view.setHistory_memo(item.getMemo());
             view.getHistory_memo().setHorizontallyScrolling(false);
@@ -198,10 +201,119 @@ public class Fragment_history extends Fragment {
                     return false;
                 }
             });
-
+            historyItemView = view;
             //히스토리 사진 처방전있을시 추가
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            String filename = ((MainActivity)getActivity()).getId();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("presc/")
+                    .child(String.valueOf(position));
+            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(final Uri uri) {
+                    Bitmap bitmap2 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.history_loading);
+                    view.setHistory_medicine_image(bitmap2);
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            Bitmap bitmap = null;
+                            try {
+                                //Glide.with(getContext()).load(R.raw.history_loading).into(view.getHistory_medicine_image());
+                                URL iamge_url = new URL(uri.toString());
+                                URLConnection conn = iamge_url.openConnection();
+                                conn.connect();
+                                int nSize = conn.getContentLength();
+                                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), nSize);
+                                bitmap = BitmapFactory.decodeStream(bis);
+                                bis.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            final Bitmap finalBitmap = bitmap;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    view.setHistory_medicine_image(finalBitmap);
+                                    view.getHistory_medicine_image().setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ImageClick(view.getHistory_medicine_image());
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    view.getHistory_medicine_image().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity)getActivity()).startCamera(0,position);
+                        }
+                    });
+                }
+            });
+            //약사진
+            StorageReference storageRef2 = storage.getReferenceFromUrl("gs://wheredoesithurt-a9ce0.appspot.com").child(filename+"/").child("medicine/")
+                    .child(String.valueOf(position));
+            storageRef2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(final Uri uri) {
+                    Bitmap bitmap2 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.history_loading);
+                    view.setHistory_medicine_image2(bitmap2);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            Bitmap bitmap = null;
+                            try {
+                                URL iamge_url = new URL(uri.toString());
+                                URLConnection conn = iamge_url.openConnection();
+                                conn.connect();
+                                int nSize = conn.getContentLength();
+                                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream(), nSize);
+                                bitmap = BitmapFactory.decodeStream(bis);
+                                bis.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            final Bitmap finalBitmap = bitmap;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    view.setHistory_medicine_image2(finalBitmap);
+                                    view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ImageClick(view.getHistory_medicine_image2());
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    view.getHistory_medicine_image2().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity)getActivity()).startCamera(1,position);
+                        }
+                    });
+                }
+            });
+
+
             return view;
         }
-
     }
+
 }
