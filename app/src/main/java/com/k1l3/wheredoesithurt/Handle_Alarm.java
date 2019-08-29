@@ -132,7 +132,5 @@ public class Handle_Alarm extends BroadcastReceiver {
             builder.setNumber(999);
         }
         notificationManager.notify(0, builder.build());
-
-
     }
 }

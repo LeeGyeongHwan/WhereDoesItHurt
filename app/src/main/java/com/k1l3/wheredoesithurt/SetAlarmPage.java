@@ -64,8 +64,8 @@ public class SetAlarmPage extends AppCompatActivity {
         String title_pre = intent.getStringExtra("title");
         String alarmnum = intent.getStringExtra("alarmcount");
         String alarmday = intent.getStringExtra("alarmday");
-        final Boolean isDrinking = intent.getBooleanExtra("isDrinking",false);
-        final Boolean isSmoking = intent.getBooleanExtra("isSmoking",false);
+        final Boolean isDrinking = intent.getBooleanExtra("isDrinking", false);
+        final Boolean isSmoking = intent.getBooleanExtra("isSmoking", false);
 
         title.setText(title_pre);
         prescription = (Prescription) intent.getSerializableExtra("prescription");
@@ -79,7 +79,6 @@ public class SetAlarmPage extends AppCompatActivity {
 
         for (int i = 0; i < Integer.parseInt(alarmnum); i++) {
             LinearLayout linearLayout = findViewById(R.id.startinflatealarm);
-            String[] time = {"AM 08:30", "PM 12:30", "PM 06:30"};
 
             LayoutInflater layoutInflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -146,8 +145,8 @@ public class SetAlarmPage extends AppCompatActivity {
                     shour = "0" + shour;
                 if (min < 10)
                     smin = "0" + smin;
-                String timenow = ampm + " " + shour + ":" + smin;
-                textView.setText(timenow);
+                String timeNow = ampm + " " + shour + ":" + smin;
+                textView.setText(timeNow);
 
             }
 
@@ -222,7 +221,6 @@ public class SetAlarmPage extends AppCompatActivity {
         }
 
 
-
         from_contain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,8 +253,8 @@ public class SetAlarmPage extends AppCompatActivity {
                 Intent moveintent = new Intent(SetAlarmPage.this, Addword_Activity.class);
                 moveintent.putExtra("prescription", prescription);
                 moveintent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                moveintent.putExtra("isDrinking",isDrinking);
-                moveintent.putExtra("isSmoking",isSmoking);
+                moveintent.putExtra("isDrinking", isDrinking);
+                moveintent.putExtra("isSmoking", isSmoking);
                 startActivity(moveintent);
                 finish();
             }
@@ -307,7 +305,6 @@ public class SetAlarmPage extends AppCompatActivity {
 
         from_dateText.setText(fromdate);
 
-
         from_date.init(from_date.getYear(), from_date.getMonth(), from_date.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
@@ -357,7 +354,20 @@ public class SetAlarmPage extends AppCompatActivity {
     }
 
     public void setAgain(int what, int year, int month, int day) {
-        String date = year + "." + month + "." + day;
+        String date = year + ".";
+
+        if (month < 10) {
+            date += "0" + month + ".";
+        } else {
+            date += month + ".";
+        }
+
+        if (day < 10) {
+            date += "0" + day;
+        } else {
+            date += day;
+        }
+
         switch (what) {
             case 1:
                 from_dateText.setText(date);

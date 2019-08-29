@@ -1,13 +1,10 @@
 package com.k1l3.wheredoesithurt.calendarDecorator;
 
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 
-import com.k1l3.wheredoesithurt.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,14 +13,14 @@ import java.util.HashSet;
  * Decorate several days with a dot
  */
 public class EventDecorator implements DayViewDecorator {
-    private final Drawable drawable;
     private int color;
+    private int index;
     private HashSet<CalendarDay> dates;
 
-    public EventDecorator(int color, Collection<CalendarDay> dates, Fragment context) {
-        drawable = context.getResources().getDrawable(R.drawable.more);
+    public EventDecorator(int color,int index, Collection<CalendarDay> dates, Fragment context) {
         this.color = color;
         this.dates = new HashSet<>(dates);
+        this.index = index;
     }
 
     @Override
@@ -33,7 +30,6 @@ public class EventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.setSelectionDrawable(drawable);
-        view.addSpan(new DotSpan(5, color)); // 날자밑에 점
+        view.addSpan(new LineSpan(color, index)); // 날자밑에 점
     }
 }
