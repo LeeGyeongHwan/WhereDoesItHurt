@@ -51,7 +51,7 @@ public class Fragment_main extends Fragment {
     private ListView my_medicine_info, my_caution_food;
     private Adapter adapter;
     private foodAdapter foodAdapter;
-    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3, presc_name,plzAdd,plzAdd2,plzAdd3;
+    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3, presc_name, plzAdd, plzAdd2, plzAdd3;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private LinearLayout counting_linear;
@@ -61,7 +61,8 @@ public class Fragment_main extends Fragment {
     private int currentCount = 0;
     private float pressedX = 0;
     private int[] check = new int[3];
-    private ScrollView scrollView,scrollView2;
+    private ScrollView scrollView, scrollView2;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -96,11 +97,11 @@ public class Fragment_main extends Fragment {
         scrollView = viewGroup.findViewById(R.id.scrollView2);
         scrollView2 = viewGroup.findViewById(R.id.scrollView3);
 
-        int NotiCheck=(((MainActivity) getActivity()).getFragment());
-        int NotiMed=(((MainActivity) getActivity()).getMedNum());
+        int NotiCheck = (((MainActivity) getActivity()).getFragment());
+        int NotiMed = (((MainActivity) getActivity()).getMedNum());
 
-        if((NotiCheck!=-1)&&(NotiMed!=-1)){
-            for(int i=0;i<NotiMed;i++){
+        if ((NotiCheck != -1) && (NotiMed != -1)) {
+            for (int i = 0; i < NotiMed; i++) {
                 getRightCurrentCount();
                 if (currentAvail < availCounting - 1) {
                     currentAvail++;
@@ -123,11 +124,11 @@ public class Fragment_main extends Fragment {
                 setPrescriptionName();
 
             }
-            currentAvail=NotiMed;
+            currentAvail = NotiMed;
             currentImage();
             setButton();
-            Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : "+NotiMed+", noticheck : "+NotiCheck);
-            int clicking=0;
+            Log.d("what", "onCreateView: 프래그먼트 진입 notiMed : " + NotiMed + ", noticheck : " + NotiCheck);
+            int clicking = 0;
 
             switch (NotiCheck) {
                 case 0:
@@ -166,8 +167,6 @@ public class Fragment_main extends Fragment {
         }
 
 
-
-
         medicine_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -194,8 +193,8 @@ public class Fragment_main extends Fragment {
 //            if (currentCount == -1) {
 //                getRightCurrentCount();
 //            }
-            currentCount=0;
-
+            currentCount = 0;
+            currentAvail = 0;
             getAvailable();
 
             currentImage();
@@ -298,7 +297,7 @@ public class Fragment_main extends Fragment {
             getAvailable();
 
             currentImage();
-        }else{
+        } else {
             progressBar.setProgress(0);
         }
 
@@ -333,7 +332,7 @@ public class Fragment_main extends Fragment {
                 }
 
             }
-        }else{
+        } else {
             plzAdd2.setVisibility(View.VISIBLE);
             scrollView.setVisibility(View.GONE);
         }
@@ -362,7 +361,7 @@ public class Fragment_main extends Fragment {
                     currentCount++;
                 }
             }
-        }else{
+        } else {
             plzAdd3.setVisibility(View.VISIBLE);
             scrollView2.setVisibility(View.GONE);
         }
@@ -399,7 +398,7 @@ public class Fragment_main extends Fragment {
                 setButtonDate(get_1, when2, time2, 1);
                 setButtonDate(get_2, when3, time3, 2);
             }
-        } else{
+        } else {
             plzAdd.setVisibility(View.VISIBLE);
             btn1.setVisibility(View.GONE);
             btn2.setVisibility(View.GONE);
@@ -433,10 +432,10 @@ public class Fragment_main extends Fragment {
                 when.setText("저녁");
             }
         }
-        if(get_0>=10) {
+        if (get_0 >= 10) {
             time.setText(get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
-        }else{
-            time.setText("0"+get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
+        } else {
+            time.setText("0" + get_0 + ":" + user.getPrescriptions().get(currentCount).getTimes().getTimes().get(i).substring(2, 4));
         }
         DayClick item = user.getPrescriptions().get(currentCount)
                 .getYear()

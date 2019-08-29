@@ -170,12 +170,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void DialogProgress() {
-        ProgressDialog dialog =
-                ProgressDialog.show(LoginActivity.this, "", "잠시만 기다려 주세요 ...", true);
-
-        // 창을 내린다.
-        // dialog.dismiss();
-    }
-
 }
