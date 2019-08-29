@@ -86,9 +86,16 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:background="#706CD4" />
-
+            <TextView
+                android:id="@+id/plz_add2"
+                android:text="약을 추가해 주세요"
+                android:fontFamily="@font/applesdgothicneor"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
             <ScrollView
-                android:id="@+id/scrollView3"
+                android:visibility="gone"
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
@@ -98,7 +105,6 @@
                 android:scrollbarThumbVertical="@drawable/scroll_color"
                 android:scrollbars="vertical"
                 app:layout_constraintVertical_bias="1.0">
-
                 <ListView
                     android:id="@+id/my_medicine_info"
                     android:layout_width="match_parent"
@@ -143,8 +149,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.0">
-
+        <TextView
+            android:id="@+id/plz_add"
+            android:text="약을 추가해 주세요"
+            android:fontFamily="@font/applesdgothicneor"
+            android:textSize="20dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp" />
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/flipbtn1"
             android:layout_width="0dp"
             android:layout_height="120dp"
@@ -183,6 +198,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/flipbtn2"
             android:layout_width="0dp"
             android:layout_height="120dp"
@@ -221,6 +237,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/flipbtn3"
             android:layout_width="0dp"
             android:layout_height="120dp"
@@ -308,9 +325,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
             app:layout_constraintVertical_bias="0.0" />
-
+        <TextView
+            android:id="@+id/plz_add3"
+            android:text="약을 추가해 주세요"
+            android:fontFamily="@font/applesdgothicneor"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/scrollView3"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"

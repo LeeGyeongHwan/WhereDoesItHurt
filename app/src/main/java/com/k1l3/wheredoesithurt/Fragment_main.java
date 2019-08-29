@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class Fragment_main extends Fragment {
     private ListView my_medicine_info, my_caution_food;
     private Adapter adapter;
     private foodAdapter foodAdapter;
-    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3, presc_name;
+    private TextView when1, when2, when3, time1, time2, time3, iseat1, iseat2, iseat3, presc_name,plzAdd,plzAdd2,plzAdd3;
     private CircleProgressBar progressBar;
     private ConstraintLayout constraintLayout;
     private LinearLayout counting_linear;
@@ -60,7 +61,7 @@ public class Fragment_main extends Fragment {
     private int currentCount = 0;
     private float pressedX = 0;
     private int[] check = new int[3];
-
+    private ScrollView scrollView,scrollView2;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -88,6 +89,12 @@ public class Fragment_main extends Fragment {
         manager = getActivity().getSupportFragmentManager();
         transaction = manager.beginTransaction();
         constraintLayout = viewGroup.findViewById(R.id.constraint_layout);
+        plzAdd = viewGroup.findViewById(R.id.plz_add);
+        plzAdd2 = viewGroup.findViewById(R.id.plz_add2);
+        plzAdd3 = viewGroup.findViewById(R.id.plz_add3);
+
+        scrollView = viewGroup.findViewById(R.id.scrollView2);
+        scrollView2 = viewGroup.findViewById(R.id.scrollView3);
 
         int NotiCheck=(((MainActivity) getActivity()).getFragment());
         int NotiMed=(((MainActivity) getActivity()).getMedNum());
@@ -307,6 +314,8 @@ public class Fragment_main extends Fragment {
 
     private void getMedicineName() {
         if (user.getPrescriptions().size() != 0) {
+            plzAdd2.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
             while (true) {
                 String startDay = user.getPrescriptions().get(currentCount).getBegin();
                 String endDay = user.getPrescriptions().get(currentCount).getEnd();
@@ -324,12 +333,17 @@ public class Fragment_main extends Fragment {
                 }
 
             }
+        }else{
+            plzAdd2.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.GONE);
         }
     }
 
     //주의해야할 음식
     private void getCautionFood() {
         if (user.getPrescriptions().size() != 0) {
+            plzAdd3.setVisibility(View.GONE);
+            scrollView2.setVisibility(View.VISIBLE);
             while (true) {
                 String startDay = user.getPrescriptions().get(currentCount).getBegin();
                 String endDay = user.getPrescriptions().get(currentCount).getEnd();
@@ -348,6 +362,9 @@ public class Fragment_main extends Fragment {
                     currentCount++;
                 }
             }
+        }else{
+            plzAdd3.setVisibility(View.VISIBLE);
+            scrollView2.setVisibility(View.GONE);
         }
     }
 
@@ -355,18 +372,26 @@ public class Fragment_main extends Fragment {
     private void setButton() {
         if (user.getPrescriptions().size() != 0) {
             if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 2) { //알람시간 2개
+                btn1.setVisibility(View.VISIBLE);
+                btn2.setVisibility(View.VISIBLE);
                 btn3.setVisibility(View.INVISIBLE);
+                plzAdd.setVisibility(View.GONE);
                 int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
                 int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(0, 2));
                 setButtonDate(get_0, when1, time1, 0);
                 setButtonDate(get_1, when2, time2, 1);
             } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 1) { //알람시간 1개
+                btn1.setVisibility(View.VISIBLE);
                 btn2.setVisibility(View.INVISIBLE);
                 btn3.setVisibility(View.INVISIBLE);
-
+                plzAdd.setVisibility(View.GONE);
                 int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
                 setButtonDate(get_0, when1, time1, 0);
             } else if (user.getPrescriptions().get(currentCount).getTimes().getTimes().size() == 3) { //알람시간 3개
+                btn1.setVisibility(View.VISIBLE);
+                btn2.setVisibility(View.VISIBLE);
+                btn3.setVisibility(View.VISIBLE);
+                plzAdd.setVisibility(View.GONE);
                 int get_0 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(0).substring(0, 2));
                 int get_1 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(1).substring(0, 2));
                 int get_2 = Integer.valueOf(user.getPrescriptions().get(currentCount).getTimes().getTimes().get(2).substring(0, 2));
@@ -374,6 +399,11 @@ public class Fragment_main extends Fragment {
                 setButtonDate(get_1, when2, time2, 1);
                 setButtonDate(get_2, when3, time3, 2);
             }
+        } else{
+            plzAdd.setVisibility(View.VISIBLE);
+            btn1.setVisibility(View.GONE);
+            btn2.setVisibility(View.GONE);
+            btn3.setVisibility(View.GONE);
         }
     }
 
